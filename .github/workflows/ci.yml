@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Go core: vet, build and tests. The frontend dist is stubbed so the
+  # //go:embed all:frontend/dist directive compiles without a full JS build.
+  # ---------------------------------------------------------------------------
+  go:
+    name: Go core
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: true
+
+      - name: Stub embedded frontend
+        run: |
+          mkdir -p frontend/dist
+          echo '<!doctype html><title>ci</title>' > frontend/dist/index.html
+
+      - name: go vet
+        run: go vet ./...
+
+      - name: go test
+        run: go test ./... -count=1
+
+  # ---------------------------------------------------------------------------
+  # Frontend: type-check and production build.
+  # ---------------------------------------------------------------------------
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npx vite build
+
+  # ---------------------------------------------------------------------------
+  # Python sidecars: byte-compile (syntax) + ruff lint (non-blocking style).
+  # ---------------------------------------------------------------------------
+  python:
+    name: Python sidecars
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Syntax check (byte-compile)
+        run: python -m compileall -q sidecar
+
+      - name: Lint (ruff, non-blocking)
+        run: |
+          pip install ruff
+          ruff check sidecar --output-format=github || true
