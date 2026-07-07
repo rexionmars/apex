@@ -12,7 +12,7 @@ one principle: the link between each **image**, the **animal** it came from, and
 the **grade** assigned to it must be verifiable — recorded at collection time,
 never reconstructed from filenames afterwards.
 
-Built for the carcass typification research at **PAVIC/UFPI**.
+Built for the carcass typification research at **iCEV**.
 
 ---
 
@@ -62,7 +62,15 @@ and the image is written to the database already paired to it.
 (PyTorch / OpenCV) for inference, live overlay and conformation · a single
 **SQLite** file as the source of truth.
 
-## Running
+## Download
+
+Pre-built native binaries for **macOS, Windows and Linux** are attached to every
+[release](https://github.com/rexionmars/apex/releases), with the model weights
+already bundled. Grab the archive for your platform, unpack, and run — no build
+tools required (the Python analysis features still need a Python with the
+scientific libraries below).
+
+## Building from source
 
 Prerequisites: Go 1.23+, Node 18+, the [Wails CLI](https://wails.io), and (for the
 model features) a Python with `torch`, `opencv-python`, `scikit-image`, `scipy`,
