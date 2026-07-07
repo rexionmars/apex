@@ -1,0 +1,126 @@
+name: Release
+
+# Build native binaries for macOS, Windows and Linux when a v* tag is pushed,
+# bundle the model weights, and attach the artifacts to a GitHub Release.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            name: macOS (universal)
+            platform: darwin/universal
+            artifact: carcass-macos
+          - os: windows-latest
+            name: Windows (amd64)
+            platform: windows/amd64
+            artifact: carcass-windows
+          - os: ubuntu-22.04
+            name: Linux (amd64)
+            platform: linux/amd64
+            artifact: carcass-linux
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # Linux needs GTK3 + WebKit2GTK for the WebView.
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev
+          # Wails needs WebKit2GTK; package name differs across Ubuntu versions.
+          sudo apt-get install -y libwebkit2gtk-4.0-dev || \
+          sudo apt-get install -y libwebkit2gtk-4.1-dev
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.12.0
+
+      - name: Build
+        run: wails build -platform ${{ matrix.platform }} -clean
+
+      # The models are small (~19 MB) and versioned, so bundle them next to the
+      # binary. On macOS they go into the .app's Resources; elsewhere alongside
+      # the binary, matching the runtime lookup in app.go (modelWeightsDir).
+      - name: Bundle model weights (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          APP=$(find build/bin -maxdepth 1 -name '*.app' | head -1)
+          mkdir -p "$APP/Contents/Resources/model/weights"
+          cp model/weights/*.pth model/weights/*.mat "$APP/Contents/Resources/model/weights/"
+
+      - name: Bundle model weights (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p build/bin/model/weights
+          cp model/weights/*.pth model/weights/*.mat build/bin/model/weights/
+
+      - name: Bundle model weights (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          mkdir -p build/bin/model/weights
+          cp model/weights/*.pth model/weights/*.mat build/bin/model/weights/
+
+      # Package the whole build/bin into a single archive per platform.
+      - name: Archive (macOS/Linux)
+        if: runner.os != 'Windows'
+        run: |
+          cd build/bin
+          tar -czf ../../${{ matrix.artifact }}.tar.gz *
+
+      - name: Archive (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path build/bin/* -DestinationPath ${{ matrix.artifact }}.zip
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            ${{ matrix.artifact }}.tar.gz
+            ${{ matrix.artifact }}.zip
+          if-no-files-found: ignore
+
+  release:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/**/*
+          generate_release_notes: true
+          draft: false
+          fail_on_unmatched_files: false
