@@ -6,14 +6,13 @@ on:
   pull_request:
     branches: [main]
 
-# Cancel superseded runs on the same ref.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   # ---------------------------------------------------------------------------
-  # Go core: vet, build and tests. The frontend dist is stubbed so the
+  # Go core: vet and tests. The frontend dist is stubbed so the
   # //go:embed all:frontend/dist directive compiles without a full JS build.
   # ---------------------------------------------------------------------------
   go:
@@ -40,16 +39,22 @@ jobs:
         run: go test ./... -count=1
 
   # ---------------------------------------------------------------------------
-  # Frontend: type-check and production build.
+  # Full Wails build: generates the Go<->JS bindings (which are not versioned),
+  # then type-checks and builds the frontend as part of the native build. This
+  # validates the Go core, the bindings and the frontend together, exactly as a
+  # release would. Needs GTK/WebKit on Linux.
   # ---------------------------------------------------------------------------
-  frontend:
-    name: Frontend
+  build:
+    name: Wails build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: true
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -58,14 +63,18 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev
+          sudo apt-get install -y libwebkit2gtk-4.0-dev || \
+          sudo apt-get install -y libwebkit2gtk-4.1-dev
 
-      - name: Type-check
-        run: npx tsc --noEmit
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.12.0
 
-      - name: Build
-        run: npx vite build
+      - name: Build (generates bindings, type-checks and builds the frontend)
+        run: wails build -platform linux/amd64 -clean
 
   # ---------------------------------------------------------------------------
   # Python sidecars: byte-compile (syntax) + ruff lint (non-blocking style).
@@ -84,7 +93,7 @@ jobs:
       - name: Syntax check (byte-compile)
         run: python -m compileall -q sidecar
 
-      - name: Lint (ruff, non-blocking)
+      - name: Lint (ruff)
         run: |
           pip install ruff
-          ruff check sidecar --output-format=github || true
+          ruff check sidecar --output-format=github
