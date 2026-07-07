@@ -34,3 +34,4 @@ docs/img/Screenshot*.png
 # --- OS ---
 .DS_Store
 **/.DS_Store
+frontend/package.json.md5
