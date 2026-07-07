@@ -1,0 +1,20 @@
+# Dependências dos sidecars Python (captura Kinect + inferência de modelos).
+
+numpy>=1.24
+opencv-python>=4.8
+
+# --- Inferência (sidecar/inference.py) ---
+torch>=2.0
+scipy>=1.10          # carregar a LUT ColorNaming (.mat)
+rembg>=2.0           # remoção de fundo (U²-Net) — separa carcaça do fundo antes da análise
+onnxruntime>=1.16    # backend do rembg
+
+# --- Kinect v2 (requer libfreenect2 no sistema): ---
+#   macOS:  brew install libfreenect2
+#   Ubuntu: siga https://github.com/OpenKinect/libfreenect2
+# pylibfreenect2>=0.1.4
+
+# --- Kinect v1 (requer libfreenect no sistema): ---
+#   macOS:  brew install libfreenect
+#   Ubuntu: apt install freenect python3-freenect
+# freenect
