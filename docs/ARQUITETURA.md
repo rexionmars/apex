@@ -1,6 +1,6 @@
 # Plano de Arquitetura — Software de Coleta e Análise de Carcaças
 
-**Projeto:** carcass_integration (PAVIC/UFPI)
+**Projeto:** carcass_integration (iCEV)
 **Data:** 2026-06-30
 **Stack:** Wails v2 + Go 1.23+ + React 19 + Vite + TypeScript + Tailwind 4 + shadcn/ui
 **Status:** proposta para revisão (nenhum código escrito ainda)
