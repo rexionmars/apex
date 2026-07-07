@@ -1,0 +1,189 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Identidade visual (adaptada do geosense-infer): "instrumento de aquisição" x
+  "atlas técnico". Ground graphite-blue noturno, painéis de vidro fosco, accent
+  cyan-NIR como sinal do instrumento, terracota topográfico como secundário, e
+  uma voz monospace ("telemetry") para todo dado medido (contagens, κ, etiquetas,
+  medidas, datas).
+*/
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-panel: var(--panel);
+  --color-panel-solid: var(--panel-solid);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-terra: var(--terra);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-hairline: var(--hairline);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  /* status semânticos + escada de limite (Open MCT) */
+  --color-ok: var(--ok);
+  --color-alert: var(--alert);
+  --color-alert-soft: var(--alert-soft);
+  --color-error: var(--error);
+  --color-info: var(--info);
+  --color-panel-hi: var(--panel-hi);
+  --color-head-bg: var(--head-bg);
+  --color-primary-bg: var(--primary-bg);
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --font-mono: var(--font-telemetry);
+}
+
+/*
+  Tema Open MCT "Espresso" (NASA Ames/JPL) — valores extraídos do código-fonte
+  (_constants-espresso.scss). Fundo cinza-grafite sólido, accent cyan #03ace4,
+  texto #acacac, e status/limites de telemetria com significado reservado.
+*/
+:root {
+  --radius: 3px;
+
+  /* Superfícies (Espresso: sólidas, do escuro ao um pouco mais claro) */
+  --background: #222222;          /* colorGenBg */
+  --foreground: #acacac;          /* colorBodyFg */
+  --head-bg: #000000;             /* colorHeadBg — barras de topo */
+
+  --panel: #2c2c2c;               /* colorBodyBg — painéis */
+  --panel-solid: #2c2c2c;
+  --panel-hi: #363636;            /* +5% lighten — hover/elevação */
+  --card: #2c2c2c;
+  --card-foreground: #dddddd;
+  --popover: #1c1c1c;
+  --popover-foreground: #d6d6d6;
+
+  /* Accent (key) — cyan do instrumento */
+  --primary: #03ace4;             /* colorKey */
+  --primary-foreground: #ffffff;  /* colorKeyFg */
+  --primary-bg: #007fad;          /* colorKeyBg — botão cheio */
+  --accent: #03ace4;
+  --accent-foreground: #ffffff;
+
+  /* Status semânticos (Espresso) — reservados a significado */
+  --ok: #1f851f;                  /* colorOk — validado */
+  --alert: #ff8a0d;               /* colorAlert — atenção/experimental */
+  --alert-soft: #ffb66c;          /* colorStatusAlert */
+  --error: #da0004;               /* colorStatusError — quebra/órfã */
+  --info: #60ba7b;                /* colorStatusInfo */
+
+  /* Escada de limite de telemetria (out-of-limits) */
+  --limit-yellow: #b18b05;
+  --limit-orange: #b36b00;
+  --limit-red: #940000;
+  --limit-purple: #891bb3;
+  --limit-cyan: #4ba6b3;
+
+  /* mantido por compat.: 'terra' agora aponta para o âmbar de alerta */
+  --terra: #ff8a0d;
+
+  --secondary: #363636;           /* superfície de botão/hover */
+  --secondary-foreground: #dddddd;
+  --muted: #2c2c2c;
+  --muted-foreground: #8f8f8f;    /* colorBodyFgSubtle-ish */
+
+  --destructive: #da0004;
+
+  /* Bordas: interiorBorder = rgba(#acacac, 0.2) */
+  --border: rgba(172, 172, 172, 0.2);
+  --hairline: rgba(172, 172, 172, 0.12);
+  --input: rgba(0, 0, 0, 0.2);    /* colorInputBg */
+  --ring: rgba(3, 172, 228, 0.5);
+
+  --font-telemetry: ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", monospace;
+  --font-display: "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-display);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Região arrastável do Wails */
+.app-draggable { --wails-draggable: drag; }
+.app-no-drag { --wails-draggable: no-drag; }
+
+/* Eyebrow de atlas: rótulos de seção uppercase, tracked, com ar de hairline */
+.eyebrow {
+  font-family: var(--font-telemetry);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 10px;
+  color: var(--muted-foreground);
+}
+
+/* Readout de telemetria: valores medidos em mono */
+.telemetry {
+  font-family: var(--font-telemetry);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+/* Painel de instrumento — superfície sólida do Espresso, borda nítida.
+   Gradiente vertical sutil (mais claro no topo) imita a elevação do Open MCT. */
+.panel {
+  background: linear-gradient(180deg, var(--panel-hi), var(--panel));
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* Divisor hairline */
+.hairline {
+  border: none;
+  border-top: 1px solid var(--hairline);
+}
+
+/* Fundo do Espresso: cinza-grafite sólido, liso. */
+.atlas-ground {
+  background-color: var(--background);
+}
+
+/* Faixa de status semântica: pílula com cor reservada a significado (Open MCT).
+   Sempre acompanha rótulo/ícone — cor nunca sozinha. */
+.status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-telemetry);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  font-size: 10px; padding: 2px 8px; border-radius: 2px;
+  border: 1px solid currentColor;
+}
+
+/* Scrollbar dos painéis (Espresso) */
+.panel-scroll::-webkit-scrollbar { width: 10px; }
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: rgba(172, 172, 172, 0.25);
+  border-radius: 2px;
+  border: 2px solid var(--panel);
+}
+.panel-scroll::-webkit-scrollbar-thumb:hover { background: rgba(172, 172, 172, 0.4); }
+.panel-scroll::-webkit-scrollbar-track { background: transparent; }
