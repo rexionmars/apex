@@ -10,9 +10,6 @@ frontend/node_modules/
 *.db
 /data/
 
-# --- Model weights (large; distributed separately — see model/weights/README.md) ---
-/model/weights/*.pth
-/model/weights/*.mat
 
 # --- Python sidecar caches ---
 sidecar/__pycache__/

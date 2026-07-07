@@ -80,8 +80,8 @@ wails build
 ```
 
 Model weights (`fat_binary.pth`, `direct_class.pth`, `eg_regression.pth`,
-`joost_color_naming.mat`) are not versioned; place them under `model/weights/`
-(see [`model/weights/README.md`](model/weights/README.md)).
+`joost_color_naming.mat`) are included under [`model/weights/`](model/weights/) —
+see [`model/weights/README.md`](model/weights/README.md) for what each one is.
 
 ## Documentation
 
