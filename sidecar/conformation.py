@@ -26,7 +26,6 @@ Protocolo (JSON stdin/stdout): probe / conform / shutdown.
 O "image" deve ser a CARCAÇA JÁ RECORTADA (fundo preto), como a saída do sidecar
 de inferência (carcass.png) — a silhueta vem dos pixels não-pretos.
 """
-import base64
 import json
 import os
 import sys

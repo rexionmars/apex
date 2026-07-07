@@ -1,0 +1,8 @@
+# Lint config for the Python sidecars.
+line-length = 110
+
+[lint]
+# The sidecars import optional heavy libraries (torch, pylibfreenect2, freenect,
+# opencv) inside try/except blocks purely to detect availability at runtime.
+# Those show up as "imported but unused" (F401) but are intentional probes.
+ignore = ["F401", "E402"]

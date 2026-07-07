@@ -161,7 +161,8 @@ class RTEngine:
         # 3) overlay na resolução do preview (redimensiona a máscara de volta)
         mask_full = cv2.resize(mask_small * 255, (W, H), interpolation=cv2.INTER_NEAREST)
         overlay = frame.copy()
-        cyan = np.zeros_like(frame); cyan[:] = (210, 200, 0)  # BGR do cyan
+        cyan = np.zeros_like(frame)
+        cyan[:] = (210, 200, 0)  # BGR of cyan
         sel = mask_full > 127
         overlay[sel] = (0.45 * overlay[sel] + 0.55 * cyan[sel]).astype(np.uint8)
 
