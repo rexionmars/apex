@@ -1,0 +1,312 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---- Packages -------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{parskip}
+\tcbuselibrary{skins,breakable}
+
+% ---- Colors (matches the app's neutral/OKLCH palette) ---------------------
+\definecolor{ink}{HTML}{111111}
+\definecolor{accent}{HTML}{DF0000}      % Wails red
+\definecolor{go}{HTML}{00ADD8}          % Go cyan
+\definecolor{react}{HTML}{61DAFB}       % React blue
+\definecolor{muted}{HTML}{6B7280}
+\definecolor{codebg}{HTML}{F6F7F9}
+\definecolor{codeframe}{HTML}{E5E7EB}
+\definecolor{kw}{HTML}{7C3AED}
+\definecolor{str}{HTML}{047857}
+\definecolor{cmt}{HTML}{9CA3AF}
+
+% ---- Hyperref -------------------------------------------------------------
+\hypersetup{
+  colorlinks=true, linkcolor=accent, urlcolor=go, citecolor=accent,
+  pdftitle={Desktop UI Stack Guide}, pdfauthor={rexionmars}
+}
+
+% ---- Headings -------------------------------------------------------------
+\titleformat{\section}{\Large\bfseries\color{ink}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries\color{ink}}{\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.4em}{0.5em}
+
+% ---- Header / footer ------------------------------------------------------
+\pagestyle{fancy}\fancyhf{}
+\lhead{\small\color{muted}Desktop UI Stack Guide}
+\rhead{\small\color{muted}Wails + Go + React}
+\cfoot{\small\color{muted}\thepage}
+\renewcommand{\headrulewidth}{0.2pt}
+
+% ---- Listings -------------------------------------------------------------
+\lstdefinestyle{base}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\footnotesize\color{ink},
+  keywordstyle=\color{kw}\bfseries,
+  stringstyle=\color{str},
+  commentstyle=\color{cmt}\itshape,
+  frame=single, framerule=0.4pt, rulecolor=\color{codeframe},
+  breaklines=true, showstringspaces=false,
+  numbers=none, tabsize=2, xleftmargin=6pt, xrightmargin=4pt,
+  aboveskip=8pt, belowskip=4pt,
+}
+\lstdefinelanguage{Go}{
+  keywords={package,import,func,var,type,struct,interface,return,for,range,if,else,go,defer,chan,map,const,nil,true,false},
+  sensitive=true, comment=[l]{//}, morestring=[b]", morestring=[b]`,
+}
+\lstdefinelanguage{TypeScript}{
+  keywords={import,export,from,const,let,var,function,return,await,async,type,interface,as,new},
+  sensitive=true, comment=[l]{//}, morecomment=[s]{/*}{*/}, morestring=[b]", morestring=[b]',
+}
+\lstdefinelanguage{CSS}{
+  keywords={import,theme,inline,root,dark},
+  sensitive=true, morecomment=[s]{/*}{*/}, morestring=[b]", morestring=[b]',
+}
+\lstdefinelanguage{bash}{
+  keywords={go,install,npx,wails,build,dev,add,init},
+  sensitive=true, comment=[l]{\#}, morestring=[b]", morestring=[b]',
+}
+\lstset{style=base}
+
+% ---- Callout box ----------------------------------------------------------
+\newtcolorbox{callout}[1][]{
+  colback=codebg, colframe=accent, boxrule=0.8pt, arc=2pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, breakable, #1
+}
+
+% ---- Title data -----------------------------------------------------------
+\title{\vspace{-1.2cm}\bfseries\color{ink}\Huge Desktop UI Stack Guide\\[4pt]
+  \large\color{muted}\normalfont A reusable blueprint for cross-platform desktop apps\\
+  \normalsize with \textbf{Wails\,+\,Go\,+\,React} (the ``Electron alternative'')}
+\author{}
+\date{\small\color{muted}Reference stack extracted from the TikTok Downloader Desktop project}
+
+% ===========================================================================
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+\vspace{-0.8cm}
+
+\begin{callout}
+\textbf{What this is.} A pragmatic, copy-paste-ready description of a modern
+desktop UI stack: a single Go binary that renders a React frontend inside the
+operating system's native WebView. No Chromium bundled, so binaries are
+\textbf{$\sim$6\,MB} instead of $\sim$150\,MB. Use it as the starting template
+for new projects.
+\end{callout}
+
+% ---------------------------------------------------------------------------
+\section{Mental model}
+
+The app is one native executable. The Go side owns the window and the business
+logic; the web side (React, built by Vite) is \emph{embedded} into that binary
+and drawn by the OS WebView. A generated, type-safe bridge lets the frontend
+call Go methods as if they were local async functions.
+
+\begin{center}
+\begin{tcolorbox}[colback=white,colframe=codeframe,boxrule=0.6pt,arc=3pt,width=\linewidth]
+\ttfamily\small
+Single Go binary\\
+\hspace*{1em}|\\
+\hspace*{1em}+--\,Native WebView\ \ (WebView2 / WKWebView / WebKitGTK)\\
+\hspace*{1em}|\hspace*{4em}+--\,React 19 + Vite\ \ (frontend/dist embedded via go:embed)\\
+\hspace*{1em}|\\
+\hspace*{1em}\textcolor{accent}{$\updownarrow$ generated bridge:}\ window.go.main.App\ \ (typed Promises)\\
+\hspace*{1em}|\\
+\hspace*{1em}+--\,App struct (Go)\ \ --\ methods exposed to the frontend
+\end{tcolorbox}
+\end{center}
+
+\begin{callout}
+\textbf{Why not Electron?} Electron ships a full Chromium + Node runtime per app.
+Wails reuses the WebView already installed on the OS and compiles Go to a native
+binary. Result: dramatically smaller size, lower memory, native performance ---
+at the cost of small cross-platform WebView differences you must test for.
+\end{callout}
+
+% ---------------------------------------------------------------------------
+\section{The two layers}
+
+\subsection{Layer 1 --- Desktop shell (Go)}
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l l X@{}}
+\toprule
+\textbf{Piece} & \textbf{Version} & \textbf{Role} \\
+\midrule
+Wails v2   & \texttt{v2.10.1} & Window, embed frontend, generate Go$\leftrightarrow$JS bridge \\
+Go         & \texttt{1.23+}   & Backend + business logic \\
+chromedp   & \texttt{v0.11.2} & \emph{Optional} --- browser automation / scraping \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Layer 2 --- Frontend (web)}
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l l X@{}}
+\toprule
+\textbf{Category} & \textbf{Library / version} & \textbf{Why} \\
+\midrule
+Framework      & React \texttt{19.2}                 & UI runtime \\
+Build tool     & Vite \texttt{7.3}                   & Fast dev server, HMR, bundling \\
+React plugin   & @vitejs/plugin-react \texttt{5.1}   & JSX + Fast Refresh \\
+Language       & TypeScript \texttt{5.9}             & Type-safety, including the bridge \\
+Styling        & Tailwind CSS \texttt{4.1}           & Utility-first, \textbf{no config file} \\
+Tailwind/Vite  & @tailwindcss/vite \texttt{4.1}      & Official plugin (replaces PostCSS) \\
+Components     & shadcn/ui                            & Components you \emph{own} (copied in) \\
+Primitives     & Radix UI \texttt{1.x}               & Headless accessibility (a11y) \\
+Icons          & lucide-react \texttt{0.562}         & SVG icon set \\
+Toasts         & sonner \texttt{2.0}                 & Notifications \\
+Theming        & next-themes \texttt{0.4}            & Light / dark / system \\
+CSS animation  & tw-animate-css \texttt{1.4}         & Keyframe utilities \\
+Class merge    & clsx + tailwind-merge               & The \texttt{cn()} helper \\
+Variants       & class-variance-authority \texttt{0.7} & Component variants (\texttt{cva}) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% ---------------------------------------------------------------------------
+\section{Five concepts that make the stack work}
+
+\subsection{1.\ The generated Go$\leftrightarrow$JS bridge}
+List your Go struct in \texttt{Bind} and Wails generates typed TypeScript
+wrappers. Struct types become TS interfaces. Type-safety crosses the
+native$\leftrightarrow$web boundary.
+
+\begin{lstlisting}[language=Go]
+// main.go
+Bind: []interface{}{ app },
+\end{lstlisting}
+
+\begin{lstlisting}[language=TypeScript]
+// frontend/wailsjs/go/main/App.d.ts  (generated)
+export function DownloadURL(req: main.DownloadRequest): Promise<backend.Result>;
+
+// in a React component
+const res = await DownloadURL({ url, output, hd, watermark });
+\end{lstlisting}
+
+\begin{callout}
+\textbf{Gotcha.} A \texttt{nil} Go slice serializes to JSON \texttt{null} (not
+\texttt{[]}), which breaks \texttt{.length}/\texttt{.map} in React. Always
+initialize returned slices as \texttt{[]T\{\}} at the Go boundary, and defensively
+use \texttt{?? []} on the JS side.
+\end{callout}
+
+\subsection{2.\ Tailwind 4 without a config file + OKLCH tokens}
+Tailwind 4 drops \texttt{tailwind.config.js}. Everything lives in the CSS entry
+file. Design tokens use OKLCH for perceptually uniform, consistent theming.
+
+\begin{lstlisting}[language=CSS]
+/* src/index.css */
+@import "tailwindcss";
+@theme inline { --color-primary: var(--primary); }
+:root  { --primary: oklch(0.205 0 0); }   /* light */
+.dark  { --primary: oklch(0.922 0 0); }   /* dark  */
+\end{lstlisting}
+
+\subsection{3.\ shadcn/ui --- you own the components}
+shadcn is \emph{not} an npm dependency. You copy each component's source into
+\texttt{src/components/ui/} (\texttt{button.tsx}, \texttt{input.tsx}, \dots).
+They are Radix (a11y) + Tailwind + \texttt{cva} (variants). Because the code is
+yours, you edit it freely. Configuration lives in \texttt{components.json}.
+
+\subsection{4.\ The \texttt{cn()} helper}
+The glue of the whole stack: merge conditional classes and resolve Tailwind
+conflicts.
+
+\begin{lstlisting}[language=TypeScript]
+// src/lib/utils.ts
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+export function cn(...inputs: ClassValue[]) { return twMerge(clsx(inputs)); }
+\end{lstlisting}
+
+\subsection{5.\ WebView app patterns (non-obvious)}
+\begin{itemize}[leftmargin=1.2em,itemsep=2pt]
+  \item \textbf{Frameless window + custom title bar}: \texttt{Frameless: true}
+        in Go plus a \texttt{<TitleBar>} with a draggable region via CSS
+        (\texttt{-{}-wails-draggable: drag}).
+  \item \textbf{External links}: intercept and open in the OS browser
+        (\texttt{BrowserOpenURL}); otherwise they open \emph{inside} the app.
+  \item \textbf{Go$\to$JS push} for progress: \texttt{runtime.EventsEmit} in Go
+        $\leftrightarrow$ \texttt{EventsOn} in React. Methods = request/response;
+        events = streaming.
+  \item \textbf{External images} in the WebView may need
+        \texttt{referrerPolicy="no-referrer"} (hotlink / CORS).
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\section{Project structure (template)}
+
+\begin{lstlisting}
+project/
+|-- main.go              # window, go:embed, Bind
+|-- app.go               # App struct -> methods exposed to the frontend
+|-- backend/             # Go business logic
+|-- wails.json           # name, frontend build commands
+`-- frontend/
+    |-- vite.config.ts   # @/ alias, injects version from wails.json
+    |-- components.json   # shadcn config
+    |-- src/
+    |   |-- index.css     # Tailwind + OKLCH tokens
+    |   |-- main.tsx      # ThemeProvider + Toaster
+    |   |-- App.tsx       # layout: TitleBar + Sidebar + pages
+    |   |-- components/ui/ # shadcn components (you own)
+    |   |-- components/    # your feature components
+    |   `-- lib/utils.ts   # cn()
+    `-- wailsjs/          # generated Go<->JS bridge
+\end{lstlisting}
+
+% ---------------------------------------------------------------------------
+\section{Commands}
+
+\begin{lstlisting}[language=bash]
+# one-time setup
+go install github.com/wailsapp/wails/v2/cmd/wails@latest
+npx shadcn@latest init
+npx shadcn@latest add button input switch progress
+
+# development (hot-reload: Vite watches frontend, Go rebuilds)
+wails dev
+
+# native build
+wails build -platform darwin/universal   # .app
+wails build -platform windows/amd64      # .exe
+wails build -platform linux/amd64        # binary
+\end{lstlisting}
+
+% ---------------------------------------------------------------------------
+\section{Pitfalls \& trade-offs}
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+  \item \textbf{The ``god component''.} \texttt{App.tsx} tends to accumulate all
+        state and orchestration. Extract logic into hooks early
+        (\texttt{useX}) and keep components presentational.
+  \item \textbf{WebView $\neq$ identical Chrome} across OSes. Test on all three
+        targets; WKWebView (macOS) sometimes differs subtly.
+  \item \textbf{macOS signing.} Unsigned \texttt{.app}/\texttt{.dmg} triggers the
+        ``unidentified developer'' warning; notarization needs a paid Apple
+        Developer account (\$99/yr).
+  \item \textbf{External images} may require \texttt{referrerPolicy} due to
+        hotlink/CORS rules.
+  \item \textbf{CI matrix.} Build on all three platforms via GitHub Actions and
+        publish binaries on \texttt{v*} tags (a \texttt{build.yml} matrix is the
+        canonical template).
+\end{enumerate}
+
+\vfill
+\begin{center}\small\color{muted}
+Blueprint distilled from a working project --- verified to build and run on macOS,
+Windows and Linux.
+\end{center}
+
+\end{document}

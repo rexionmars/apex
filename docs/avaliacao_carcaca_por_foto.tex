@@ -1,0 +1,351 @@
+%% Documento tecnico de planejamento. Registro interno (PAVIC/UFPI).
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\graphicspath{{figs_dados/}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\titlespacing*{\section}{0pt}{1.5em}{0.4em}
+\titlespacing*{\subsection}{0pt}{0.95em}{0.25em}
+\renewcommand{\arraystretch}{1.3}
+
+\begin{document}
+
+{\LARGE\bfseries Avaliação de carcaças ovinas por imagem\par}
+\vspace{0.4em}
+{\small PAVIC/UFPI}
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Resumo.} Avaliaram-se mais de trinta abordagens computacionais, em quatorze
+frentes experimentais, para estimar a tipificação de carcaças ovinas a partir de
+imagens. Nenhuma abordagem predisse o grau a partir da imagem. O resultado central deste
+registro é que o progresso foi impedido pela integridade dos dados disponíveis, e não
+por insuficiência dos métodos. O pareamento entre imagem, animal e grau não foi
+registrado de forma verificável, e as associações foto--nota utilizadas são incertas. Em
+consequência, toda correlação entre descritores de imagem e o grau é não interpretável,
+o que invalida os resultados de predição e impede testar qualquer hipótese sobre o que a
+imagem contém. As únicas saídas que não dependem do grau, a segmentação de tecidos e a
+consistência anatômica do mapa de convexidade do perfil, permaneceram disponíveis e
+operaram conforme o esperado. Este documento descreve a causa da inviabilidade dos
+dados, os métodos avaliados com os respectivos resultados, e os requisitos de uma nova
+aquisição. Os resultados são limitados pela amostra disponível (n = 22 carcaças ovinas,
+anotação manual de tecidos) e pela falha de pareamento descrita.
+
+\tableofcontents
+\vspace{0.6em}
+\hrule
+
+%========================================================================
+\section{Por que os dados disponíveis são inviáveis}
+
+A inviabilidade tem uma causa demonstrada: a falha de integridade do pareamento entre
+imagem, animal e grau. Essa falha, isoladamente, impede a estimação do grau a partir da
+imagem. Ela também impede testar qualquer hipótese sobre o conteúdo da imagem, pois todo
+teste depende de um grau corretamente pareado.
+
+\subsection{Falha de integridade do pareamento imagem--animal--grau}
+
+O pareamento entre cada fotografia e o respectivo animal e grau não foi registrado no
+momento da coleta. Ele foi reconstruído posteriormente por ordenação dos nomes de
+arquivo e associação sequencial à lista de animais, sem verificação. Três evidências,
+extraídas dos dados, confirmam a inconsistência.
+
+\textbf{Evidência 1: etiquetas físicas com duplicatas e ilegibilidade.} As etiquetas
+físicas das carcaças foram lidas manualmente sobre as imagens. A leitura indica que três
+imagens consecutivas correspondem à mesma carcaça, e que uma etiqueta é ilegível
+(Tabela~\ref{tab:tags}, Figura~\ref{fig:dup}). A numeração das carcaças nas etiquetas,
+além disso, não segue a ordem dos arquivos de imagem.
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}{0.235\textwidth}\centering
+\includegraphics[width=\textwidth]{IMG_6194_small.jpg}
+\caption{IMG\_6194}
+\end{subfigure}\hfill
+\begin{subfigure}{0.235\textwidth}\centering
+\includegraphics[width=\textwidth]{IMG_6195_small.jpg}
+\caption{IMG\_6195}
+\end{subfigure}\hfill
+\begin{subfigure}{0.235\textwidth}\centering
+\includegraphics[width=\textwidth]{IMG_6196_small.jpg}
+\caption{IMG\_6196}
+\end{subfigure}\hfill
+\begin{subfigure}{0.235\textwidth}\centering
+\includegraphics[width=\textwidth]{IMG_6203_small.jpg}
+\caption{IMG\_6203}
+\end{subfigure}
+\caption{Exemplos das imagens da coleta. (a)--(c) IMG\_6194, IMG\_6195 e IMG\_6196 são a
+mesma carcaça (etiqueta legível, carcaça 10), registrada três vezes; um pareamento
+sequencial as associaria a três animais distintos. (d) IMG\_6203 tem a etiqueta (saco
+plástico no jarrete) em branco, ilegível. As imagens também ilustram a ausência de
+padronização de captura: fundo não uniforme, presença do operador, e iluminação por
+janela.}
+\label{fig:dup}
+\end{figure}
+
+\begin{table}[!ht]
+\centering
+\caption{Trecho da leitura manual das etiquetas físicas. A coluna ``carcaça'' é o
+identificador escrito na etiqueta; a coluna ``tratamento'' é a dieta registrada na
+etiqueta. As três imagens IMG\_6194 a IMG\_6196 correspondem à carcaça 10, e a IMG\_6203
+tem etiqueta ilegível.}
+\label{tab:tags}
+\begin{tabular}{lll}
+\toprule
+Imagem & Carcaça (etiqueta) & Tratamento (etiqueta) \\
+\midrule
+IMG\_6193 & 01 & T1 / 0\% \\
+IMG\_6194 & 10 & T1 / 0\% \\
+IMG\_6195 & 10 & T1 / 0\% \\
+IMG\_6196 & 10 & T1 / 0\% \\
+IMG\_6203 & ilegível & ilegível \\
+IMG\_6204 & 14 & T1 / 0\% \\
+IMG\_6217 & 28 & T1 / 0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Evidência 2: a numeração da etiqueta não corresponde à do laboratório.} O
+identificador da etiqueta da carcaça e o identificador (Animal) da planilha de
+laboratório constituem sistemas de numeração distintos, sem tabela de correspondência.
+A verificação compara, por número, o tratamento da etiqueta com o tratamento que o
+laboratório atribui ao Animal de mesmo número (Tabela~\ref{tab:cruz}). Das 15 carcaças
+de etiqueta legível e presentes no laboratório, apenas 4 coincidem, no nível do acaso.
+As carcaças 24 e 28 não constam da planilha. A carcaça 16 tem tratamento T5 (30\% mais
+TAN), ausente da planilha. Sete animais da planilha (5, 9, 11, 13, 18, 19, 22) não
+possuem imagem correspondente.
+
+\begin{table}[!ht]
+\centering
+\caption{Verificação cruzada do tratamento por número. ``\% (etiqueta)'' é a dieta lida
+na etiqueta da carcaça; ``\% (laboratório)'' é a dieta que a planilha atribui ao Animal
+de mesmo número. Coincidem 4 de 15 casos testáveis.}
+\label{tab:cruz}
+\begin{tabular}{cccc}
+\toprule
+Número & \% (etiqueta) & \% (laboratório) & Coincide \\
+\midrule
+01 & 0  & 0  & sim \\
+10 & 0  & 10 & não \\
+14 & 0  & 30 & não \\
+03 & 10 & 10 & sim \\
+06 & 10 & 10 & sim \\
+08 & 10 & 20 & não \\
+15 & 10 & 20 & não \\
+04 & 20 & 30 & não \\
+17 & 20 & 30 & não \\
+23 & 20 & 10 & não \\
+02 & 30 & 20 & não \\
+07 & 30 & 0  & não \\
+12 & 30 & 20 & não \\
+21 & 30 & 30 & sim \\
+16 & 30+TAN & 0 & não \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Evidência 3: a planilha de laboratório não referencia as imagens.} A planilha de
+laboratório possui 22 linhas e 27 colunas. A coluna de identificação é o Animal, e não
+há coluna de nome de imagem. Não existe, portanto, vínculo registrado entre a planilha e
+os arquivos de foto.
+
+Como consequência, toda correlação entre descritores de imagem e o grau utilizou
+rótulos de associação incerta. O mesmo se aplica às correlações com a espessura de
+gordura e com a área de olho de lombo. Esses resultados não são interpretáveis quanto
+ao grau.
+
+\subsection{Hipótese de modalidade, não testável com os dados atuais}
+
+A tipificação considera dois eixos. A conformação descreve a forma e o desenvolvimento
+muscular, e é definida sobre o perfil externo. O acabamento descreve a cobertura de
+gordura subcutânea, e depende em parte da espessura da gordura.
+
+A distinção entre os dois eixos motiva uma hipótese sobre o alcance da imagem. A
+conformação é uma propriedade do perfil externo, em princípio registrada na projeção de
+superfície. A espessura da gordura é uma propriedade de profundidade, que por
+construção óptica não é registrada na projeção de superfície (Tabela~\ref{tab:foto}).
+Esta hipótese é consistente com a prática reportada na literatura, em que a composição
+de gordura é estimada por modalidades de profundidade, como a absorciometria de raios X,
+a tomografia e o ultrassom, e não por imagem de superfície (Seção~\ref{sec:lit}).
+
+Cabe a ressalva central: esta hipótese não foi testada neste projeto. Os testes de
+acabamento dependeram do grau de pareamento incerto, e portanto não constituem
+evidência a favor nem contra a hipótese. A separação entre o que é uma expectativa
+óptica e o que seria um resultado próprio do projeto requer uma aquisição com pareamento
+verificável.
+
+\begin{table}[!ht]
+\centering
+\caption{Atributos observáveis e não observáveis na imagem de superfície da carcaça.}
+\label{tab:foto}
+\begin{tabular}{p{6.6cm}p{6.6cm}}
+\toprule
+Observável na imagem & Não observável na imagem \\
+\midrule
+perfil da perna, do lombo e da paleta (convexo ou côncavo) & espessura da gordura de
+cobertura \\
+largura e dimensões da carcaça & gordura perirrenal \\
+exposição óssea no contorno & marmoreio (gordura intramuscular) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%========================================================================
+\section{Métodos avaliados e resultados}
+
+Avaliaram-se mais de trinta abordagens. Para a exposição, agrupam-se em cinco categorias
+segundo o resultado obtido. Os coeficientes reportados situam-se no intervalo $[0,1]$,
+em que 1 indica associação perfeita e 0 indica ausência de associação; n = 22 salvo
+indicação em contrário.
+
+\subsection{Segmentação de tecidos (etapa de pré-processamento)}
+
+A segmentação separa, na imagem, as regiões de gordura, músculo e fundo. Ela antecede
+qualquer medição. Avaliaram-se uma tabela de correspondência cromática (ColorNaming),
+uma rede pré-treinada (DINOv2) e a replicação de uma arquitetura da literatura. As
+regiões de fundo e gordura foram segmentadas com sobreposição (IoU) próxima de 0,83 para
+a gordura. A região de músculo apresentou sobreposição inferior, de 0,10 a 0,38. Essa
+diferença é consistente com a similaridade cromática entre músculo e fundo. A etapa não
+depende do grau e atende ao requisito de pré-processamento.
+
+\subsection{Estimação do acabamento (não interpretável sob os dados atuais)}
+
+Avaliaram-se descritores de área e de fração de gordura da máscara, estimadores de
+espessura por transformada de distância, e descritores cromáticos. Avaliaram-se também
+métodos geométrico-estatísticos: homologia persistente (conectividade e número de
+cavidades da cobertura de gordura), análise de frequência e textura, percolação, e
+descritores de simetria e fragmentação. A maior correlação de Spearman com o acabamento
+foi $\rho \approx 0{,}49$, obtida com o descritor de área, e nenhum descritor atingiu
+$|\rho| \geq 0{,}5$.
+
+Esses valores não são interpretáveis, pois foram calculados contra o grau de pareamento
+incerto descrito na Seção~1. Um valor baixo, sob rótulos incertos, é compatível tanto
+com uma ausência real de associação quanto com o efeito do pareamento. Por esse motivo,
+os resultados de acabamento não constituem evidência sobre o alcance da imagem. A
+hipótese de modalidade da Seção~1.2 permanece não testada.
+
+\subsection{Estimação da conformação (resultados não conclusivos sob os dados atuais)}
+
+Avaliaram-se descritores de morfometria de silhueta (largura, extensão, solidez),
+descritores elípticos de Fourier do contorno, e o invariante integral de convexidade do
+perfil. Diversos descritores apresentaram correlações brutas de 0,5 a 0,6. Essas
+correlações não se sustentaram após a correção para comparações múltiplas. Parte delas
+foi atribuída a uma fonte de imagem incorreta, o contorno da região de corte em lugar do
+contorno da carcaça. As demais utilizaram o pareamento incerto. Um teste de limite
+superior foi conduzido sobre o contorno anotado manualmente. Nenhum dos 384 testes
+permaneceu significativo após a correção de Benjamini--Hochberg.
+
+Esse resultado requer interpretação cautelosa, pois foi obtido contra o mesmo grau de
+pareamento incerto. Ele não estabelece que a conformação seja inobservável na imagem.
+Indica, antes, que a hipótese não é testável sob os dados atuais. A conformação permanece
+a frente compatível com a modalidade bidimensional.
+
+\subsection{Métodos sem desempenho acima da referência}
+
+Alguns métodos não superaram a referência do acaso, independentemente da integridade dos
+dados. Esse desempenho é consistente com o tamanho de amostra reduzido (n = 22). O grupo
+inclui a transformada de espalhamento por \emph{wavelets}, com acurácia balanceada de
+0,14 ante uma referência de 0,33, a transformada de característica de Euler, a análise de
+renormalização por suavização em escala, e a seleção esparsa de variáveis.
+
+\subsection{Resultado independente do grau}
+
+O mapa de convexidade do perfil é anatomicamente consistente: as pernas e os jarretes
+são classificados como convexos, e o entalhe medial entre as pernas como côncavo. Este
+resultado não depende do grau e indica que a forma é mensurável na imagem. A validação
+preditiva requer um grau corretamente pareado, ainda indisponível.
+
+\subsection{Evidência externa da literatura}\label{sec:lit}
+
+Uma revisão de aproximadamente 150 fontes fornece evidência externa, sobre dados de
+pareamento correto, distinta dos resultados não interpretáveis acima. Os sistemas de
+análise de imagem (VIA) reportam correlação de 0,94 a 0,97 para conformação e valores
+inferiores e mais dispersos (0,30 a 0,91) para gordura. A composição de gordura é
+estimada por absorciometria de raios X (DEXA), tomografia ou ultrassom. Essa evidência
+é consistente com a hipótese de modalidade da Seção~1.2. Ela não substitui um teste
+sobre os dados próprios do projeto, ainda pendente. A Tabela~\ref{tab:resumo} resume as
+cinco categorias.
+
+\begin{table}[!ht]
+\centering
+\caption{Síntese dos métodos avaliados, por categoria de resultado.}
+\label{tab:resumo}
+\begin{tabular}{p{3.5cm}p{4.5cm}p{4.8cm}}
+\toprule
+Categoria & Resultado & Causa \\
+\midrule
+Segmentação de tecidos & gordura e fundo segmentados; músculo inferior & etapa de
+pré-processamento; atende \\
+Acabamento & $\rho \leq 0{,}49$ (não interpretável) & grau de pareamento incerto \\
+Conformação & correlações não sustentadas após correção & grau de pareamento incerto \\
+Métodos geométrico-estatísticos & no nível da referência ou abaixo & amostra reduzida
+(n = 22) \\
+Mapa de convexidade & anatomicamente consistente & não depende do grau; requer grau
+pareado para validar \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%========================================================================
+\section{Requisitos para a continuidade}
+
+A reanálise dos dados atuais não é indicada para a estimação do grau. Requer-se uma nova
+aquisição com quatro requisitos.
+
+\begin{enumerate}[itemsep=0.35em,topsep=0.3em]
+\item \textbf{Pareamento físico entre imagem, animal e medidas, no momento do abate.} A
+etiqueta da carcaça deve ser legível na própria imagem, e uma única planilha,
+preenchida na coleta, deve associar a cada carcaça as suas imagens, notas e medidas. O
+pareamento não deve ser reconstruído posteriormente.
+
+\item \textbf{Grau atribuído por avaliadores sobre a própria imagem.} Dois a três
+avaliadores treinados atribuem a nota de forma independente, a partir da mesma imagem
+utilizada na análise. Mede-se a concordância entre avaliadores e deriva-se um grau de
+consenso. A concordância insuficiente invalida o uso da nota como referência.
+
+\item \textbf{Amostra suficiente e estratificada.} Estima-se um total de 100 a 120
+carcaças, cobrindo a faixa completa de grau, das categorias de menor conformação e
+acabamento às de maior. A amostra atual (n = 22), concentrada em poucas categorias, não
+permite estimação com precisão adequada.
+
+\item \textbf{Referência física, para a estimação de gordura no nível da literatura.} A
+espessura de gordura, o GR, a área de olho de lombo, ou a dissecção devem ser medidos
+nos mesmos animais. Sem referência física, a estimação restringe-se à conformação,
+observável na imagem.
+\end{enumerate}
+
+\subsection{Limitações}
+
+As limitações deste registro são: (1) amostra de n = 22 carcaças ovinas com anotação
+manual de tecidos; (2) pareamento imagem--grau de integridade não verificada, que
+invalida os resultados de predição de grau; (3) distribuição de grau concentrada em
+poucas categorias; (4) ausência de validação contra referência física nos mesmos
+animais; (5) resultados específicos para carcaças ovinas nas condições avaliadas.
+
+\vspace{0.4em}
+\hrule
+\vspace{0.6em}
+
+\textbf{Conclusão.} O conjunto de métodos avaliados não estabelece a predição do grau a
+partir da imagem. A causa demonstrada é a integridade do pareamento entre imagem, animal
+e grau. Sob rótulos de associação incerta, os resultados de predição não são
+interpretáveis, e nenhuma hipótese sobre o conteúdo da imagem pode ser testada. O
+progresso foi, portanto, impedido pela qualidade dos dados disponibilizados, e não por
+insuficiência dos métodos. A limitação de modalidade para a gordura permanece uma
+hipótese, apoiada na óptica e na literatura, mas não testada com os dados próprios. A
+conformação é observável na imagem e constitui a frente compatível com a modalidade
+bidimensional. A continuidade requer uma aquisição com pareamento físico verificável.
+
+\end{document}
