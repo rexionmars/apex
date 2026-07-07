@@ -1,0 +1,47 @@
+\chapter{Dashboard and export}
+
+\eyebrow{track the sample, ship the dataset}
+
+\vspace{4pt}
+The \textbf{Project dashboard} (Figure~\ref{fig:dashboard}) is the overview of the
+whole effort: how far the sample has progressed, how well the raters agree,
+whether the pairing is intact, and the button that produces the final dataset.
+
+\shot{dashboard.jpeg}{The Project dashboard. Summary cards (carcasses, images,
+graded, pairing); the stratified-sample progress toward the target; inter-rater
+agreement; and the export panel with the integrity report.}{dashboard}
+
+\section{Sample progress}
+
+Summary cards show the totals and the pairing status (\pillok{intact} when no
+image is orphaned). The \textbf{Stratified sample (R3)} panel tracks progress
+toward the target of 100--120 carcasses, broken down per batch and stratum, so
+under-represented strata are visible.
+
+\section{Inter-rater agreement}
+
+The \textbf{Fleiss' $\kappa$} panel reports agreement per axis (conformation,
+finishing), for all batches or a chosen one. Until at least two raters have scored
+a common set of carcasses it reads \tele{$\kappa$ not computable yet}.
+
+\section{Export dataset}
+
+The \textbf{Export dataset} button produces two files in a chosen folder:
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{File} & \textbf{Contents} \\
+\midrule
+\tele{manifest.csv} & One row per image, with the full pairing: physical tag,
+      animal, treatment, stratum, consensus grades, agreement, fat percentage,
+      conformation indices and the physical reference. \\
+\tele{integrity\_report.txt} & A human-readable attestation: totals per stratum,
+      any orphan images excluded, inter-rater agreement, and file hashes. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Only carcasses with verified pairing are included; optionally, only those with a
+valid consensus grade. The integrity report is the artefact that attests the
+2022 failure did not recur.

@@ -1,0 +1,84 @@
+\chapter{Installation and running}
+
+\eyebrow{getting the instrument on}
+
+\section{Prerequisites}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l l X@{}}
+\toprule
+\textbf{Component} & \textbf{Version} & \textbf{Needed for} \\
+\midrule
+Go            & 1.23+ & Building and running the core \\
+Node.js       & 18+   & Building the front end \\
+Wails CLI     & v2    & Development and native builds \\
+Python        & 3.10+ & The inference / analysis sidecars \\
+PyTorch, OpenCV, scikit-image, scipy, rembg & --- & Fat, conformation, live monitor \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The core, capture and import features run with Go and Node alone. The model-based
+features (fat analysis, conformation, live monitor) additionally require a Python
+environment with the scientific libraries above.
+
+\section{One-time setup}
+
+\begin{lstlisting}
+# install the Wails CLI
+go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+# python dependencies for the analysis sidecars
+pip install torch opencv-python scikit-image scipy rembg onnxruntime
+\end{lstlisting}
+
+\subsection*{Model weights}
+
+The trained weights and the ColorNaming lookup table are not shipped in the
+source tree. Place them under \tele{model/weights/}:
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{File} & \textbf{Purpose} \\
+\midrule
+\tele{fat\_binary.pth}        & Fat segmentation (validated, IoU $\sim$0.92) \\
+\tele{direct\_class.pth}      & Finishing grade (experimental) \\
+\tele{eg\_regression.pth}     & Fat-thickness regression (experimental) \\
+\tele{joost\_color\_naming.mat} & ColorNaming lookup table (required by all) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Running in development}
+
+\begin{lstlisting}
+# hot-reload development (front end + Go rebuild on change)
+wails dev
+\end{lstlisting}
+
+If your system \tele{python3} does not have the scientific libraries, point the
+app at one that does:
+
+\begin{lstlisting}
+export CARCASS_PYTHON=/path/to/python-with-torch
+wails dev
+\end{lstlisting}
+
+\begin{note}[title=Camera and the WebView]
+Webcam capture and the live monitor use the system camera through the WebView, so
+they must run inside the app (via \tele{wails dev} or the compiled binary), not in
+a plain browser --- the bridge to the Go core only exists inside the app.
+\end{note}
+
+\section{Building a native app}
+
+\begin{lstlisting}
+wails build -platform darwin/universal   # .app
+wails build -platform windows/amd64      # .exe
+wails build -platform linux/amd64        # binary
+\end{lstlisting}
+
+For the packaged app, the model weights are copied into the application's
+resources so the analysis sidecars can find them; the helper script
+\tele{scripts/build.sh} does this automatically after a build.

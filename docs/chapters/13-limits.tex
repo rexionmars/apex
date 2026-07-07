@@ -1,0 +1,68 @@
+\chapter{Scientific scope and limitations}
+
+\eyebrow{what the numbers can and cannot claim}
+
+\vspace{4pt}
+CARCASS is built to be honest about the boundary between what its measurements
+establish and what remains open. This chapter states that boundary explicitly.
+
+\section{What is validated}
+
+\begin{itemize}[leftmargin=1.3em,itemsep=3pt]
+  \item \textbf{Fat segmentation} is validated (IoU $\sim$0.92) and reliable, once
+        the background has been removed so the model sees the conditions it was
+        trained on.
+  \item \textbf{Verifiable pairing} is guaranteed by construction: every image
+        carries its \tele{carcass\_id} from the moment of capture or import.
+  \item \textbf{Conformation convexity} is an objective, reproducible measurement
+        of the profile, invariant to pose and lighting; its correspondence to
+        anatomy is verifiable by eye.
+\end{itemize}
+
+\section{What is not validated}
+
+The two \emph{grades} --- finishing and conformation --- are estimates, not
+settled predictions. This is grounded in the project's oracle experiment, which
+tested whether conformation is recoverable from a single 2D image:
+
+\begin{caution}[title=The oracle result]
+Computing shape descriptors on the \emph{perfect manual annotation} --- the best
+mask any model could produce --- \textbf{zero of 384 statistical tests survived
+multiple-comparison correction} at n=22. Even with perfect segmentation,
+conformation is not reliably recoverable from a single 2D image at this sample
+size. The bottleneck is the acquisition modality, not the model.
+\end{caution}
+
+Therefore the software presents these grades as \pillalert{estimates}, never as
+facts, and marks them in amber wherever they appear.
+
+\section{Why this matters --- and how it is resolved}
+
+The validation the grades lack requires exactly one thing: grades correctly
+paired to images, on a larger sample. That is precisely what CARCASS is built to
+collect. As the paired dataset grows, the \textbf{Physical correlation} tab
+(Station~7) can test whether the surface measurements predict the physical
+reference and the assessor grades --- closing the loop that the earlier research
+could not.
+
+\section{Modality caveats}
+
+\begin{itemize}[leftmargin=1.3em,itemsep=3pt]
+  \item \textbf{Fat cover (finishing)} is a depth property; a single surface
+        image captures it only partly. Depth capture (Kinect) is supported in the
+        schema for future work.
+  \item \textbf{Standardised capture} matters: a fixed background, uniform
+        lighting and a consistent view improve every downstream measurement. The
+        software imposes a required view and offers background capture, but the
+        physical setup is the operator's responsibility.
+  \item \textbf{Sample size.} The current models come from n=22. Their estimates
+        should be read as exploratory until the target sample is collected and
+        the validation loop is run.
+\end{itemize}
+
+\begin{note}[title=The through-line]
+The earlier study did not fail at its methods --- it failed at data integrity.
+CARCASS exists to fix that first. Every honest limitation above is a reason the
+software is built the way it is: collect a trustworthy, paired dataset, and let
+validation follow.
+\end{note}

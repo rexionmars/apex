@@ -1,0 +1,55 @@
+\chapter{The interface}
+
+\eyebrow{how to read the instrument}
+
+\vspace{4pt}
+CARCASS follows the anatomy of mission-control software. The window is organised
+into fixed regions, and you work by \textbf{selecting an object} in the navigation
+tree and \textbf{choosing a view} of it.
+
+\section{Anatomy of the window}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{Region} & \textbf{What it holds} \\
+\midrule
+Title bar (top) & Product mark and a live readout: carcasses, images, graded. \\
+Navigation tree (left) & Root objects (Live monitor, Import images, Project dashboard) and the data hierarchy \textbf{Batches\,$\rightarrow$\,Carcasses}. \\
+Browse bar (above centre) & The path (breadcrumb) of the selected object, and a \textbf{view switcher} on the right. \\
+Main area (centre) & The selected object's active view. \\
+Inspector (right) & Read-only properties of the selected object. Collapsible. \\
+Status bar (bottom) & Engine state, device, and dataset counts. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Objects and views}
+
+Selecting an object in the tree changes both the breadcrumb and the set of views
+offered in the browse bar:
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{Object} & \textbf{Views (in the browse bar)} \\
+\midrule
+A \textbf{batch}   & Overview, Analysis, Grading \\
+A \textbf{carcass} & Overview, Images, Analysis \\
+Live monitor       & Live monitor \\
+Import images      & Import \\
+Project dashboard  & Dashboard \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{note}[title=The Inspector always tracks your selection]
+Whatever you select --- a batch or a carcass --- the right-hand Inspector shows
+its properties: for a carcass, its identification, physical reference and model
+analysis; for a batch, its counts and fat statistics. It is read-only; editing
+happens in the views.
+\end{note}
+
+The status bar at the bottom is the instrument's heartbeat: it shows whether the
+inference \tele{engine} is \pillok{ready} and on which \tele{device} (e.g.
+\tele{mps}), plus the running dataset totals.

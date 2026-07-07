@@ -1,0 +1,69 @@
+\chapter{Collection: register and capture}
+
+\eyebrow{acquisition with verifiable pairing}
+
+\vspace{4pt}
+Collection is the heart of the software. The rule is simple and strict:
+\textbf{register the carcass before you capture}. The image inherits the pairing
+from the carcass --- never from a filename.
+
+\section{Create a batch}
+
+A \textbf{batch} is one collection session (a slaughter day, a site). Create it
+from the Project dashboard or by importing. Each batch groups the carcasses
+collected together.
+
+\section{Register a carcass}
+
+Select the batch and open its \textbf{Overview} view. Register a carcass with:
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{Field} & \textbf{Meaning} \\
+\midrule
+Physical tag \textbf{(required)} & The readable ID on the physical label. The first
+      line of defence against the pairing error: it is unique per batch. \\
+Animal (lab) & The animal ID in the laboratory spreadsheet --- the explicit link. \\
+Treatment & Diet / treatment group. \\
+Stratum & Sampling stratum, for stratified coverage. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{caution}[title=The physical tag is mandatory by design]
+A carcass cannot be created without a physical tag, and the same tag cannot be
+used twice in one batch. This is what makes the image--animal link verifiable and
+prevents the duplicate-label failure of the earlier collection.
+\end{caution}
+
+\section{Capture images}
+
+Select the carcass and open its \textbf{Images} view (Figure~\ref{fig:carcass-images}).
+Start the camera, choose the view angle (posterior, lateral, dorsal), capture a
+frame, review the preview, and save. The saved image is written to the carcass's
+folder with its \tele{carcass\_id} already set.
+
+\shot{carcass-images.jpeg}{The Images view of a carcass. Left: webcam capture with
+a view selector and a capture preview; the \tele{Save (pair to \#IMG\_6250)} button
+makes the pairing explicit. Right: the Inspector shows the full carcass record ---
+identification, physical reference, model analysis and conformation --- for the
+selected carcass.}{carcass-images}
+
+The Inspector on the right (Figure~\ref{fig:carcass-images}) is the carcass's
+complete record. As soon as the image has been analysed, it also shows the model
+results: \tele{Fat (model)}, whether the background was removed, the experimental
+grade, and the conformation convexities.
+
+\begin{note}[title={Kinect (RGB + depth), optional}]
+If a Kinect and its libraries are present, the capture panel offers an
+\tele{RGB+depth} capture that also records a depth map. Without it, the panel
+falls back to webcam capture and shows \tele{Kinect unavailable (webcam only)}.
+\end{note}
+
+\section{Edit carcass data later}
+
+The carcass \textbf{Overview} view is an editable form for every field, including
+the physical reference measured on the animal (fat thickness, GR, loin eye area).
+Fill these in whenever the laboratory measurements become available --- they are
+what the physical-correlation analysis (Station~7) needs.

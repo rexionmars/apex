@@ -1,0 +1,66 @@
+\chapter{Purpose}
+
+\eyebrow{why this software exists}
+
+\vspace{4pt}
+CARCASS is a desktop application for the \textbf{collection and analysis of ovine
+carcass images}, built to assemble a research dataset and continue the carcass
+typification research at PAVIC/UFPI.
+
+Its purpose is narrow and deliberate. A previous data-collection effort did not
+fail because of its machine-learning methods --- it failed because of the
+\textbf{integrity of the pairing} between each image, the animal it came from, and
+the grade assigned to it. That link was not recorded at the moment of collection;
+it was reconstructed afterwards, by file order, without verification. Physical
+tags were duplicated or illegible, the laboratory spreadsheet had no image-name
+column, and only a few tags matched the lab records. The result was a dataset in
+which no image could be trusted to belong to the animal it was attributed to.
+
+\begin{note}[title=The core idea]
+CARCASS is not merely an image capturer. It is the tool that makes the
+image\,$\leftrightarrow$\,animal\,$\leftrightarrow$\,grade pairing \textbf{verifiable
+by construction}, so that the earlier failure cannot be repeated. Every
+architectural decision serves that goal.
+\end{note}
+
+\section{What it does}
+
+Around that integrity core, the software provides an end-to-end workflow:
+
+\begin{itemize}[leftmargin=1.3em,itemsep=3pt]
+  \item \textbf{Acquisition.} Register a carcass with a mandatory physical tag,
+        then capture images from an external camera --- the image is born paired
+        to the carcass in the database, never inferred from a filename.
+  \item \textbf{Import.} Bring in photos captured elsewhere; each becomes a
+        carcass (or is reconciled to an existing one), so external images enter
+        the dataset without breaking pairing.
+  \item \textbf{Analysis.} Run trained models over the images: fat segmentation
+        (validated), an experimental finishing grade, and an analytical
+        conformation (convexity) measure --- all with automatic background
+        removal so surface measurements are correct.
+  \item \textbf{Grading.} Collect independent, blind grades from multiple raters
+        and measure their agreement (Fleiss' $\kappa$).
+  \item \textbf{Live monitor.} A real-time fat overlay from a camera or a video
+        file, to help frame the carcass during capture.
+  \item \textbf{Dashboard \& export.} Track sample progress against the target,
+        and export the dataset as a manifest plus an integrity report.
+\end{itemize}
+
+\section{Who it is for}
+
+The primary users are the research team and the operators who collect carcass
+images at the slaughter line and in the laboratory. The interface is designed as
+a scientific \emph{instrument} --- scanned and operated, not read top to bottom
+--- and follows the visual language of mission-control software: a dark
+instrument ground, a cyan signal accent, and monospace readouts for every
+measured value.
+
+\section{A note on scientific honesty}
+
+Two of the numbers this software produces --- the \emph{finishing grade} and the
+\emph{conformation grade} --- are marked throughout the interface as
+\textbf{experimental / not validated}. This is a deliberate choice, grounded in
+the project's own findings (Station~13). The software surfaces them because they
+are useful as exploratory references and because the dataset it builds is exactly
+what is needed to validate them in the future. It never presents them as settled
+facts.

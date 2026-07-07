@@ -1,0 +1,31 @@
+\chapter{Import external images}
+
+\eyebrow{bring in photos, keep the pairing}
+
+\vspace{4pt}
+When you already have photos --- taken with another camera, in another session ---
+the \textbf{Import images} object brings them in without breaking pairing.
+
+\section{Two ways to import}
+
+Choose a folder; the app scans it, computes a \tele{sha256} for each image
+(so duplicates are detected), and reads EXIF. Then:
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=4pt]
+  \item \textbf{Import all as new carcasses.} The fast path: each photo becomes a
+        new carcass, with the physical tag taken from the filename. You fill in
+        the real data later in the carcass Overview. Repeated filenames get a
+        numeric suffix automatically, so tags stay unique.
+  \item \textbf{Pair to an existing carcass.} Per item, reconcile a photo to a
+        carcass already in the batch --- useful when several photos belong to the
+        same animal.
+\end{enumerate}
+
+\begin{note}[title=Pairing is preserved either way]
+Whichever path you take, the carcass is created (or chosen) at the moment of
+import, so the image is never orphaned. Duplicates already in the dataset are
+skipped by hash.
+\end{note}
+
+This turns the earlier failure mode --- orphan images later given invented links
+--- into an explicit step the operator resolves at import time.

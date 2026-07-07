@@ -1,0 +1,63 @@
+\chapter{What the software produces}
+
+\eyebrow{the deliverables}
+
+\vspace{4pt}
+Everything CARCASS produces serves one end: a research dataset with verifiable
+pairing, enriched with objective measurements. This chapter summarises the
+outputs and how trustworthy each is.
+
+\section{The dataset}
+
+The central product is the \textbf{paired dataset}: for every image, a verifiable
+link to its carcass, animal, treatment and stratum, plus the physical reference
+measured on the animal. It lives in the single \tele{carcass.db} and is exported
+as \tele{manifest.csv} + \tele{integrity\_report.txt}.
+
+\section{Per-image measurements}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l l X@{}}
+\toprule
+\textbf{Measurement} & \textbf{Status} & \textbf{What it is} \\
+\midrule
+Fat fraction \& mask & \pillok{validated} & Fraction of the carcass surface
+      segmented as fat, with a cyan overlay. IoU $\sim$0.92. \\
+Conformation convexity & \pillok{objective} & Per-region convexity (leg / loin /
+      shoulder) and a convexity map. Analytical, invariant, training-free. \\
+Finishing grade & \pillalert{experimental} & A 3-class finishing estimate from a
+      model trained on n=22. Not validated. \\
+Conformation grade & \pillalert{estimate} & A 5-class estimate derived from leg
+      convexity. Not validated. \\
+Fat-thickness (EG) & \pillalert{experimental} & A regression estimate. Not
+      validated. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Per-batch products}
+
+\begin{itemize}[leftmargin=1.3em,itemsep=3pt]
+  \item \textbf{Fat statistics} --- mean, std dev, median, min, max, and the
+        distribution histogram.
+  \item \textbf{Inter-rater agreement} --- Fleiss' $\kappa$ per axis and a
+        consensus grade.
+  \item \textbf{Sample progress} --- coverage against the 100--120 target, by
+        stratum.
+  \item \textbf{CSV export} --- one row per image with every measurement.
+\end{itemize}
+
+\section{Live products}
+
+\begin{itemize}[leftmargin=1.3em,itemsep=3pt]
+  \item \textbf{Live fat overlay} --- real-time framing guide from camera or
+        video (approximate).
+\end{itemize}
+
+\begin{note}[title=Reading the colour code]
+Throughout the software, colour tells you how much to trust a number.
+\textbf{Green} = validated or objective. \textbf{Amber} = experimental or an
+estimate, to be validated later. \textbf{Red} is reserved for broken pairing and
+never used for a data series. Every coloured value carries a label --- colour is
+never the only signal.
+\end{note}

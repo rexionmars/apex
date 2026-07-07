@@ -1,0 +1,87 @@
+\chapter{System overview}
+
+\eyebrow{how the pieces fit}
+
+\vspace{4pt}
+CARCASS is a single native desktop application. A Go core owns the window, the
+database and the business logic; a React front end draws the interface inside the
+operating system's native WebView; and Python \emph{sidecars} run the parts that
+need PyTorch or OpenCV --- model inference, real-time overlay, and conformation.
+
+\section{Architecture}
+
+\begin{center}
+\begin{tcolorbox}[colback=codebg,colframe=hair,boxrule=0.6pt,arc=3pt,width=\linewidth]
+\ttfamily\small
+Single native binary (Wails)\\
+\hspace*{1em}|\\
+\hspace*{1em}+-- React front end \ (dark instrument UI, drawn by the WebView)\\
+\hspace*{1em}|\hspace*{4em}$\updownarrow$ typed Go$\leftrightarrow$JS bridge\\
+\hspace*{1em}+-- Go core\\
+\hspace*{2em}\ \ \ +-- store \ \ (single SQLite file: the "one spreadsheet")\\
+\hspace*{2em}\ \ \ +-- images/ \ (paired image folders on disk)\\
+\hspace*{2em}\ \ \ +-- Python sidecars (spawned as needed):\\
+\hspace*{4em}\ \ \ +-- inference.py \ \ (fat segmentation, grade, cutout)\\
+\hspace*{4em}\ \ \ +-- realtime.py \ \ \ (live fat overlay, background subtraction)\\
+\hspace*{4em}\ \ \ +-- conformation.py (integral convexity, analytical)\\
+\hspace*{4em}\ \ \ +-- kinect\_capture.py (optional RGB+depth)
+\end{tcolorbox}
+\end{center}
+
+\subsection*{Three principles}
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=4pt]
+  \item \textbf{The database is the source of truth for pairing.} An image never
+        carries its link in its filename. The flow is always: select or create
+        the carcass, then capture/import \emph{inside} that carcass's context, so
+        the image is written with its \tele{carcass\_id} already set.
+        Reconstruction by file order is structurally impossible.
+  \item \textbf{Capture sources are interchangeable.} Webcam capture runs in the
+        front end via the browser camera API; the Kinect (depth) runs through a
+        Python sidecar; both are just sources of a paired image.
+  \item \textbf{Measurements come with honesty about their status.} Colour
+        encodes state: \pillok{validated} (green) for fat segmentation,
+        \pillalert{experimental} (amber) for the grades, and red reserved for
+        broken pairing --- never for a data series.
+\end{enumerate}
+
+\section{Technology stack}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l l X@{}}
+\toprule
+\textbf{Layer} & \textbf{Technology} & \textbf{Role} \\
+\midrule
+Desktop shell & Wails v2 (Go) & Window, embed front end, Go$\leftrightarrow$JS bridge \\
+Core          & Go 1.23+      & Database, pairing, orchestration \\
+Database      & SQLite (pure-Go) & Single \tele{carcass.db} --- the one spreadsheet \\
+Front end     & React 19 + Vite + TypeScript & The instrument interface \\
+Styling       & Tailwind 4, shadcn/ui & Open MCT "Espresso" theme \\
+Inference     & Python + PyTorch & Fat / grade / conformation models \\
+Vision        & OpenCV, scikit-image, rembg & Cutout, convexity, background removal \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Where data lives}
+
+Everything is stored locally, under the operating system's application-data
+directory:
+
+\begin{lstlisting}
+<app data>/carcass-integration/
+|-- carcass.db          # the single database: batches, carcasses,
+|                       #   images, raters, grades, analyses
+`-- images/
+    `-- batch_<id>/
+        `-- carcass_<tag>/
+            |-- rgb_<uuid>.jpg        # the paired image
+            `-- analysis/             # model outputs (masks, overlays,
+                                      #   convexity maps)
+\end{lstlisting}
+
+\begin{note}[title=The single database is the "one spreadsheet"]
+The original research requirement was a single spreadsheet, filled in at
+collection time, that records the image--animal link. Here that spreadsheet is
+\tele{carcass.db}: one file, one source of truth, portable and auditable.
+\end{note}
