@@ -1,0 +1,36 @@
+# --- Build artifacts ---
+/build/bin/
+frontend/dist/
+frontend/node_modules/
+
+# Wails generated bindings (recreated on build)
+/frontend/wailsjs/
+
+# --- Local collection data (never versioned) ---
+*.db
+/data/
+
+# --- Model weights (large; distributed separately — see model/weights/README.md) ---
+/model/weights/*.pth
+/model/weights/*.mat
+
+# --- Python sidecar caches ---
+sidecar/__pycache__/
+**/__pycache__/
+*.pyc
+
+# --- LaTeX build artifacts ---
+docs/*.aux
+docs/*.log
+docs/*.toc
+docs/*.out
+docs/*.synctex.gz
+docs/chapters/*.aux
+
+# --- Original raw screenshots (renamed copies are versioned) ---
+docs/img/Screenshot*.jpeg
+docs/img/Screenshot*.png
+
+# --- OS ---
+.DS_Store
+**/.DS_Store

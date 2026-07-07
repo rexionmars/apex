@@ -1,0 +1,17 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "carcass-integration",
+  "outputfilename": "carcass-integration",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "PAVIC/UFPI"
+  },
+  "info": {
+    "productName": "Coleta de Carcaças",
+    "productVersion": "0.1.0",
+    "comments": "Coleta e análise de imagens de carcaças com pareamento verificável (PAVIC/UFPI)"
+  }
+}
