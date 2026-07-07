@@ -2,7 +2,36 @@
 
 \eyebrow{getting the instrument on}
 
-\section{Prerequisites}
+\section{Option A --- a pre-built release}
+
+The quickest path is to download a native build for your platform from the
+project's \textbf{Releases} page. Each release ships a self-contained archive per
+operating system, with the model weights already bundled --- no build tools
+required:
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{Platform} & \textbf{Archive} \\
+\midrule
+macOS (universal) & \tele{carcass-macos.tar.gz} --- contains the \tele{.app} \\
+Windows (amd64)   & \tele{carcass-windows.zip} --- contains the \tele{.exe} \\
+Linux (amd64)     & \tele{carcass-linux.tar.gz} --- contains the binary \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Unpack it and run the app. The Python analysis features still need a Python
+environment with the scientific libraries (see below); everything else works out
+of the box. Releases are produced automatically by continuous integration
+(Station~14).
+
+\begin{note}[title={Building from source}]
+If you want to develop, modify, or build for a platform not in the releases,
+follow Options~B and~C below.
+\end{note}
+
+\section{Prerequisites (build from source)}
 
 \begin{center}
 \begin{tabularx}{\linewidth}{@{}l l X@{}}
@@ -22,7 +51,7 @@ The core, capture and import features run with Go and Node alone. The model-base
 features (fat analysis, conformation, live monitor) additionally require a Python
 environment with the scientific libraries above.
 
-\section{One-time setup}
+\section{Option B --- run from source}
 
 \begin{lstlisting}
 # install the Wails CLI
@@ -71,7 +100,7 @@ they must run inside the app (via \tele{wails dev} or the compiled binary), not 
 a plain browser --- the bridge to the Go core only exists inside the app.
 \end{note}
 
-\section{Building a native app}
+\section{Option C --- build a native app}
 
 \begin{lstlisting}
 wails build -platform darwin/universal   # .app
