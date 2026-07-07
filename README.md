@@ -1,5 +1,9 @@
 # Apex
 
+[![CI](https://github.com/rexionmars/apex/actions/workflows/ci.yml/badge.svg)](https://github.com/rexionmars/apex/actions/workflows/ci.yml)
+[![Release](https://github.com/rexionmars/apex/actions/workflows/release.yml/badge.svg)](https://github.com/rexionmars/apex/actions/workflows/release.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 **Acquisition, pairing and image analysis of ovine carcasses — with verifiable pairing by construction.**
 
 Apex is a cross-platform desktop instrument for building a research-grade carcass
