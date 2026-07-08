@@ -1,0 +1,80 @@
+\chapter{Releases e integração contínua}
+
+\eyebrow{como as versões são construídas e distribuídas}
+
+\vspace{4pt}
+O projeto é desenvolvido de forma aberta, com verificações de qualidade
+automatizadas e builds multiplataforma. Dois workflows do GitHub Actions
+conduzem isso: um verifica cada alteração, e outro produz uma release para cada
+tag de versão.
+
+\section{Integração contínua}
+
+O workflow de \textbf{CI} roda a cada push e pull request para o branch principal.
+Ele verifica as três linguagens do projeto em paralelo:
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{Job} & \textbf{O que verifica} \\
+\midrule
+Núcleo Go & \tele{go vet} e a suíte de testes completa (\tele{go test ./...}),
+      incluindo os testes de integridade de pareamento e de $\kappa$ de Fleiss. \\
+Build Wails & Um \tele{wails build} completo: gera os bindings Go$\leftrightarrow$JS,
+      faz a verificação de tipos do front end (\tele{tsc}), o compila (\tele{vite})
+      e compila o núcleo Go --- validando as três camadas juntas, exatamente como
+      uma release faz. \\
+Sidecars Python & Compilação de bytes (sintaxe) mais um lint com \tele{ruff} dos
+      sidecars de inferência, conformação, ao vivo e Kinect. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Um selo verde de CI no repositório significa que os três passaram no branch
+principal atual.
+
+\section{Releases}
+
+O workflow de \textbf{Release} é disparado quando uma tag de versão que
+corresponde a \tele{v*} é enviada. Ele constrói a aplicação nativa em três
+runners em paralelo --- macOS, Windows e Linux --- empacota os pesos do modelo em
+cada build e anexa os arquivos a uma GitHub Release com notas geradas
+automaticamente.
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l l@{}}
+\toprule
+\textbf{Plataforma} & \textbf{Arquivo da release} \\
+\midrule
+macOS (universal) & \tele{carcass-macos.tar.gz} \\
+Windows (amd64)   & \tele{carcass-windows.zip} \\
+Linux (amd64)     & \tele{carcass-linux.tar.gz} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Cada arquivo é autocontido: os pesos treinados (\tele{fat\_binary.pth},
+\tele{direct\_class.pth}, \tele{eg\_regression.pth}) e a tabela de consulta
+ColorNaming viajam junto com o binário, colocados onde o app os espera em tempo
+de execução.
+
+\section{Publicando uma nova versão}
+
+Publicar uma release é um único push com tag:
+
+\begin{lstlisting}
+git tag -a v0.2.0 -m "Apex v0.2.0 - <summary>"
+git push origin v0.2.0
+\end{lstlisting}
+
+O workflow faz o resto --- os três builds de plataforma, o empacotamento dos
+pesos e a release publicada com binários prontos para download. Mantenha a versão
+em \tele{wails.json} em sincronia com a tag.
+
+\begin{note}[title={Reproduzível por construção}]
+Como a release usa o mesmo \tele{wails build} que a CI roda a cada commit, um
+build com tag nunca é uma surpresa: se a CI está verde, a release compila. O
+resultado é um conjunto de binários prontos para executar que não precisam de
+ferramentas de build --- apenas, para os recursos de modelo, um ambiente Python
+com as bibliotecas científicas.
+\end{note}

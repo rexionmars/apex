@@ -1,0 +1,71 @@
+\chapter{Escopo científico e limitações}
+
+\eyebrow{o que os números podem e não podem afirmar}
+
+\vspace{4pt}
+O Apex foi construído para ser honesto quanto à fronteira entre o que suas
+medições estabelecem e o que permanece em aberto. Este capítulo declara essa
+fronteira de forma explícita.
+
+\section{O que é validado}
+
+\begin{itemize}[leftmargin=1.3em,itemsep=3pt]
+  \item A \textbf{segmentação de gordura} é validada (IoU $\sim$0,92) e confiável,
+        desde que o fundo tenha sido removido para que o modelo veja as condições
+        em que foi treinado.
+  \item O \textbf{pareamento verificável} é garantido por construção: toda imagem
+        carrega seu \tele{carcass\_id} desde o momento da captura ou importação.
+  \item A \textbf{convexidade de conformação} é uma medição objetiva e
+        reproduzível do perfil, invariante à pose e à iluminação; sua
+        correspondência com a anatomia é verificável a olho nu.
+\end{itemize}
+
+\section{O que não é validado}
+
+Os dois \emph{graus} --- acabamento e conformação --- são estimativas, não
+predições estabelecidas. Isso se fundamenta no experimento oráculo do projeto,
+que testou se a conformação é recuperável a partir de uma única imagem 2D:
+
+\begin{caution}[title=O resultado do oráculo]
+Calculando descritores de forma sobre a \emph{anotação manual perfeita} --- a
+melhor máscara que qualquer modelo poderia produzir --- \textbf{zero de 384
+testes estatísticos sobreviveram à correção de múltiplas comparações} com n=22.
+Mesmo com segmentação perfeita, a conformação não é recuperável de forma
+confiável a partir de uma única imagem 2D neste tamanho de amostra. O gargalo é
+a modalidade de aquisição, não o modelo.
+\end{caution}
+
+Portanto, o software apresenta esses graus como \pillalert{estimativas}, nunca
+como fatos, e os marca em âmbar onde quer que apareçam.
+
+\section{Por que isso importa --- e como se resolve}
+
+A validação que falta aos graus requer exatamente uma coisa: graus corretamente
+pareados às imagens, em uma amostra maior. É precisamente isso que o Apex foi
+construído para coletar. À medida que o conjunto de dados pareado cresce, a aba
+\textbf{Correlação física} (Estação~7) pode testar se as medições de superfície
+predizem a referência física e os graus dos avaliadores --- fechando o ciclo que
+a pesquisa anterior não conseguiu.
+
+\section{Ressalvas de modalidade}
+
+\begin{itemize}[leftmargin=1.3em,itemsep=3pt]
+  \item A \textbf{cobertura de gordura (acabamento)} é uma propriedade de
+        profundidade; uma única imagem de superfície a captura apenas
+        parcialmente. A captura de profundidade (Kinect) é suportada no esquema
+        para trabalhos futuros.
+  \item A \textbf{captura padronizada} importa: um fundo fixo, iluminação uniforme
+        e uma vista consistente melhoram toda medição subsequente. O software
+        impõe uma vista obrigatória e oferece a captura de fundo, mas a montagem
+        física é responsabilidade do operador.
+  \item \textbf{Tamanho da amostra.} Os modelos atuais vêm de n=22. Suas
+        estimativas devem ser lidas como exploratórias até que a amostra alvo seja
+        coletada e o ciclo de validação seja executado.
+\end{itemize}
+
+\begin{note}[title=O fio condutor]
+O estudo anterior não falhou em seus métodos --- falhou na integridade dos dados.
+O Apex existe para corrigir isso primeiro. Cada limitação honesta acima é uma
+razão pela qual o software é construído do jeito que é: coletar um conjunto de
+dados pareado e confiável, e deixar a validação seguir.
+\end{note}

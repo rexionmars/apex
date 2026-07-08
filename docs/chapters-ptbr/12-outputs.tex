@@ -1,0 +1,64 @@
+\chapter{O que o software produz}
+
+\eyebrow{os produtos entregues}
+
+\vspace{4pt}
+Tudo o que o Apex produz atende a um único fim: um conjunto de dados de pesquisa
+com pareamento verificável, enriquecido com medições objetivas. Este capítulo
+resume os produtos gerados e o quanto se pode confiar em cada um.
+
+\section{O conjunto de dados}
+
+O produto central é o \textbf{conjunto de dados pareado}: para cada imagem, um
+vínculo verificável com sua carcaça, animal, tratamento e estrato, além da
+referência física medida no animal. Ele reside no único \tele{carcass.db} e é
+exportado como \tele{manifest.csv} + \tele{integrity\_report.txt}.
+
+\section{Medições por imagem}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l l X@{}}
+\toprule
+\textbf{Medição} & \textbf{Status} & \textbf{O que é} \\
+\midrule
+Fração de gordura \& máscara & \pillok{validado} & Fração da superfície da carcaça
+      segmentada como gordura, com sobreposição ciano. IoU $\sim$0,92. \\
+Convexidade de conformação & \pillok{objetivo} & Convexidade por região (perna /
+      lombo / paleta) e um mapa de convexidade. Analítica, invariante, sem
+      necessidade de treinamento. \\
+Grau de acabamento & \pillalert{experimental} & Uma estimativa de acabamento em
+      3 classes a partir de um modelo treinado com n=22. Não validado. \\
+Grau de conformação & \pillalert{estimativa} & Uma estimativa em 5 classes
+      derivada da convexidade da perna. Não validado. \\
+Espessura de gordura (EG) & \pillalert{experimental} & Uma estimativa por
+      regressão. Não validada. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Produtos por lote}
+
+\begin{itemize}[leftmargin=1.3em,itemsep=3pt]
+  \item \textbf{Estatísticas de gordura} --- média, desvio padrão, mediana,
+        mínimo, máximo e o histograma de distribuição.
+  \item \textbf{Concordância entre avaliadores} --- $\kappa$ de Fleiss por eixo e
+        um grau de consenso.
+  \item \textbf{Progresso da amostra} --- cobertura em relação à meta de
+        100--120, por estrato.
+  \item \textbf{Exportação CSV} --- uma linha por imagem com todas as medições.
+\end{itemize}
+
+\section{Produtos ao vivo}
+
+\begin{itemize}[leftmargin=1.3em,itemsep=3pt]
+  \item \textbf{Sobreposição de gordura ao vivo} --- guia de enquadramento em
+        tempo real a partir da câmera ou de vídeo (aproximada).
+\end{itemize}
+
+\begin{note}[title=Lendo o código de cores]
+Em todo o software, a cor indica o quanto você deve confiar em um número.
+\textbf{Verde} = validado ou objetivo. \textbf{Âmbar} = experimental ou uma
+estimativa, a ser validada depois. \textbf{Vermelho} é reservado para pareamento
+quebrado e nunca usado para uma série de dados. Todo valor colorido carrega um
+rótulo --- a cor nunca é o único sinal.
+\end{note}

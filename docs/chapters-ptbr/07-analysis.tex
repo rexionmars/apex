@@ -1,0 +1,75 @@
+\chapter{Análise por modelo}
+
+\eyebrow{segmentação de gordura no lote}
+
+\vspace{4pt}
+A visão \textbf{Analysis} de um lote executa os modelos treinados sobre suas imagens e
+transforma os resultados em um espaço de trabalho científico: uma galeria, uma tabela ordenável com uma
+distribuição, conformação, correlação física e comparação lado a lado.
+
+\section{Executando a análise}
+
+Abra um lote e selecione \textbf{Analysis}. Pressione \tele{Analyze batch} para processar
+todas as imagens ainda não analisadas, com uma barra de progresso ao vivo. Os resultados são salvos no
+lote, de modo que reabri-lo não os executa novamente; \tele{Reanalyze} força uma nova execução.
+O botão \tele{CSV} exporta todos os resultados.
+
+Cada imagem passa pelo mesmo pipeline:
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+  \item \textbf{Remoção de fundo.} A carcaça é recortada e composta sobre
+        preto --- as mesmas condições em que o modelo de gordura foi treinado.
+  \item \textbf{Segmentação de gordura.} O modelo validado produz uma máscara de gordura; a
+        fração de gordura é medida \emph{em relação à superfície da carcaça}, não
+        à foto inteira.
+  \item \textbf{Conformação.} A medida de convexidade roda sobre a silhueta limpa
+        (Estação~8).
+  \item \textbf{Grau (opcional).} Com \tele{include grade (experimental)}
+        marcado, o grau de acabamento experimental também é calculado.
+\end{enumerate}
+
+\begin{caution}[title={Por que a remoção de fundo importa}]
+O modelo de gordura foi treinado com carcaças recortadas sobre fundo preto. Sem a
+remoção, ele conta ladrilhos claros e o jaleco do operador como gordura (dando valores
+falsamente altos). A remoção é automática; uma pílula \tele{background removed} a confirma,
+e o percentual de gordura passa a ser a fração da \emph{superfície da carcaça}.
+\end{caution}
+
+\section{Galeria}
+
+A galeria (Figura~\ref{fig:analysis-gallery}) mostra cada carcaça com sua sobreposição
+de gordura em ciano e o percentual de gordura abaixo --- uma varredura visual rápida do
+lote inteiro. Acima dela, estatísticas do lote (média, desvio padrão, mediana, mín, máx) e uma
+linha de pílulas de status: \pillok{validated segmentation $\cdot$ IoU 0.92},
+\pillalert{experimental grade $\cdot$ n=22} e \tele{analysis saved to batch}.
+
+\shot{analysis-gallery.jpeg}{Analysis $\rightarrow$ Gallery. Sobreposição de gordura (ciano) por
+carcaça com a fração de gordura; estatísticas do lote e as pílulas de status codificadas por cor
+acima; o Inspector informa a média, o desvio padrão e a amplitude de gordura do lote.}{analysis-gallery}
+
+\section{Tabela e distribuição}
+
+A aba \textbf{Table + distribution} (Figura~\ref{fig:analysis-table}) lista as
+carcaças em uma tabela ordenável (por etiqueta ou \% de gordura), ao lado do grau e das
+colunas de referência física, junto a um histograma da distribuição de gordura do lote.
+
+\shot{analysis-table.jpeg}{Analysis $\rightarrow$ Table + distribution. Uma tabela ordenável
+de gordura, grau e medidas físicas por carcaça, ao lado do histograma de gordura do
+lote.}{analysis-table}
+
+\section{Comparar}
+
+A aba \textbf{Compare} (Figura~\ref{fig:analysis-compare}) permite selecionar até
+quatro carcaças e ver suas sobreposições e números lado a lado --- útil para
+calibrar a percepção contra o modelo.
+
+\shot{analysis-compare.jpeg}{Analysis $\rightarrow$ Compare. Até quatro carcaças
+lado a lado, cada uma com sua sobreposição de gordura, percentual de gordura e grau experimental.}{analysis-compare}
+
+\section{Correlação física}
+
+A aba \textbf{Physical correlation} plota a \% de gordura do modelo contra a referência
+física que você inseriu (espessura de gordura, área de olho de lombo), com o $r$ de Pearson. Esta
+é a aba que vai \emph{fechar o ciclo de validação} assim que o conjunto de dados pareado for
+grande o suficiente: ela testa se a medida de superfície prediz a referência
+física medida no animal.

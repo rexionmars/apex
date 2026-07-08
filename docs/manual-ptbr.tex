@@ -1,0 +1,155 @@
+\documentclass[11pt,a4paper,oneside]{book}
+
+% ---- Packages -------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[brazil]{babel}
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tcolorbox}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{parskip}
+\tcbuselibrary{skins,breakable}
+
+% ---- Colors: Open MCT "Espresso" instrument palette -----------------------
+\definecolor{ground}{HTML}{16181C}
+\definecolor{panel}{HTML}{22262E}
+\definecolor{ink}{HTML}{1A1A1A}
+\definecolor{cyan}{HTML}{03ACE4}
+\definecolor{cyandk}{HTML}{007FAD}
+\definecolor{ok}{HTML}{1F851F}
+\definecolor{alert}{HTML}{C87308}
+\definecolor{err}{HTML}{DA0004}
+\definecolor{muted}{HTML}{5B6470}
+\definecolor{hair}{HTML}{D7DBE0}
+\definecolor{codebg}{HTML}{F5F7F9}
+\definecolor{codeframe}{HTML}{E2E6EA}
+
+% ---- Hyperref -------------------------------------------------------------
+\hypersetup{
+  colorlinks=true, linkcolor=cyandk, urlcolor=cyandk, citecolor=cyandk,
+  pdftitle={Apex -- Manual do Usuário e Referência},
+  pdfauthor={iCEV}
+}
+
+% ---- Headings: instrument voice -------------------------------------------
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily}
+  {\raggedright\color{cyan}\ttfamily\large ESTAÇÃO \thechapter}
+  {6pt}
+  {\Huge\bfseries\color{ink}}
+\titlespacing*{\chapter}{0pt}{-20pt}{26pt}
+
+\titleformat{\section}{\large\sffamily\bfseries\color{ink}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\sffamily\bfseries\color{ink}}{\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.3em}{0.4em}
+
+% ---- Header / footer ------------------------------------------------------
+\pagestyle{fancy}\fancyhf{}
+\lhead{\small\sffamily\color{muted}Apex}
+\rhead{\small\sffamily\color{muted}\leftmark}
+\cfoot{\small\sffamily\color{muted}\thepage}
+\renewcommand{\headrulewidth}{0.2pt}
+
+% ---- Listings -------------------------------------------------------------
+\lstset{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\footnotesize\color{ink},
+  frame=single, framerule=0.4pt, rulecolor=\color{codeframe},
+  breaklines=true, showstringspaces=false, columns=fullflexible,
+  numbers=none, tabsize=2, xleftmargin=6pt, xrightmargin=4pt,
+  aboveskip=8pt, belowskip=6pt,
+}
+
+% ---- Callout boxes --------------------------------------------------------
+\newtcolorbox{note}[1][]{
+  enhanced, colback=codebg, colframe=cyan, boxrule=1pt, arc=2pt,
+  left=9pt, right=9pt, top=6pt, bottom=6pt, breakable,
+  coltitle=cyandk, fonttitle=\sffamily\bfseries, #1
+}
+\newtcolorbox{caution}[1][]{
+  enhanced, colback=codebg, colframe=alert, boxrule=1pt, arc=2pt,
+  left=9pt, right=9pt, top=6pt, bottom=6pt, breakable,
+  coltitle=alert, fonttitle=\sffamily\bfseries, #1
+}
+
+% eyebrow label
+\newcommand{\eyebrow}[1]{{\ttfamily\footnotesize\color{cyandk}\MakeUppercase{#1}}}
+% telemetry (mono) inline
+\newcommand{\tele}[1]{{\ttfamily #1}}
+% status pills
+\newcommand{\pillok}[1]{{\color{ok}\ttfamily\footnotesize[#1]}}
+\newcommand{\pillalert}[1]{{\color{alert}\ttfamily\footnotesize[#1]}}
+
+% figure helper: full-width screenshot with framed caption
+\newcommand{\shot}[3]{%
+  \begin{figure}[H]\centering
+  \fbox{\includegraphics[width=\linewidth]{img/#1}}%
+  \caption{#2}\label{fig:#3}
+  \end{figure}}
+
+\captionsetup{font=small,labelfont={bf,color=cyandk}}
+
+% ===========================================================================
+\begin{document}
+\frontmatter
+
+% ---- Title page -----------------------------------------------------------
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{2.2cm}
+\begin{flushleft}
+{\ttfamily\color{cyandk}\large AQUISIÇÃO\ \ $\cdot$\ \ PAREAMENTO VERIFICÁVEL\ \ $\cdot$\ \ iCEV}\\[6pt]
+{\color{cyan}\rule{\linewidth}{1.2pt}}\\[10pt]
+{\sffamily\bfseries\fontsize{52}{56}\selectfont\color{ink}Apex}\\[10pt]
+{\sffamily\Large\color{muted}Aquisição, pareamento e análise de imagens de carcaças ovinas}\\[4pt]
+{\sffamily\large\color{muted}Manual do Usuário e Referência}
+\end{flushleft}
+
+\vfill
+
+\begin{tcolorbox}[colback=codebg,colframe=hair,boxrule=0.6pt,arc=2pt]
+\small\sffamily
+Um instrumento de mesa que constrói um conjunto de imagens de nível de pesquisa
+com \textbf{pareamento verificável} entre imagem, animal e grau, e dele deriva
+medidas objetivas: segmentação de gordura, convexidade de conformação e um
+monitor de enquadramento ao vivo.
+\end{tcolorbox}
+
+\vspace{0.6cm}
+{\ttfamily\small\color{muted}
+Wails\,+\,Go\,+\,React\ \ \textbullet\ \ sidecars de inferência em Python\ \ \textbullet\ \ banco de dados local único\par}
+\end{titlepage}
+
+\tableofcontents
+
+% ===========================================================================
+\mainmatter
+
+\input{chapters-ptbr/01-purpose}
+\input{chapters-ptbr/02-overview}
+\input{chapters-ptbr/03-install}
+\input{chapters-ptbr/04-navigation}
+\input{chapters-ptbr/05-collection}
+\input{chapters-ptbr/06-import}
+\input{chapters-ptbr/07-analysis}
+\input{chapters-ptbr/08-conformation}
+\input{chapters-ptbr/09-grading}
+\input{chapters-ptbr/10-live}
+\input{chapters-ptbr/11-dashboard-export}
+\input{chapters-ptbr/12-outputs}
+\input{chapters-ptbr/13-limits}
+\input{chapters-ptbr/14-releases}
+
+\end{document}

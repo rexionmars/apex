@@ -1,0 +1,37 @@
+\chapter{Monitor ao vivo}
+
+\eyebrow{sobreposição de gordura em tempo real para enquadramento}
+
+\vspace{4pt}
+O \textbf{Monitor ao vivo} exibe uma sobreposição de gordura em tempo real --- de uma câmera ou de um
+arquivo de vídeo --- para ajudar você a enquadrar a carcaça durante a captura. É um
+\emph{guia de enquadramento}, não a medição oficial.
+
+\section{Como usar}
+
+\shot{live-monitor.jpeg}{O Monitor ao vivo, parado. Um seletor de origem (Câmera ao vivo /
+Arquivo de vídeo) escolhe a fonte do quadro; \tele{Start} inicia a sobreposição e
+\tele{Capture background} registra a cena vazia para a subtração. O estado do motor
+e o dispositivo são exibidos no topo.}{live-monitor}
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+  \item Escolha a origem: \textbf{Câmera ao vivo} ou \textbf{Arquivo de vídeo}.
+  \item Pressione \tele{Start}. O vídeo é reproduzido e a sobreposição de gordura (ciano) o acompanha,
+        com uma leitura ao vivo de FPS e de percentual de gordura no canto.
+  \item Para uma câmera fixa, pressione \tele{Capture background} com a cena vazia;
+        o aplicativo a subtrai de cada quadro para que a sobreposição fique restrita à
+        carcaça. Em seguida, posicione a carcaça.
+\end{enumerate}
+
+\section{Como funciona e seus limites}
+
+O monitor usa subtração de fundo clássica (rápida, $\sim$10\,ms) somada ao
+modelo de gordura em resolução reduzida, atingindo taxas próximas do tempo real no
+hardware testado. Ele deliberadamente \emph{não} usa a remoção de fundo precisa (porém lenta)
+do pipeline de Análise.
+
+\begin{caution}[title={Guia de enquadramento, não o número validado}]
+A sobreposição ao vivo é aproximada --- um auxílio visual para acertar o enquadramento. O
+número de gordura validado vem da aba de Análise, executada sobre uma imagem capturada com
+remoção de fundo precisa.
+\end{caution}

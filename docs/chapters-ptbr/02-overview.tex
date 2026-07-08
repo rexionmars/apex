@@ -1,0 +1,89 @@
+\chapter{Visão geral do sistema}
+
+\eyebrow{como as peças se encaixam}
+
+\vspace{4pt}
+O Apex é uma única aplicação de desktop nativa. Um núcleo em Go é dono da janela, do
+banco de dados e da lógica de negócio; um front end em React desenha a interface
+dentro do WebView nativo do sistema operacional; e \emph{sidecars} em Python executam
+as partes que precisam de PyTorch ou OpenCV --- inferência de modelos, sobreposição
+em tempo real e conformação.
+
+\section{Arquitetura}
+
+\begin{center}
+\begin{tcolorbox}[colback=codebg,colframe=hair,boxrule=0.6pt,arc=3pt,width=\linewidth]
+\ttfamily\small
+Binário nativo único (Wails)\\
+\hspace*{1em}|\\
+\hspace*{1em}+-- Front end React \ (UI escura de instrumento, desenhada pelo WebView)\\
+\hspace*{1em}|\hspace*{4em}$\updownarrow$ ponte tipada Go$\leftrightarrow$JS\\
+\hspace*{1em}+-- Núcleo Go\\
+\hspace*{2em}\ \ \ +-- store \ \ (arquivo SQLite único: a "planilha única")\\
+\hspace*{2em}\ \ \ +-- images/ \ (pastas de imagens pareadas em disco)\\
+\hspace*{2em}\ \ \ +-- Sidecars Python (iniciados conforme necessário):\\
+\hspace*{4em}\ \ \ +-- inference.py \ \ (segmentação de gordura, grau, recorte)\\
+\hspace*{4em}\ \ \ +-- realtime.py \ \ \ (sobreposição de gordura ao vivo, subtração de fundo)\\
+\hspace*{4em}\ \ \ +-- conformation.py (convexidade integral, analítica)\\
+\hspace*{4em}\ \ \ +-- kinect\_capture.py (RGB+depth opcional)
+\end{tcolorbox}
+\end{center}
+
+\subsection*{Três princípios}
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=4pt]
+  \item \textbf{O banco de dados é a fonte da verdade para o pareamento.} Uma imagem
+        nunca carrega seu vínculo no nome do arquivo. O fluxo é sempre: selecionar ou
+        criar a carcaça, depois capturar/importar \emph{dentro} do contexto dessa
+        carcaça, de modo que a imagem seja gravada com seu \tele{carcass\_id} já
+        definido. A reconstrução pela ordem dos arquivos é estruturalmente
+        impossível.
+  \item \textbf{As fontes de captura são intercambiáveis.} A captura por webcam roda
+        no front end via a API de câmera do navegador; o Kinect (depth) roda através
+        de um sidecar Python; ambos são apenas fontes de uma imagem pareada.
+  \item \textbf{As medições vêm com honestidade sobre seu status.} A cor codifica o
+        estado: \pillok{validated} (verde) para a segmentação de gordura,
+        \pillalert{experimental} (âmbar) para os graus, e o vermelho reservado para
+        pareamento quebrado --- nunca para uma série de dados.
+\end{enumerate}
+
+\section{Pilha de tecnologia}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l l X@{}}
+\toprule
+\textbf{Camada} & \textbf{Tecnologia} & \textbf{Papel} \\
+\midrule
+Casca de desktop & Wails v2 (Go) & Janela, embutir o front end, ponte Go$\leftrightarrow$JS \\
+Núcleo          & Go 1.23+      & Banco de dados, pareamento, orquestração \\
+Banco de dados  & SQLite (pure-Go) & \tele{carcass.db} único --- a planilha única \\
+Front end       & React 19 + Vite + TypeScript & A interface do instrumento \\
+Estilização     & Tailwind 4, shadcn/ui & Tema "Espresso" do Open MCT \\
+Inferência      & Python + PyTorch & Modelos de gordura / grau / conformação \\
+Visão           & OpenCV, scikit-image, rembg & Recorte, convexidade, remoção de fundo \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Onde os dados ficam}
+
+Tudo é armazenado localmente, sob o diretório de dados de aplicação do sistema
+operacional:
+
+\begin{lstlisting}
+<app data>/carcass-integration/
+|-- carcass.db          # o banco de dados único: lotes, carcacas,
+|                       #   imagens, avaliadores, graus, analises
+`-- images/
+    `-- batch_<id>/
+        `-- carcass_<tag>/
+            |-- rgb_<uuid>.jpg        # a imagem pareada
+            `-- analysis/             # saidas dos modelos (mascaras,
+                                      #   sobreposicoes, mapas de convexidade)
+\end{lstlisting}
+
+\begin{note}[title={O banco de dados único é a "planilha única"}]
+O requisito original da pesquisa era uma planilha única, preenchida no momento da
+coleta, que registrasse o vínculo imagem--animal. Aqui essa planilha é
+\tele{carcass.db}: um arquivo, uma fonte da verdade, portátil e auditável.
+\end{note}

@@ -1,0 +1,114 @@
+\chapter{Instalação e execução}
+
+\eyebrow{colocando o instrumento em funcionamento}
+
+\section{Opção A --- uma versão pré-compilada}
+
+O caminho mais rápido é baixar um build nativo para a sua plataforma a partir da
+página de \textbf{Releases} do projeto. Cada versão distribui um arquivo
+autocontido por sistema operacional, com os pesos do modelo já incluídos --- sem
+necessidade de ferramentas de build:
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{Plataforma} & \textbf{Arquivo} \\
+\midrule
+macOS (universal) & \tele{carcass-macos.tar.gz} --- contém o \tele{.app} \\
+Windows (amd64)   & \tele{carcass-windows.zip} --- contém o \tele{.exe} \\
+Linux (amd64)     & \tele{carcass-linux.tar.gz} --- contém o binário \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Descompacte-o e execute o aplicativo. Os recursos de análise em Python ainda
+precisam de um ambiente Python com as bibliotecas científicas (veja abaixo); todo
+o resto funciona de imediato. As versões são produzidas automaticamente por
+integração contínua (Estação~14).
+
+\begin{note}[title={Compilando a partir do código-fonte}]
+Se você quiser desenvolver, modificar ou compilar para uma plataforma que não esteja
+nas versões, siga as Opções~B e~C abaixo.
+\end{note}
+
+\section{Pré-requisitos (compilar a partir do código-fonte)}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l l X@{}}
+\toprule
+\textbf{Componente} & \textbf{Versão} & \textbf{Necessário para} \\
+\midrule
+Go            & 1.23+ & Compilar e executar o núcleo \\
+Node.js       & 18+   & Compilar o front end \\
+Wails CLI     & v2    & Desenvolvimento e builds nativos \\
+Python        & 3.10+ & Os sidecars de inferência / análise \\
+PyTorch, OpenCV, scikit-image, scipy, rembg & --- & Gordura, conformação, monitor ao vivo \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Os recursos de núcleo, captura e importação rodam apenas com Go e Node. Os recursos
+baseados em modelos (análise de gordura, conformação, monitor ao vivo) exigem
+adicionalmente um ambiente Python com as bibliotecas científicas acima.
+
+\section{Opção B --- executar a partir do código-fonte}
+
+\begin{lstlisting}
+# instala a Wails CLI
+go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+# dependencias python para os sidecars de analise
+pip install torch opencv-python scikit-image scipy rembg onnxruntime
+\end{lstlisting}
+
+\subsection*{Pesos do modelo}
+
+Os pesos treinados e a tabela de consulta ColorNaming não são distribuídos na
+árvore de código-fonte. Coloque-os sob \tele{model/weights/}:
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{Arquivo} & \textbf{Finalidade} \\
+\midrule
+\tele{fat\_binary.pth}        & Segmentação de gordura (validada, IoU $\sim$0.92) \\
+\tele{direct\_class.pth}      & Grau de acabamento (experimental) \\
+\tele{eg\_regression.pth}     & Regressão de espessura de gordura (experimental) \\
+\tele{joost\_color\_naming.mat} & Tabela de consulta ColorNaming (exigida por todos) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Executando em desenvolvimento}
+
+\begin{lstlisting}
+# desenvolvimento com hot-reload (front end + recompilacao do Go a cada mudanca)
+wails dev
+\end{lstlisting}
+
+Se o \tele{python3} do seu sistema não tiver as bibliotecas científicas, aponte o
+aplicativo para um que as tenha:
+
+\begin{lstlisting}
+export CARCASS_PYTHON=/path/to/python-with-torch
+wails dev
+\end{lstlisting}
+
+\begin{note}[title={A câmera e o WebView}]
+A captura por webcam e o monitor ao vivo usam a câmera do sistema através do WebView,
+portanto precisam rodar dentro do aplicativo (via \tele{wails dev} ou o binário
+compilado), não em um navegador comum --- a ponte para o núcleo Go só existe dentro
+do aplicativo.
+\end{note}
+
+\section{Opção C --- compilar um aplicativo nativo}
+
+\begin{lstlisting}
+wails build -platform darwin/universal   # .app
+wails build -platform windows/amd64      # .exe
+wails build -platform linux/amd64        # binario
+\end{lstlisting}
+
+Para o aplicativo empacotado, os pesos do modelo são copiados para os recursos da
+aplicação de modo que os sidecars de análise possam encontrá-los; o script auxiliar
+\tele{scripts/build.sh} faz isso automaticamente após um build.

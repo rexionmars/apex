@@ -36,3 +36,10 @@ frontend/package.json.md5
 # --- Local tooling / build dir ---
 .claude/
 /build/
+
+# --- pt-br LaTeX artifacts ---
+docs/chapters-ptbr/*.aux
+docs/manual-ptbr.aux
+docs/manual-ptbr.log
+docs/manual-ptbr.toc
+docs/manual-ptbr.out

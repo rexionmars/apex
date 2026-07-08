@@ -1,0 +1,78 @@
+\chapter{Propósito}
+
+\eyebrow{por que este software existe}
+
+\vspace{4pt}
+O Apex é uma aplicação de desktop para a \textbf{coleta e análise de imagens de
+carcaças ovinas}, construída para montar um conjunto de dados de pesquisa e dar
+continuidade à pesquisa de tipificação de carcaças no iCEV.
+
+Seu propósito é restrito e deliberado. Um esforço anterior de coleta de dados não
+fracassou por causa de seus métodos de aprendizado de máquina --- ele fracassou por
+causa da \textbf{integridade do pareamento} entre cada imagem, o animal do qual ela
+veio e o grau atribuído a ela. Esse vínculo não foi registrado no momento da coleta;
+ele foi reconstruído posteriormente, pela ordem dos arquivos, sem verificação. As
+etiquetas físicas estavam duplicadas ou ilegíveis, a planilha de laboratório não
+tinha uma coluna com o nome da imagem, e apenas algumas etiquetas coincidiam com os
+registros do laboratório. O resultado foi um conjunto de dados no qual nenhuma
+imagem podia ser confiada como pertencente ao animal ao qual era atribuída.
+
+\begin{note}[title={A ideia central}]
+O Apex não é apenas um capturador de imagens. É a ferramenta que torna o pareamento
+imagem\,$\leftrightarrow$\,animal\,$\leftrightarrow$\,grau \textbf{verificável
+por construção}, de modo que o fracasso anterior não possa se repetir. Cada decisão
+arquitetural serve a esse objetivo.
+\end{note}
+
+\begin{note}[title={Uma nota sobre o nome}]
+A aplicação se chama \textbf{Apex}. Sua janela ainda carrega a marca interna
+\tele{CARCASS} na barra de título e na barra de status (visível nas capturas de
+tela), que é a assinatura do instrumento na tela; ao longo deste manual o produto é
+referido como Apex.
+\end{note}
+
+\section{O que ele faz}
+
+Em torno desse núcleo de integridade, o software fornece um fluxo de trabalho de
+ponta a ponta:
+
+\begin{itemize}[leftmargin=1.3em,itemsep=3pt]
+  \item \textbf{Aquisição.} Registre uma carcaça com uma etiqueta física
+        obrigatória, depois capture imagens a partir de uma câmera externa --- a
+        imagem nasce pareada à carcaça no banco de dados, nunca inferida a partir de
+        um nome de arquivo.
+  \item \textbf{Importação.} Traga fotos capturadas em outro lugar; cada uma se
+        torna uma carcaça (ou é reconciliada a uma existente), de modo que imagens
+        externas entram no conjunto de dados sem quebrar o pareamento.
+  \item \textbf{Análise.} Execute modelos treinados sobre as imagens: segmentação
+        de gordura (validada), um grau de acabamento experimental e uma medida
+        analítica de conformação (convexidade) --- tudo com remoção automática de
+        fundo, para que as medições de superfície fiquem corretas.
+  \item \textbf{Avaliação.} Colete graus independentes e cegos de múltiplos
+        avaliadores e meça a concordância entre eles ($\kappa$ de Fleiss).
+  \item \textbf{Monitor ao vivo.} Uma sobreposição de gordura em tempo real a partir
+        de uma câmera ou de um arquivo de vídeo, para ajudar a enquadrar a carcaça
+        durante a captura.
+  \item \textbf{Painel \& exportação.} Acompanhe o progresso da amostra em relação
+        à meta e exporte o conjunto de dados como um manifesto mais um relatório de
+        integridade.
+\end{itemize}
+
+\section{Para quem ele é}
+
+Os usuários principais são a equipe de pesquisa e os operadores que coletam imagens
+de carcaças na linha de abate e no laboratório. A interface é projetada como um
+\emph{instrumento} científico --- examinado e operado, não lido de cima a baixo ---
+e segue a linguagem visual do software de controle de missão: um fundo escuro de
+instrumento, um destaque de sinal ciano e leituras em fonte monoespaçada para cada
+valor medido.
+
+\section{Uma nota sobre honestidade científica}
+
+Dois dos números que este software produz --- o \emph{grau de acabamento} e o
+\emph{grau de conformação} --- estão marcados em toda a interface como
+\textbf{experimentais / não validados}. Esta é uma escolha deliberada, fundamentada
+nos próprios achados do projeto (Estação~13). O software os exibe porque são úteis
+como referências exploratórias e porque o conjunto de dados que ele constrói é
+exatamente o que se precisa para validá-los no futuro. Ele nunca os apresenta como
+fatos consolidados.

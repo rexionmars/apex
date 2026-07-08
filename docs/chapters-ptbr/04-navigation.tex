@@ -1,0 +1,55 @@
+\chapter{A interface}
+
+\eyebrow{como ler o instrumento}
+
+\vspace{4pt}
+O Apex segue a anatomia do software de controle de missão. A janela é organizada em
+regiões fixas, e você trabalha \textbf{selecionando um objeto} na árvore de navegação
+e \textbf{escolhendo uma vista} dele.
+
+\section{Anatomia da janela}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{Região} & \textbf{O que ela contém} \\
+\midrule
+Barra de título (topo) & Marca do produto e uma leitura ao vivo: carcaças, imagens, avaliadas. \\
+Árvore de navegação (esquerda) & Objetos raiz (Monitor ao vivo, Importar imagens, Painel do projeto) e a hierarquia de dados \textbf{Lotes\,$\rightarrow$\,Carcaças}. \\
+Barra de navegação (acima do centro) & O caminho (trilha) do objeto selecionado, e um \textbf{seletor de vistas} à direita. \\
+Área principal (centro) & A vista ativa do objeto selecionado. \\
+Inspetor (direita) & Propriedades somente leitura do objeto selecionado. Recolhível. \\
+Barra de status (inferior) & Estado do motor, dispositivo e contagens do conjunto de dados. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Objetos e vistas}
+
+Selecionar um objeto na árvore altera tanto a trilha quanto o conjunto de vistas
+oferecidas na barra de navegação:
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+\textbf{Objeto} & \textbf{Vistas (na barra de navegação)} \\
+\midrule
+Um \textbf{lote}      & Visão geral, Análise, Avaliação \\
+Uma \textbf{carcaça}  & Visão geral, Imagens, Análise \\
+Monitor ao vivo       & Monitor ao vivo \\
+Importar imagens      & Importação \\
+Painel do projeto     & Painel \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{note}[title={O Inspetor sempre acompanha a sua seleção}]
+Qualquer que seja o objeto selecionado --- um lote ou uma carcaça --- o Inspetor à
+direita mostra suas propriedades: para uma carcaça, sua identificação, referência
+física e análise de modelo; para um lote, suas contagens e estatísticas de gordura.
+Ele é somente leitura; a edição acontece nas vistas.
+\end{note}
+
+A barra de status na parte inferior é o pulso do instrumento: ela mostra se o
+\tele{engine} de inferência está \pillok{ready} e em qual \tele{device} (por exemplo,
+\tele{mps}), além dos totais correntes do conjunto de dados.

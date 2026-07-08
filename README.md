@@ -98,8 +98,10 @@ see [`model/weights/README.md`](model/weights/README.md) for what each one is.
 ## Documentation
 
 A full user & reference manual (LaTeX book, with screenshots) is in
-[`docs/`](docs/) — build it with `pdflatex manual.tex`, or read the compiled
-[`docs/manual.pdf`](docs/manual.pdf).
+[`docs/`](docs/), in two languages:
+
+- **English** — [`docs/manual.pdf`](docs/manual.pdf) (build: `pdflatex manual.tex`)
+- **Português (BR)** — [`docs/manual-ptbr.pdf`](docs/manual-ptbr.pdf) (build: `pdflatex manual-ptbr.tex`)
 
 ## Scientific scope
 
