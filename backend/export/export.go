@@ -101,7 +101,7 @@ func WriteManifest(outDir string, rows []store.ExportRow, cons map[int64]Consens
 // WriteReport grava o relatório de integridade legível.
 func WriteReport(outDir string, res Result, unpaired store.UnpairedInfo, confLabel, finLabel string, confKappa, finKappa float64, generatedAt string) (string, error) {
 	reportPath := filepath.Join(outDir, "integrity_report.txt")
-	body := fmt.Sprintf(`RELATÓRIO DE INTEGRIDADE — Dataset de carcaças (iCEV)
+	body := fmt.Sprintf(`RELATÓRIO DE INTEGRIDADE — Dataset de carcaças
 Gerado em: %s
 
 PAREAMENTO

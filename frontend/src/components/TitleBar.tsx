@@ -26,7 +26,7 @@ export function TitleBar({
         </div>
         <span className="hairline h-4 w-px self-center border-l" />
         <span className="eyebrow hidden sm:inline">
-          acquisition · verifiable pairing · icev
+          acquisition · verifiable pairing
         </span>
       </div>
 

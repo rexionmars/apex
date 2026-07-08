@@ -12,8 +12,6 @@ between each **image**, the **animal** it came from, and the **grade** assigned 
 it is recorded at collection time and can be verified, rather than reconstructed
 from filenames afterwards.
 
-Developed at iCEV.
-
 ---
 
 ## Background

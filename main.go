@@ -16,7 +16,7 @@ func main() {
 	app := NewApp()
 
 	err := wails.Run(&options.App{
-		Title:     "Coleta de Carcaças — iCEV",
+		Title:     "Coleta de Carcaças",
 		Width:     1280,
 		Height:    860,
 		MinWidth:  1040,
@@ -36,7 +36,7 @@ func main() {
 			Appearance: mac.NSAppearanceNameDarkAqua,
 			About: &mac.AboutInfo{
 				Title:   "Coleta de Carcaças",
-				Message: "Aquisição e pareamento verificável de imagens de carcaças (iCEV)",
+				Message: "Aquisição e pareamento verificável de imagens de carcaças",
 			},
 		},
 	})

@@ -45,7 +45,7 @@ export function StatusBar({ refreshKey }: { refreshKey: number }) {
       </span>
 
       <span className="telemetry ml-auto tracking-[0.14em] text-muted-foreground/70">
-        CARCASS · iCEV
+        CARCASS
       </span>
     </footer>
   );

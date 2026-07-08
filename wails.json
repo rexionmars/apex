@@ -7,11 +7,11 @@
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
   "author": {
-    "name": "iCEV"
+    "name": "João Leonardi da Silva Melo"
   },
   "info": {
     "productName": "Coleta de Carcaças",
     "productVersion": "0.1.0",
-    "comments": "Coleta e análise de imagens de carcaças com pareamento verificável (iCEV)"
+    "comments": "Coleta e análise de imagens de carcaças com pareamento verificável"
   }
 }
