@@ -3,15 +3,15 @@
 \eyebrow{the deliverables}
 
 \vspace{4pt}
-Everything Apex produces serves one end: a research dataset with verifiable
-pairing, enriched with objective measurements. This chapter summarises the
-outputs and how trustworthy each is.
+The outputs of Apex are directed at a single purpose: a research dataset with
+verifiable pairing, enriched with objective measurements. This chapter summarises
+the outputs and the degree of confidence attached to each.
 
 \section{The dataset}
 
-The central product is the \textbf{paired dataset}: for every image, a verifiable
+The primary product is the \textbf{paired dataset}: for every image, a verifiable
 link to its carcass, animal, treatment and stratum, plus the physical reference
-measured on the animal. It lives in the single \tele{carcass.db} and is exported
+measured on the animal. It is stored in the single \tele{carcass.db} and exported
 as \tele{manifest.csv} + \tele{integrity\_report.txt}.
 
 \section{Per-image measurements}
@@ -55,9 +55,9 @@ Fat-thickness (EG) & \pillalert{experimental} & A regression estimate. Not
 \end{itemize}
 
 \begin{note}[title=Reading the colour code]
-Throughout the software, colour tells you how much to trust a number.
+Throughout the software, colour indicates the confidence attached to a number.
 \textbf{Green} = validated or objective. \textbf{Amber} = experimental or an
 estimate, to be validated later. \textbf{Red} is reserved for broken pairing and
-never used for a data series. Every coloured value carries a label, so colour is
+is never used for a data series. Every coloured value carries a label, so colour is
 never the only signal.
 \end{note}

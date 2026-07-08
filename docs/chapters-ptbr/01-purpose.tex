@@ -1,78 +1,76 @@
 \chapter{Propósito}
 
-\eyebrow{por que este software existe}
+\eyebrow{escopo do software}
 
 \vspace{4pt}
-O Apex é uma aplicação de desktop para a \textbf{coleta e análise de imagens de
-carcaças ovinas}, construída para montar um conjunto de dados de pesquisa e dar
-continuidade à pesquisa de tipificação de carcaças no iCEV.
+O Apex é uma aplicação de desktop para a coleta e análise de imagens de carcaças
+ovinas. Ele é desenvolvido no iCEV. Seu objetivo é montar um conjunto de imagens
+no qual a associação entre cada imagem, o animal do qual ela se originou e o grau
+atribuído a ela seja registrada no momento da coleta e possa ser verificada.
 
-Seu propósito é restrito e deliberado. Um esforço anterior de coleta de dados não
-fracassou por causa de seus métodos de aprendizado de máquina. Ele fracassou por
-causa da \textbf{integridade do pareamento} entre cada imagem, o animal do qual ela
-veio e o grau atribuído a ela. Esse vínculo não foi registrado no momento da coleta;
-foi reconstruído depois, pela ordem dos arquivos, sem verificação. As
-etiquetas físicas estavam duplicadas ou ilegíveis, a planilha de laboratório não
-tinha uma coluna com o nome da imagem, e apenas algumas etiquetas coincidiam com os
-registros do laboratório. O resultado foi um conjunto de dados no qual nenhuma
-imagem podia ser confiada como pertencente ao animal ao qual era atribuída.
+Esse objetivo responde a um problema documentado. Um esforço anterior de coleta de
+dados não fracassou por causa de seus métodos de aprendizado de máquina.
+Fracassou porque a associação entre imagem, animal e grau não foi registrada
+durante a coleta. Essa associação foi reconstruída depois, pela ordem dos
+arquivos, sem verificação. As etiquetas físicas estavam duplicadas ou ilegíveis, a
+planilha de laboratório não tinha uma coluna com o nome da imagem, e apenas
+algumas etiquetas coincidiam com os registros do laboratório. No conjunto de dados
+resultante, nenhuma imagem podia ser confirmada como pertencente ao animal ao qual
+era atribuída.
 
-\begin{note}[title={A ideia central}]
-O Apex não é apenas um capturador de imagens. É a ferramenta que torna o pareamento
-imagem\,$\leftrightarrow$\,animal\,$\leftrightarrow$\,grau \textbf{verificável
-por construção}, de modo que o fracasso anterior não possa se repetir. Cada decisão
-arquitetural serve a esse objetivo.
+\begin{note}[title={Objetivo de projeto}]
+O Apex registra a associação
+imagem\,$\leftrightarrow$\,animal\,$\leftrightarrow$\,grau no banco de dados no
+momento da captura, de modo que ela possa ser auditada em vez de inferida a partir
+dos nomes de arquivo. A arquitetura descrita neste manual decorre desse objetivo.
 \end{note}
 
 \begin{note}[title={Uma nota sobre o nome}]
-A aplicação se chama \textbf{Apex}. Sua janela ainda carrega a marca interna
-\tele{CARCASS} na barra de título e na barra de status, visível nas capturas de
-tela, que é a assinatura do instrumento na tela. Ao longo deste manual o produto é
-referido como Apex.
+A aplicação se chama Apex. Sua janela exibe a marca interna \tele{CARCASS} na barra
+de título e na barra de status, visível nas capturas de tela. Este manual se refere
+ao produto como Apex.
 \end{note}
 
-\section{O que ele faz}
+\section{Funções}
 
-Em torno desse núcleo de integridade, o software fornece um fluxo de trabalho de
-ponta a ponta:
+O software oferece suporte ao seguinte fluxo de trabalho:
 
 \begin{itemize}[leftmargin=1.3em,itemsep=3pt]
-  \item \textbf{Aquisição.} Registre uma carcaça com uma etiqueta física
-        obrigatória, depois capture imagens a partir de uma câmera externa. A
-        imagem nasce pareada à carcaça no banco de dados, nunca inferida a partir de
-        um nome de arquivo.
-  \item \textbf{Importação.} Traga fotos capturadas em outro lugar; cada uma se
-        torna uma carcaça (ou é reconciliada a uma existente), de modo que imagens
-        externas entram no conjunto de dados sem quebrar o pareamento.
-  \item \textbf{Análise.} Execute modelos treinados sobre as imagens: segmentação
-        de gordura (validada), um grau de acabamento experimental e uma medida
-        analítica de conformação (convexidade). Tudo com remoção automática de
-        fundo, para que as medições de superfície fiquem corretas.
-  \item \textbf{Avaliação.} Colete graus independentes e cegos de múltiplos
-        avaliadores e meça a concordância entre eles ($\kappa$ de Fleiss).
-  \item \textbf{Monitor ao vivo.} Uma sobreposição de gordura em tempo real a partir
-        de uma câmera ou de um arquivo de vídeo, para ajudar a enquadrar a carcaça
+  \item \textbf{Aquisição.} Uma carcaça é registrada com uma etiqueta física
+        obrigatória, e as imagens são então capturadas de uma câmera externa. A
+        imagem é armazenada com uma referência à carcaça no banco de dados; ela não
+        é inferida a partir de um nome de arquivo.
+  \item \textbf{Importação.} Fotos capturadas em outro lugar podem ser importadas.
+        Cada uma é atribuída a uma nova carcaça ou conciliada a uma existente, de
+        modo que as imagens importadas mantêm a associação.
+  \item \textbf{Análise.} Modelos treinados são executados sobre as imagens:
+        segmentação de gordura (validada), um grau de acabamento (experimental) e
+        uma medida analítica de conformação (convexidade). A remoção de fundo é
+        aplicada automaticamente para que as medidas de superfície sejam calculadas
+        sobre a carcaça.
+  \item \textbf{Avaliação.} Graus independentes e cegos são coletados de múltiplos
+        avaliadores, e sua concordância é medida com o $\kappa$ de Fleiss.
+  \item \textbf{Monitor ao vivo.} Uma sobreposição de gordura em tempo real, a
+        partir de uma câmera ou de um arquivo de vídeo, auxilia no enquadramento
         durante a captura.
-  \item \textbf{Painel \& exportação.} Acompanhe o progresso da amostra em relação
-        à meta e exporte o conjunto de dados como um manifesto mais um relatório de
-        integridade.
+  \item \textbf{Painel e exportação.} O progresso da amostra é acompanhado em
+        relação à meta, e o conjunto de dados é exportado como um manifesto e um
+        relatório de integridade.
 \end{itemize}
 
-\section{Para quem ele é}
+\section{Usuários previstos}
 
-Os usuários principais são a equipe de pesquisa e os operadores que coletam imagens
-de carcaças na linha de abate e no laboratório. A interface é projetada como um
-\emph{instrumento} científico, examinado e operado, não lido de cima a baixo.
-Ela segue a linguagem visual do software de controle de missão: um fundo escuro de
-instrumento, um destaque de sinal ciano e leituras em fonte monoespaçada para cada
-valor medido.
+Os usuários previstos são a equipe de pesquisa e os operadores que coletam imagens
+de carcaças na linha de abate e no laboratório. A interface é organizada para
+leitura por varredura e operação, e não para leitura contínua. Ela usa um fundo
+escuro, um destaque em ciano e leituras em monospace para os valores medidos,
+seguindo convenções comuns em software de controle de missão.
 
-\section{Uma nota sobre honestidade científica}
+\section{Estado das medidas}
 
-Dois dos números que este software produz, o \emph{grau de acabamento} e o
-\emph{grau de conformação}, estão marcados em toda a interface como
-\textbf{experimentais / não validados}. Esta é uma escolha deliberada, fundamentada
-nos próprios achados do projeto (Estação~13). O software os exibe porque são úteis
-como referências exploratórias e porque o conjunto de dados que ele constrói é
-exatamente o que se precisa para validá-los no futuro. Ele nunca os apresenta como
-fatos consolidados.
+Dois dos valores que o software produz, o grau de acabamento e o grau de
+conformação, são rotulados como \textbf{experimental / não validado} em toda a
+interface. Essa rotulação reflete os resultados do próprio projeto (Estação~13).
+Os valores são fornecidos como referências exploratórias, e o conjunto de dados
+que o software constrói destina-se a apoiar sua validação. Eles não são
+apresentados como resultados estabelecidos.

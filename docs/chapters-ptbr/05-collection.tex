@@ -3,27 +3,27 @@
 \eyebrow{aquisição com pareamento verificável}
 
 \vspace{4pt}
-A coleta é o coração do software. A regra é simples e rígida:
-\textbf{registre a carcaça antes de capturar}. A imagem herda o pareamento
-da carcaça, nunca de um nome de arquivo.
+Durante a coleta, uma carcaça é registrada antes de as imagens serem capturadas.
+A imagem herda o pareamento da carcaça, e não de um nome de arquivo.
 
 \section{Criar um lote}
 
-Um \textbf{lote} é uma sessão de coleta (um dia de abate, um local). Crie-o
+Um \textbf{lote} é uma sessão de coleta (um dia de abate, um local). Ele é criado
 a partir do painel do Projeto ou por importação. Cada lote agrupa as carcaças
 coletadas em conjunto.
 
 \section{Registrar uma carcaça}
 
-Selecione o lote e abra sua visão \textbf{Overview}. Registre uma carcaça com:
+O lote é selecionado e a visão \textbf{Overview} é aberta. Uma carcaça é registrada
+com os seguintes campos:
 
 \begin{center}
 \begin{tabularx}{\linewidth}{@{}l X@{}}
 \toprule
 \textbf{Campo} & \textbf{Significado} \\
 \midrule
-Etiqueta física \textbf{(obrigatória)} & O identificador legível na etiqueta física. A primeira
-      linha de defesa contra o erro de pareamento: é única por lote. \\
+Etiqueta física \textbf{(obrigatória)} & O identificador legível na etiqueta física.
+      Ela é única por lote e restringe o erro de pareamento. \\
 Animal (lab) & O identificador do animal na planilha de laboratório: o vínculo explícito. \\
 Tratamento & Grupo de dieta / tratamento. \\
 Estrato & Estrato de amostragem, para cobertura estratificada. \\
@@ -31,18 +31,19 @@ Estrato & Estrato de amostragem, para cobertura estratificada. \\
 \end{tabularx}
 \end{center}
 
-\begin{caution}[title=A etiqueta física é obrigatória por design]
-Uma carcaça não pode ser criada sem uma etiqueta física, e a mesma etiqueta não pode ser
-usada duas vezes em um mesmo lote. É isso que torna o vínculo imagem--animal verificável e
-evita a falha de rótulo duplicado da coleta anterior.
+\begin{caution}[title={A etiqueta física é obrigatória}]
+Uma carcaça não pode ser criada sem uma etiqueta física, e a mesma etiqueta não pode
+ser usada duas vezes em um mesmo lote. Essa restrição mantém o vínculo imagem--animal
+verificável e evita a falha de rótulo duplicado da coleta anterior.
 \end{caution}
 
 \section{Capturar imagens}
 
-Selecione a carcaça e abra sua visão \textbf{Images} (Figura~\ref{fig:carcass-images}).
-Inicie a câmera, escolha o ângulo de vista (posterior, lateral, dorsal), capture um
-quadro, revise a prévia e salve. A imagem salva é gravada na pasta da carcaça
-com seu \tele{carcass\_id} já definido.
+A carcaça é selecionada e a visão \textbf{Images} é aberta
+(Figura~\ref{fig:carcass-images}). A câmera é iniciada, o ângulo de vista é escolhido
+(posterior, lateral, dorsal), um quadro é capturado, a prévia é revisada e a imagem
+é salva. A imagem salva é gravada na pasta da carcaça com seu \tele{carcass\_id} já
+definido.
 
 \shot{carcass-images.jpeg}{A visão Images de uma carcaça. À esquerda: captura por webcam com
 um seletor de vista e uma prévia de captura; o botão \tele{Save (pair to \#IMG\_6250)}
@@ -63,7 +64,8 @@ recorre à captura por webcam e mostra \tele{Kinect unavailable (webcam only)}.
 
 \section{Editar os dados da carcaça depois}
 
-A visão \textbf{Overview} da carcaça é um formulário editável para todos os campos, inclusive
-a referência física medida no animal (espessura de gordura, GR, área de olho de lombo).
-Preencha-os assim que as medidas de laboratório ficarem disponíveis: são
-o que a análise de correlação física (Estação~7) precisa.
+A visão \textbf{Overview} da carcaça é um formulário editável para todos os campos,
+inclusive a referência física medida no animal (espessura de gordura, GR, área de olho
+de lombo). Esses campos são preenchidos assim que as medidas de laboratório ficam
+disponíveis, pois são os dados requeridos pela análise de correlação física
+(Estação~7).

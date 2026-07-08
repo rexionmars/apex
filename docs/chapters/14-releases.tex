@@ -3,9 +3,9 @@
 \eyebrow{how versions are built and shipped}
 
 \vspace{4pt}
-The project is developed in the open with automated quality checks and
-multi-platform builds. Two GitHub Actions workflows drive this: one verifies
-every change, and one produces a release for every version tag.
+The project uses automated quality checks and multi-platform builds. Two GitHub
+Actions workflows implement this: one verifies every change, and one produces a
+release for every version tag.
 
 \section{Continuous integration}
 
@@ -21,8 +21,8 @@ Go core & \tele{go vet} and the full test suite (\tele{go test ./...}), includin
       the pairing-integrity and Fleiss'~$\kappa$ tests. \\
 Wails build & A complete \tele{wails build}: it generates the Go$\leftrightarrow$JS
       bindings, type-checks the front end (\tele{tsc}), builds it (\tele{vite}) and
-      compiles the Go core, validating all three layers together, exactly as a
-      release does. \\
+      compiles the Go core, validating all three layers together, as a release
+      does. \\
 Python sidecars & Byte-compile (syntax) plus a \tele{ruff} lint of the inference,
       conformation, live and Kinect sidecars. \\
 \bottomrule
@@ -55,22 +55,22 @@ Each archive is self-contained: the trained weights (\tele{fat\_binary.pth},
 \tele{direct\_class.pth}, \tele{eg\_regression.pth}) and the ColorNaming lookup
 table travel with the binary, placed where the app expects them at runtime.
 
-\section{Cutting a new version}
+\section{Publishing a new version}
 
-Releasing is a single tagged push:
+A release is triggered by a single tagged push:
 
 \begin{lstlisting}
 git tag -a v0.2.0 -m "Apex v0.2.0 - <summary>"
 git push origin v0.2.0
 \end{lstlisting}
 
-The workflow does the rest: three platform builds, weight bundling, and the
-published release with downloadable binaries. Keep the version in
-\tele{wails.json} in step with the tag.
+The workflow then performs the three platform builds, the weight bundling, and the
+published release with downloadable binaries. The version in \tele{wails.json}
+should be kept in step with the tag.
 
-\begin{note}[title={Reproducible by construction}]
-Because the release uses the same \tele{wails build} the CI runs on every commit,
-a tagged build is never a surprise: if CI is green, the release builds. The result
-is a set of ready-to-run binaries that need no build tools. The model
-features need only a Python environment with the scientific libraries.
+\begin{note}[title={Reproducible builds}]
+Because the release uses the same \tele{wails build} that the CI runs on every
+commit, a green CI indicates that the release will build. The result is a set of
+ready-to-run binaries that need no build tools. The model features require a
+Python environment with the scientific libraries.
 \end{note}

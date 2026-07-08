@@ -4,17 +4,17 @@
 
 \vspace{4pt}
 The \textbf{Grading} view of a batch collects grades from multiple assessors, each
-scoring independently and blind, and measures how much they agree. This is the
-human reference the research requires: a grade assigned \emph{over the image},
-with a measure of its reliability.
+scoring independently and blind, and measures how much they agree. It provides a
+human reference: a grade assigned \emph{over the image}, together with a measure of
+its reliability.
 
 \section{How a session works}
 
 \begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
-  \item Add or choose a \textbf{rater}.
-  \item Start a \textbf{blind session} on the batch. Other raters' scores are
+  \item A \textbf{rater} is added or selected.
+  \item A \textbf{blind session} is started on the batch. Other raters' scores are
         hidden, so each assessment is independent.
-  \item For each carcass with an image, score two axes on a 1--5 scale:
+  \item For each carcass with an image, two axes are scored on a 1--5 scale:
         \textbf{Conformation} (shape and muscle development, observable in the
         image) and \textbf{Finishing} (fat cover).
 \end{enumerate}
@@ -24,8 +24,8 @@ with a measure of its reliability.
 Once at least two raters have scored the same set of carcasses, the Project
 dashboard reports the inter-rater agreement with \textbf{Fleiss' $\kappa$} per
 axis, together with a consensus grade. If agreement is insufficient the consensus
-is flagged, exactly the guard-rail the research needs before trusting a grade
-as reference.
+is flagged, which allows testing whether a grade is reliable enough to be used as
+a reference.
 
 \begin{note}[title={Two axes, two different confidences}]
 \emph{Conformation} is observable in the image. \emph{Finishing} depends on fat

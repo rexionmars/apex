@@ -22,8 +22,8 @@ Núcleo Go & \tele{go vet} e a suíte de testes completa (\tele{go test ./...}),
       incluindo os testes de integridade de pareamento e de $\kappa$ de Fleiss. \\
 Build Wails & Um \tele{wails build} completo: gera os bindings Go$\leftrightarrow$JS,
       faz a verificação de tipos do front end (\tele{tsc}), o compila (\tele{vite})
-      e compila o núcleo Go, validando as três camadas juntas, exatamente como
-      uma release faz. \\
+      e compila o núcleo Go, validando as três camadas juntas, do mesmo modo que
+      uma release. \\
 Sidecars Python & Compilação de bytes (sintaxe) mais um lint com \tele{ruff} dos
       sidecars de inferência, conformação, ao vivo e Kinect. \\
 \bottomrule
@@ -58,23 +58,22 @@ Cada arquivo é autocontido: os pesos treinados (\tele{fat\_binary.pth},
 ColorNaming viajam junto com o binário, colocados onde o app os espera em tempo
 de execução.
 
-\section{Publicando uma nova versão}
+\section{Publicação de uma nova versão}
 
-Publicar uma release é um único push com tag:
+A publicação de uma release consiste em um único push com tag:
 
 \begin{lstlisting}
 git tag -a v0.2.0 -m "Apex v0.2.0 - <summary>"
 git push origin v0.2.0
 \end{lstlisting}
 
-O workflow faz o resto: os três builds de plataforma, o empacotamento dos
-pesos e a release publicada com binários prontos para download. Mantenha a versão
-em \tele{wails.json} em sincronia com a tag.
+O workflow executa o restante: os três builds de plataforma, o empacotamento dos
+pesos e a release publicada com binários prontos para download. A versão
+em \tele{wails.json} deve ser mantida em sincronia com a tag.
 
-\begin{note}[title={Reproduzível por construção}]
-Como a release usa o mesmo \tele{wails build} que a CI roda a cada commit, um
-build com tag nunca é uma surpresa: se a CI está verde, a release compila. O
-resultado é um conjunto de binários prontos para executar que não precisam de
-ferramentas de build. Para os recursos de modelo, basta um ambiente Python
-com as bibliotecas científicas.
+\begin{note}[title={Reprodutibilidade do build}]
+Como a release usa o mesmo \tele{wails build} executado pela CI a cada commit, um
+build com tag é consistente com a verificação de CI: se a CI está verde, a release
+compila. Os binários resultantes são executáveis sem ferramentas de build. Os
+recursos de modelo requerem um ambiente Python com as bibliotecas científicas.
 \end{note}

@@ -3,9 +3,8 @@
 \eyebrow{o que os números podem e não podem afirmar}
 
 \vspace{4pt}
-O Apex foi construído para ser honesto quanto à fronteira entre o que suas
-medições estabelecem e o que permanece em aberto. Este capítulo declara essa
-fronteira de forma explícita.
+Este capítulo delimita a fronteira entre o que as medições do Apex estabelecem
+e o que permanece em aberto, e declara essa fronteira de forma explícita.
 
 \section{O que é validado}
 
@@ -23,7 +22,7 @@ fronteira de forma explícita.
 \section{O que não é validado}
 
 Os dois \emph{graus} (acabamento e conformação) são estimativas, não
-predições estabelecidas. Isso se fundamenta no experimento oráculo do projeto,
+predições estabelecidas. Essa classificação fundamenta-se no experimento oráculo do projeto,
 que testou se a conformação é recuperável a partir de uma única imagem 2D:
 
 \begin{caution}[title=O resultado do oráculo]
@@ -35,17 +34,17 @@ confiável a partir de uma única imagem 2D neste tamanho de amostra. O gargalo 
 a modalidade de aquisição, não o modelo.
 \end{caution}
 
-Portanto, o software apresenta esses graus como \pillalert{estimativas}, nunca
-como fatos, e os marca em âmbar onde quer que apareçam.
+Por esse motivo, o software apresenta esses graus como \pillalert{estimativas}, não
+como fatos estabelecidos, e os marca em âmbar onde quer que apareçam.
 
-\section{Por que isso importa, e como se resolve}
+\section{Implicações e caminho de validação}
 
-A validação que falta aos graus requer exatamente uma coisa: graus corretamente
-pareados às imagens, em uma amostra maior. É precisamente isso que o Apex foi
-construído para coletar. À medida que o conjunto de dados pareado cresce, a aba
-\textbf{Correlação física} (Estação~7) pode testar se as medições de superfície
-predizem a referência física e os graus dos avaliadores. Assim se fecha o ciclo que
-a pesquisa anterior não conseguiu.
+A validação que falta aos graus requer uma condição: graus corretamente
+pareados às imagens, em uma amostra maior. Esse é o conjunto de dados que o Apex
+se destina a coletar. À medida que o conjunto de dados pareado cresce, a aba
+\textbf{Correlação física} (Estação~7) permite testar se as medições de superfície
+predizem a referência física e os graus dos avaliadores. Esse teste não pôde ser
+realizado com os dados da pesquisa anterior.
 
 \section{Ressalvas de modalidade}
 
@@ -58,14 +57,14 @@ a pesquisa anterior não conseguiu.
         e uma vista consistente melhoram toda medição subsequente. O software
         impõe uma vista obrigatória e oferece a captura de fundo, mas a montagem
         física é responsabilidade do operador.
-  \item \textbf{Tamanho da amostra.} Os modelos atuais vêm de n=22. Suas
-        estimativas devem ser lidas como exploratórias até que a amostra alvo seja
+  \item \textbf{Tamanho da amostra.} Os modelos atuais derivam de n=22. Suas
+        estimativas devem ser interpretadas como exploratórias até que a amostra alvo seja
         coletada e o ciclo de validação seja executado.
 \end{itemize}
 
-\begin{note}[title=O fio condutor]
-O estudo anterior não falhou em seus métodos. Falhou na integridade dos dados.
-O Apex existe para corrigir isso primeiro. Cada limitação honesta acima é uma
-razão pela qual o software é construído do jeito que é: coletar um conjunto de
-dados pareado e confiável, e deixar a validação seguir.
+\begin{note}[title=Observação de conjunto]
+O estudo anterior não falhou em seus métodos, mas na integridade dos dados. As
+limitações declaradas acima decorrem dessa constatação e orientam o projeto do
+software: coletar primeiro um conjunto de dados pareado e confiável, e conduzir a
+validação a partir dele.
 \end{note}

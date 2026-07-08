@@ -3,8 +3,8 @@
 \eyebrow{what the numbers can and cannot claim}
 
 \vspace{4pt}
-Apex is built to be honest about the boundary between what its measurements
-establish and what remains open. This chapter states that boundary explicitly.
+This chapter states the boundary between what the measurements of Apex establish
+and what remains open.
 
 \section{What is validated}
 
@@ -22,28 +22,27 @@ establish and what remains open. This chapter states that boundary explicitly.
 \section{What is not validated}
 
 The two \emph{grades} (finishing and conformation) are estimates, not
-settled predictions. This is grounded in the project's oracle experiment, which
+settled predictions. This follows from the project's oracle experiment, which
 tested whether conformation is recoverable from a single 2D image:
 
 \begin{caution}[title=The oracle result]
-Computing shape descriptors on the \emph{perfect manual annotation} (the best
-mask any model could produce), \textbf{zero of 384 statistical tests survived
+Shape descriptors were computed on the \emph{perfect manual annotation} (the best
+mask any model could produce). \textbf{Zero of 384 statistical tests survived
 multiple-comparison correction} at n=22. Even with perfect segmentation,
 conformation is not reliably recoverable from a single 2D image at this sample
 size. The bottleneck is the acquisition modality, not the model.
 \end{caution}
 
-Therefore the software presents these grades as \pillalert{estimates}, never as
+The software therefore presents these grades as \pillalert{estimates}, not as
 facts, and marks them in amber wherever they appear.
 
-\section{Why this matters, and how it is resolved}
+\section{Path to validation}
 
-The validation the grades lack requires exactly one thing: grades correctly
-paired to images, on a larger sample. That is precisely what Apex is built to
-collect. As the paired dataset grows, the \textbf{Physical correlation} tab
-(Station~7) can test whether the surface measurements predict the physical
-reference and the assessor grades. This closes the loop that the earlier research
-could not.
+The validation the grades lack requires grades correctly paired to images, on a
+larger sample. This is the data that Apex collects. As the paired dataset grows,
+the \textbf{Physical correlation} tab (Station~7) allows testing whether the
+surface measurements predict the physical reference and the assessor grades. This
+addresses a step the earlier research could not complete.
 
 \section{Modality caveats}
 
@@ -51,18 +50,18 @@ could not.
   \item \textbf{Fat cover (finishing)} is a depth property; a single surface
         image captures it only partly. Depth capture (Kinect) is supported in the
         schema for future work.
-  \item \textbf{Standardised capture} matters: a fixed background, uniform
-        lighting and a consistent view improve every downstream measurement. The
-        software imposes a required view and offers background capture, but the
-        physical setup is the operator's responsibility.
+  \item \textbf{Standardised capture} affects every downstream measurement: a
+        fixed background, uniform lighting and a consistent view improve the
+        results. The software imposes a required view and offers background
+        capture, but the physical setup is the operator's responsibility.
   \item \textbf{Sample size.} The current models come from n=22. Their estimates
         should be read as exploratory until the target sample is collected and
         the validation loop is run.
 \end{itemize}
 
-\begin{note}[title=The through-line]
-The earlier study did not fail at its methods. It failed at data integrity.
-Apex exists to fix that first. Every honest limitation above is a reason the
-software is built the way it is: collect a trustworthy, paired dataset, and let
-validation follow.
+\begin{note}[title=Summary]
+The earlier study was limited by data integrity rather than by its methods. The
+software addresses this by collecting a reliable, paired dataset, so that
+validation can follow. The limitations above account for the design decisions
+described in this manual.
 \end{note}

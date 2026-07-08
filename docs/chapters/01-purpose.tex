@@ -1,73 +1,72 @@
 \chapter{Purpose}
 
-\eyebrow{why this software exists}
+\eyebrow{scope of the software}
 
 \vspace{4pt}
-Apex is a desktop application for the \textbf{collection and analysis of ovine
-carcass images}, built to assemble a research dataset and continue the carcass
-typification research at iCEV.
+Apex is a desktop application for the collection and analysis of ovine carcass
+images. It is developed at iCEV. Its objective is to assemble an image dataset in
+which the association between each image, the animal it originated from, and the
+grade assigned to it is recorded at collection time and can be verified.
 
-Its purpose is narrow and deliberate. A previous data-collection effort did not
-fail because of its machine-learning methods. It failed because of the
-\textbf{integrity of the pairing} between each image, the animal it came from, and
-the grade assigned to it. That link was not recorded at the moment of collection;
-it was reconstructed afterwards, by file order, without verification. Physical
-tags were duplicated or illegible, the laboratory spreadsheet had no image-name
-column, and only a few tags matched the lab records. The result was a dataset in
-which no image could be trusted to belong to the animal it was attributed to.
+This objective addresses a documented problem. A previous data-collection effort
+did not fail because of its machine-learning methods. It failed because the
+association between image, animal, and grade was not recorded during collection.
+That association was reconstructed afterwards, by file order, without
+verification. Physical tags were duplicated or illegible, the laboratory
+spreadsheet had no image-name column, and only a few tags matched the laboratory
+records. In the resulting dataset, no image could be confirmed to belong to the
+animal it was attributed to.
 
-\begin{note}[title=The core idea]
-Apex is not merely an image capturer. It is the tool that makes the
-image\,$\leftrightarrow$\,animal\,$\leftrightarrow$\,grade pairing \textbf{verifiable
-by construction}, so that the earlier failure cannot be repeated. Every
-architectural decision serves that goal.
+\begin{note}[title={Design objective}]
+Apex records the image\,$\leftrightarrow$\,animal\,$\leftrightarrow$\,grade
+association in the database at the moment of capture, so that it can be audited
+rather than inferred from filenames. The architecture described in this manual
+follows from that objective.
 \end{note}
 
 \begin{note}[title={A note on the name}]
-The application is named \textbf{Apex}. Its window still carries the internal mark
-\tele{CARCASS} in the title bar and status bar (visible in the screenshots), which
-is the instrument's on-screen signature; throughout this manual the product is
-referred to as Apex.
+The application is named Apex. Its window carries the internal mark \tele{CARCASS}
+in the title bar and status bar, visible in the screenshots. This manual refers to
+the product as Apex.
 \end{note}
 
-\section{What it does}
+\section{Functions}
 
-Around that integrity core, the software provides an end-to-end workflow:
+The software supports the following workflow:
 
 \begin{itemize}[leftmargin=1.3em,itemsep=3pt]
-  \item \textbf{Acquisition.} Register a carcass with a mandatory physical tag,
-        then capture images from an external camera. The image is born paired
-        to the carcass in the database, never inferred from a filename.
-  \item \textbf{Import.} Bring in photos captured elsewhere; each becomes a
-        carcass (or is reconciled to an existing one), so external images enter
-        the dataset without breaking pairing.
-  \item \textbf{Analysis.} Run trained models over the images: fat segmentation
-        (validated), an experimental finishing grade, and an analytical
-        conformation (convexity) measure. All run with automatic background
-        removal so surface measurements are correct.
-  \item \textbf{Grading.} Collect independent, blind grades from multiple raters
-        and measure their agreement (Fleiss' $\kappa$).
+  \item \textbf{Acquisition.} A carcass is registered with a mandatory physical
+        tag, and images are then captured from an external camera. The image is
+        stored with a reference to the carcass in the database; it is not inferred
+        from a filename.
+  \item \textbf{Import.} Photos captured elsewhere can be imported. Each is
+        assigned to a new carcass or reconciled to an existing one, so imported
+        images retain the association.
+  \item \textbf{Analysis.} Trained models are run over the images: fat
+        segmentation (validated), a finishing grade (experimental), and an
+        analytical conformation (convexity) measure. Background removal is applied
+        automatically so that surface measurements are computed on the carcass.
+  \item \textbf{Grading.} Independent, blind grades are collected from multiple
+        raters, and their agreement is measured with Fleiss' $\kappa$.
   \item \textbf{Live monitor.} A real-time fat overlay from a camera or a video
-        file, to help frame the carcass during capture.
-  \item \textbf{Dashboard \& export.} Track sample progress against the target,
-        and export the dataset as a manifest plus an integrity report.
+        file assists with framing during capture.
+  \item \textbf{Dashboard and export.} Sample progress is tracked against the
+        target, and the dataset is exported as a manifest and an integrity report.
 \end{itemize}
 
-\section{Who it is for}
+\section{Intended users}
 
-The primary users are the research team and the operators who collect carcass
-images at the slaughter line and in the laboratory. The interface is designed as
-a scientific \emph{instrument} to be scanned and operated, not read top to bottom.
-It follows the visual language of mission-control software: a dark
-instrument ground, a cyan signal accent, and monospace readouts for every
-measured value.
+The intended users are the research team and the operators who collect carcass
+images at the slaughter line and in the laboratory. The interface is organised for
+scanning and operation rather than continuous reading. It uses a dark background,
+a cyan accent, and monospace readouts for measured values, following conventions
+common in mission-control software.
 
-\section{A note on scientific honesty}
+\section{Status of the measurements}
 
-Two of the numbers this software produces (the \emph{finishing grade} and the
-\emph{conformation grade}) are marked throughout the interface as
-\textbf{experimental / not validated}. This is a deliberate choice, grounded in
-the project's own findings (Station~13). The software surfaces them for two
-reasons: they are useful as exploratory references, and the dataset it builds is
-exactly what is needed to validate them in the future. It never presents them as
-settled facts.
+Two of the values the software produces, the finishing grade and the conformation
+grade, are labelled \textbf{experimental / not validated} throughout the
+interface. This labelling reflects the project's own findings (Station~13). The
+values are provided as exploratory references, and the dataset the software builds
+is intended to support their validation. They are not presented as established
+results.

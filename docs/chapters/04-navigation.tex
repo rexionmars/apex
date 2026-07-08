@@ -1,11 +1,11 @@
 \chapter{The interface}
 
-\eyebrow{how to read the instrument}
+\eyebrow{reading the interface}
 
 \vspace{4pt}
-Apex follows the anatomy of mission-control software. The window is organised
-into fixed regions, and you work by \textbf{selecting an object} in the navigation
-tree and \textbf{choosing a view} of it.
+Apex follows the layout conventions of mission-control software. The window is
+organised into fixed regions. Operation proceeds by \textbf{selecting an object}
+in the navigation tree and \textbf{choosing a view} of it.
 
 \section{Anatomy of the window}
 
@@ -27,7 +27,7 @@ Status bar (bottom) & Engine state, device, and dataset counts. \\
 \section{Objects and views}
 
 Selecting an object in the tree changes both the breadcrumb and the set of views
-offered in the browse bar:
+available in the browse bar:
 
 \begin{center}
 \begin{tabularx}{\linewidth}{@{}l X@{}}
@@ -43,13 +43,13 @@ Project dashboard  & Dashboard \\
 \end{tabularx}
 \end{center}
 
-\begin{note}[title=The Inspector always tracks your selection]
-Whatever you select (a batch or a carcass), the right-hand Inspector shows
+\begin{note}[title=The Inspector tracks the current selection]
+For the selected object (a batch or a carcass), the right-hand Inspector shows
 its properties: for a carcass, its identification, physical reference and model
 analysis; for a batch, its counts and fat statistics. It is read-only; editing
-happens in the views.
+occurs in the views.
 \end{note}
 
-The status bar at the bottom is the instrument's heartbeat: it shows whether the
-inference \tele{engine} is \pillok{ready} and on which \tele{device} (e.g.
-\tele{mps}), plus the running dataset totals.
+The status bar at the bottom reports engine state: whether the inference
+\tele{engine} is \pillok{ready} and on which \tele{device} (e.g. \tele{mps}),
+together with the running dataset totals.

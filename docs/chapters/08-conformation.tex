@@ -1,19 +1,19 @@
 \chapter{Conformation by convexity}
 
-\eyebrow{shape and muscling, from the profile}
+\eyebrow{shape and muscling from the profile}
 
 \vspace{4pt}
 Conformation describes the shape and muscle development of the carcass. The
 grading norm defines it through the \textbf{convexity of the profile}: full muscle
 pushes the outline outward (convex); poor muscle, with bone apparent, sinks it
-inward (concave). Apex transcribes exactly this rule into a measurement.
+inward (concave). Apex implements this rule as a measurement.
 
 \section{The method}
 
 The \textbf{integral-invariant convexity} measure (Manay et al.\ 2004; Pottmann
 et al.\ 2009) computes, at each point of the carcass contour, how much of a small
 disk falls inside the silhouette. That area carries the signed curvature without
-differentiating, so it is robust to mask noise, and yields a value:
+differentiation, so it is robust to mask noise, and yields a value:
 
 \begin{center}
 \ttfamily $c > 0$ \rm convex (muscled) \quad\textbullet\quad
@@ -40,17 +40,17 @@ map reproduces the anatomy the grading norm describes: the legs read blue
 (convex, muscled), the medial notch between them reads red (a recess). Per-region
 indices and an estimated grade appear below each map.}{analysis-conformation}
 
-Notice how the map is consistent with anatomy without any label: the legs are
-blue, the notch between them is red, the loin is near-neutral. This
-correspondence is verifiable by eye.
+The map is consistent with anatomy without any label: the legs are blue, the
+notch between them is red, the loin is near-neutral. This correspondence is
+verifiable by eye.
 
 \begin{caution}[title=The estimated grade is not validated]
 The convexity map and the per-region indices are \textbf{objective measurements}.
 The \emph{estimated grade} derived from them (shown with an \tele{est.} pill in
 amber) is \textbf{not validated}. The project's oracle experiment showed that
 conformation is not reliably recoverable from a single 2D image at this sample
-size (Station~13). Use the grade as an indicative reference, to be validated as
-the paired dataset grows.
+size (Station~13). The grade should be treated as an indicative reference, to be
+validated as the paired dataset grows.
 \end{caution}
 
 \section{Where the numbers appear}

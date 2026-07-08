@@ -1,18 +1,18 @@
 \chapter{O que o software produz}
 
-\eyebrow{os produtos entregues}
+\eyebrow{produtos gerados}
 
 \vspace{4pt}
-Tudo o que o Apex produz atende a um único fim: um conjunto de dados de pesquisa
+Os produtos do Apex convergem para um único fim: um conjunto de dados de pesquisa
 com pareamento verificável, enriquecido com medições objetivas. Este capítulo
-resume os produtos gerados e o quanto se pode confiar em cada um.
+resume os produtos gerados e o nível de confiança associado a cada um.
 
 \section{O conjunto de dados}
 
 O produto central é o \textbf{conjunto de dados pareado}: para cada imagem, um
 vínculo verificável com sua carcaça, animal, tratamento e estrato, além da
-referência física medida no animal. Ele reside no único \tele{carcass.db} e é
-exportado como \tele{manifest.csv} + \tele{integrity\_report.txt}.
+referência física medida no animal. Ele reside no arquivo \tele{carcass.db} e é
+exportado como \tele{manifest.csv} e \tele{integrity\_report.txt}.
 
 \section{Medições por imagem}
 
@@ -56,7 +56,7 @@ Espessura de gordura (EG) & \pillalert{experimental} & Uma estimativa por
 \end{itemize}
 
 \begin{note}[title=Lendo o código de cores]
-Em todo o software, a cor indica o quanto você deve confiar em um número.
+Em todo o software, a cor indica o nível de confiança associado a um número.
 \textbf{Verde} = validado ou objetivo. \textbf{Âmbar} = experimental ou uma
 estimativa, a ser validada depois. \textbf{Vermelho} é reservado para pareamento
 quebrado e nunca usado para uma série de dados. Todo valor colorido carrega um

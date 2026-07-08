@@ -4,26 +4,26 @@
 [![Release](https://github.com/rexionmars/apex/actions/workflows/release.yml/badge.svg)](https://github.com/rexionmars/apex/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Acquisition, pairing and image analysis of ovine carcasses — with verifiable pairing by construction.**
+**Acquisition, pairing and image analysis of ovine carcasses, with verifiable image–animal–grade association.**
 
-Apex is a cross-platform desktop instrument for building a research-grade carcass
-image dataset and deriving objective measurements from it. It is designed around
-one principle: the link between each **image**, the **animal** it came from, and
-the **grade** assigned to it must be verifiable — recorded at collection time,
-never reconstructed from filenames afterwards.
+Apex is a cross-platform desktop application for building a carcass image dataset
+and deriving objective measurements from it. Its objective is that the association
+between each **image**, the **animal** it came from, and the **grade** assigned to
+it is recorded at collection time and can be verified, rather than reconstructed
+from filenames afterwards.
 
-Built for the carcass typification research at **iCEV**.
+Developed at iCEV.
 
 ---
 
-## Why
+## Background
 
-A previous data-collection effort did not fail at its machine-learning methods —
-it failed at **data integrity**. The image↔animal↔grade pairing was reconstructed
-after the fact, by file order, with duplicated and illegible physical tags and a
-spreadsheet that had no image-name column. Apex makes that failure structurally
-impossible: a carcass is registered with a mandatory physical tag *before* capture,
-and the image is written to the database already paired to it.
+A previous data-collection effort did not fail because of its machine-learning
+methods. It failed because the image–animal–grade association was not recorded
+during collection. It was reconstructed afterwards, by file order, with duplicated
+and illegible physical tags and a spreadsheet that had no image-name column. In
+Apex, a carcass is registered with a mandatory physical tag before capture, and
+the image is stored with a reference to it in the database.
 
 ## What it does
 
@@ -109,7 +109,7 @@ Fat segmentation and verifiable pairing are validated/guaranteed. The **finishin
 and conformation grades are experimental estimates, not validated** — the
 project's oracle experiment showed conformation is not reliably recoverable from a
 single 2D image at n=22. Apex marks these in amber throughout, and the dataset it
-builds is precisely what is needed to validate them. See Station 13 of the manual.
+builds is intended to support their validation. See Station 13 of the manual.
 
 ## License
 

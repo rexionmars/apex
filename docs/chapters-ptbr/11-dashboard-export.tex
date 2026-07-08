@@ -1,11 +1,11 @@
 \chapter{Painel e exportação}
 
-\eyebrow{acompanhe a amostra, entregue o conjunto de dados}
+\eyebrow{acompanhamento da amostra e exportação do conjunto de dados}
 
 \vspace{4pt}
 O \textbf{Painel do projeto} (Figura~\ref{fig:dashboard}) é a visão geral de todo o
-trabalho: o quanto a amostra avançou, o quão bem os avaliadores concordam,
-se o pareamento está íntegro e o botão que produz o conjunto de dados final.
+trabalho: o progresso da amostra, a concordância entre os avaliadores,
+a integridade do pareamento e o controle que produz o conjunto de dados final.
 
 \shot{dashboard.jpeg}{O Painel do projeto. Cartões-resumo (carcaças, imagens,
 avaliadas, pareamento); o progresso da amostra estratificada rumo à meta; a concordância
@@ -15,7 +15,7 @@ entre avaliadores; e o painel de exportação com o relatório de integridade.}{
 
 Os cartões-resumo mostram os totais e o status do pareamento (\pillok{íntegro} quando nenhuma
 imagem está órfã). O painel \textbf{Amostra estratificada (R3)} acompanha o progresso
-rumo à meta de 100--120 carcaças, detalhado por lote e por estrato, de modo que
+em relação à meta de 100--120 carcaças, detalhado por lote e por estrato, de modo que
 estratos sub-representados fiquem visíveis.
 
 \section{Concordância entre avaliadores}
@@ -26,7 +26,7 @@ não tiverem pontuado um conjunto comum de carcaças, ele exibe \tele{$\kappa$ n
 
 \section{Exportar conjunto de dados}
 
-O botão \textbf{Exportar conjunto de dados} produz dois arquivos em uma pasta escolhida:
+O controle \textbf{Exportar conjunto de dados} produz dois arquivos em uma pasta escolhida:
 
 \begin{center}
 \begin{tabularx}{\linewidth}{@{}l X@{}}
@@ -36,12 +36,12 @@ O botão \textbf{Exportar conjunto de dados} produz dois arquivos em uma pasta e
 \tele{manifest.csv} & Uma linha por imagem, com o pareamento completo: etiqueta física,
       animal, tratamento, estrato, graus de consenso, concordância, percentual de gordura,
       índices de conformação e a referência física. \\
-\tele{integrity\_report.txt} & Uma atestação legível por humanos: totais por estrato,
+\tele{integrity\_report.txt} & Um relatório legível por humanos: totais por estrato,
       quaisquer imagens órfãs excluídas, concordância entre avaliadores e hashes dos arquivos. \\
 \bottomrule
 \end{tabularx}
 \end{center}
 
 Apenas carcaças com pareamento verificado são incluídas; opcionalmente, apenas aquelas com um
-grau de consenso válido. O relatório de integridade é o artefato que atesta que a
-falha de 2022 não se repetiu.
+grau de consenso válido. O relatório de integridade documenta que a
+falha de pareamento anterior não se repetiu.

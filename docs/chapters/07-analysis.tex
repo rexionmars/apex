@@ -4,16 +4,16 @@
 
 \vspace{4pt}
 The \textbf{Analysis} view of a batch runs the trained models over its images and
-turns the results into a scientific workspace. This workspace holds a gallery, a
-sortable table with a distribution, conformation, physical correlation, and
-side-by-side comparison.
+presents the results in a workspace. This workspace holds a gallery, a sortable
+table with a distribution, conformation, physical correlation, and side-by-side
+comparison.
 
 \section{Running the analysis}
 
-Open a batch and select \textbf{Analysis}. Press \tele{Analyze batch} to process
-all not-yet-analysed images, with a live progress bar. Results are saved to the
-batch, so re-opening does not re-run them; \tele{Reanalyze} forces a fresh run.
-The \tele{CSV} button exports every result.
+A batch is opened and \textbf{Analysis} is selected. The \tele{Analyze batch}
+control processes all not-yet-analysed images, with a live progress bar. Results
+are saved to the batch, so re-opening does not re-run them; \tele{Reanalyze}
+forces a fresh run. The \tele{CSV} control exports every result.
 
 Each image passes through the same pipeline:
 
@@ -39,9 +39,9 @@ and the fat percentage becomes the fraction of the \emph{carcass surface}.
 \section{Gallery}
 
 The gallery (Figure~\ref{fig:analysis-gallery}) shows every carcass with its fat
-overlay in cyan and the fat percentage beneath, a fast visual sweep of the
-whole batch. Above it, batch statistics (mean, std dev, median, min, max) and a
-row of status pills: \pillok{validated segmentation $\cdot$ IoU 0.92},
+overlay in cyan and the fat percentage beneath, providing a visual overview of
+the whole batch. Above it, batch statistics (mean, std dev, median, min, max) and
+a row of status pills: \pillok{validated segmentation $\cdot$ IoU 0.92},
 \pillalert{experimental grade $\cdot$ n=22}, and \tele{analysis saved to batch}.
 
 \shot{analysis-gallery.jpeg}{Analysis $\rightarrow$ Gallery. Fat overlay (cyan) per
@@ -52,7 +52,7 @@ above; the Inspector reports the batch's fat mean, std dev and range.}{analysis-
 
 The \textbf{Table + distribution} tab (Figure~\ref{fig:analysis-table}) lists the
 carcasses in a sortable table (by tag or fat \%), alongside the grade and the
-physical-reference columns, next to a histogram of the batch's fat distribution.
+physical-reference columns, beside a histogram of the batch's fat distribution.
 
 \shot{analysis-table.jpeg}{Analysis $\rightarrow$ Table + distribution. A sortable
 table of per-carcass fat, grade and physical measurements, beside the batch fat
@@ -60,17 +60,16 @@ histogram.}{analysis-table}
 
 \section{Compare}
 
-The \textbf{Compare} tab (Figure~\ref{fig:analysis-compare}) lets you select up to
-four carcasses and view their overlays and numbers side by side, which helps you
-calibrate perception against the model.
+The \textbf{Compare} tab (Figure~\ref{fig:analysis-compare}) allows up to four
+carcasses to be selected and their overlays and numbers viewed side by side,
+supporting calibration of perception against the model.
 
 \shot{analysis-compare.jpeg}{Analysis $\rightarrow$ Compare. Up to four carcasses
 side by side, each with its fat overlay, fat percentage and experimental grade.}{analysis-compare}
 
 \section{Physical correlation}
 
-The \textbf{Physical correlation} tab plots the model's fat \% against the physical
-reference you entered (fat thickness, loin eye area), with the Pearson $r$. This
-tab will \emph{close the validation loop} once the paired dataset is large enough.
-It tests whether the surface measurement predicts the physical reference measured
-on the animal.
+The \textbf{Physical correlation} tab plots the model's fat \% against the entered
+physical reference (fat thickness, loin eye area), with the Pearson $r$. This tab
+supports validation once the paired dataset is large enough. It tests whether the
+surface measurement predicts the physical reference measured on the animal.

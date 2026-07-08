@@ -4,10 +4,10 @@
 
 \vspace{4pt}
 The \textbf{Live monitor} shows a fat overlay in real time, from a camera or a
-video file, to help you frame the carcass while capturing. It is a
+video file, as an aid to framing the carcass during capture. It is a
 \emph{framing guide}, not the official measurement.
 
-\section{Using it}
+\section{Operation}
 
 \shot{live-monitor.jpeg}{The Live monitor, stopped. A source switch (Live camera /
 Video file) chooses the frame source; \tele{Start} begins the overlay and
@@ -15,23 +15,24 @@ Video file) chooses the frame source; \tele{Start} begins the overlay and
 state and device are shown at the top.}{live-monitor}
 
 \begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
-  \item Choose the source: \textbf{Live camera} or \textbf{Video file}.
-  \item Press \tele{Start}. The video plays and the fat overlay (cyan) tracks it,
-        with a live FPS and fat-percentage readout in the corner.
-  \item For a fixed camera, press \tele{Capture background} with the scene empty;
-        the app subtracts it from each frame so the overlay is restricted to the
-        carcass. Then position the carcass.
+  \item The source is selected: \textbf{Live camera} or \textbf{Video file}.
+  \item The \tele{Start} control begins playback. The video plays and the fat
+        overlay (cyan) tracks it, with a live FPS and fat-percentage readout in
+        the corner.
+  \item For a fixed camera, \tele{Capture background} records the empty scene; the
+        application subtracts it from each frame so the overlay is restricted to
+        the carcass. The carcass is then positioned.
 \end{enumerate}
 
 \section{How it works, and its limits}
 
-The monitor uses classical background subtraction (fast, $\sim$10\,ms) plus the
-fat model at reduced resolution, reaching roughly real-time rates on the tested
-hardware. It deliberately does \emph{not} use the precise (but slow) background
-removal of the Analysis pipeline.
+The monitor uses classical background subtraction ($\sim$10\,ms) plus the fat
+model at reduced resolution, reaching roughly real-time rates on the tested
+hardware. It does \emph{not} use the more accurate but slower background removal
+of the Analysis pipeline.
 
 \begin{caution}[title={Framing guide, not the validated number}]
-The live overlay is approximate, a visual aid to get the framing right. The
-validated fat number comes from the Analysis tab, run on a captured image with
-precise background removal.
+The live overlay is approximate, a visual aid for framing. The validated fat
+number comes from the Analysis tab, run on a captured image with the more accurate
+background removal.
 \end{caution}

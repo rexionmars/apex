@@ -4,15 +4,16 @@
 
 \vspace{4pt}
 A visão \textbf{Analysis} de um lote executa os modelos treinados sobre suas imagens e
-transforma os resultados em um espaço de trabalho científico: uma galeria, uma tabela ordenável com sua
+apresenta os resultados em várias abas: uma galeria, uma tabela ordenável com sua
 distribuição, além de conformação, correlação física e comparação lado a lado.
 
 \section{Executando a análise}
 
-Abra um lote e selecione \textbf{Analysis}. Pressione \tele{Analyze batch} para processar
-todas as imagens ainda não analisadas, com uma barra de progresso ao vivo. Os resultados são salvos no
-lote, de modo que reabri-lo não os executa novamente; \tele{Reanalyze} força uma nova execução.
-O botão \tele{CSV} exporta todos os resultados.
+Um lote é aberto e a vista \textbf{Analysis} é selecionada. O controle
+\tele{Analyze batch} processa todas as imagens ainda não analisadas, com uma barra de
+progresso ao vivo. Os resultados são salvos no lote, de modo que a reabertura não os
+executa novamente; \tele{Reanalyze} força uma nova execução. O botão \tele{CSV}
+exporta todos os resultados.
 
 Cada imagem passa pelo mesmo pipeline:
 
@@ -60,7 +61,7 @@ lote.}{analysis-table}
 \section{Comparar}
 
 A aba \textbf{Compare} (Figura~\ref{fig:analysis-compare}) permite selecionar até
-quatro carcaças e ver suas sobreposições e números lado a lado, útil para
+quatro carcaças e exibir suas sobreposições e números lado a lado, o que é útil para
 calibrar a percepção contra o modelo.
 
 \shot{analysis-compare.jpeg}{Analysis $\rightarrow$ Compare. Até quatro carcaças
@@ -69,7 +70,7 @@ lado a lado, cada uma com sua sobreposição de gordura, percentual de gordura e
 \section{Correlação física}
 
 A aba \textbf{Physical correlation} plota a \% de gordura do modelo contra a referência
-física que você inseriu (espessura de gordura, área de olho de lombo), com o $r$ de Pearson. Esta
-é a aba que vai \emph{fechar o ciclo de validação} assim que o conjunto de dados pareado for
-grande o suficiente. Ela testa se a medida de superfície prediz a referência
-física medida no animal.
+física inserida (espessura de gordura, área de olho de lombo), com o $r$ de Pearson.
+Esta aba dá suporte à validação quando o conjunto de dados pareado atinge tamanho
+suficiente. Ela testa se a medida de superfície prediz a referência física medida no
+animal.

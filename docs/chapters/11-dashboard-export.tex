@@ -1,12 +1,12 @@
 \chapter{Dashboard and export}
 
-\eyebrow{track the sample, ship the dataset}
+\eyebrow{sample progress and dataset export}
 
 \vspace{4pt}
-The \textbf{Project dashboard} (Figure~\ref{fig:dashboard}) is the overview of the
-whole effort. It shows how far the sample has progressed, how well the raters
-agree, and whether the pairing is intact. It also holds the button that produces
-the final dataset.
+The \textbf{Project dashboard} (Figure~\ref{fig:dashboard}) provides an overview of
+the study. It shows how far the sample has progressed, the degree of inter-rater
+agreement, and whether the pairing is intact. It also contains the control that
+produces the final dataset.
 
 \shot{dashboard.jpeg}{The Project dashboard. Summary cards (carcasses, images,
 graded, pairing); the stratified-sample progress toward the target; inter-rater
@@ -27,7 +27,7 @@ a common set of carcasses it reads \tele{$\kappa$ not computable yet}.
 
 \section{Export dataset}
 
-The \textbf{Export dataset} button produces two files in a chosen folder:
+The \textbf{Export dataset} control produces two files in a chosen folder:
 
 \begin{center}
 \begin{tabularx}{\linewidth}{@{}l X@{}}
@@ -37,12 +37,12 @@ The \textbf{Export dataset} button produces two files in a chosen folder:
 \tele{manifest.csv} & One row per image, with the full pairing: physical tag,
       animal, treatment, stratum, consensus grades, agreement, fat percentage,
       conformation indices and the physical reference. \\
-\tele{integrity\_report.txt} & A human-readable attestation: totals per stratum,
+\tele{integrity\_report.txt} & A human-readable summary: totals per stratum,
       any orphan images excluded, inter-rater agreement, and file hashes. \\
 \bottomrule
 \end{tabularx}
 \end{center}
 
 Only carcasses with verified pairing are included; optionally, only those with a
-valid consensus grade. The integrity report is the artefact that attests the
-2022 failure did not recur.
+valid consensus grade. The integrity report documents that the pairing failure of
+the 2022 study did not recur.

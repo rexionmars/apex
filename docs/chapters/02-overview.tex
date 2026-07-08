@@ -1,12 +1,12 @@
 \chapter{System overview}
 
-\eyebrow{how the pieces fit}
+\eyebrow{architecture}
 
 \vspace{4pt}
-Apex is a single native desktop application. A Go core owns the window, the
+Apex is a single native desktop application. A Go core manages the window, the
 database and the business logic. A React front end draws the interface inside the
-operating system's native WebView. Python \emph{sidecars} run the parts that
-need PyTorch or OpenCV: model inference, real-time overlay, and conformation.
+operating system's native WebView. Python \emph{sidecars} run the components that
+require PyTorch or OpenCV: model inference, real-time overlay, and conformation.
 
 \section{Architecture}
 
@@ -31,15 +31,15 @@ Single native binary (Wails)\\
 \subsection*{Three principles}
 
 \begin{enumerate}[leftmargin=1.4em,itemsep=4pt]
-  \item \textbf{The database is the source of truth for pairing.} An image never
-        carries its link in its filename. The flow is always: select or create
-        the carcass, then capture/import \emph{inside} that carcass's context, so
-        the image is written with its \tele{carcass\_id} already set.
-        Reconstruction by file order is structurally impossible.
+  \item \textbf{The database is the source of truth for pairing.} An image does
+        not carry its link in its filename. A carcass is selected or created, and
+        capture or import then occurs \emph{within} that carcass's context, so the
+        image is written with its \tele{carcass\_id} already set. Reconstruction
+        by file order is not permitted by the schema.
   \item \textbf{Capture sources are interchangeable.} Webcam capture runs in the
         front end via the browser camera API; the Kinect (depth) runs through a
-        Python sidecar; both are just sources of a paired image.
-  \item \textbf{Measurements come with honesty about their status.} Colour
+        Python sidecar. Both are sources of a paired image.
+  \item \textbf{Measurements are labelled with their validation status.} Colour
         encodes state: \pillok{validated} (green) for fat segmentation,
         \pillalert{experimental} (amber) for the grades, and red reserved for
         broken pairing, never for a data series.

@@ -1,13 +1,12 @@
 \chapter{Installation and running}
 
-\eyebrow{getting the instrument on}
+\eyebrow{installation}
 
 \section{Option A: a pre-built release}
 
-The quickest path is to download a native build for your platform from the
-project's \textbf{Releases} page. Each release ships a self-contained archive per
-operating system, with the model weights already bundled and no build tools
-required:
+A native build for each platform is available on the project's \textbf{Releases}
+page. Each release provides a self-contained archive per operating system, with
+the model weights bundled and no build tools required:
 
 \begin{center}
 \begin{tabularx}{\linewidth}{@{}l X@{}}
@@ -21,14 +20,14 @@ Linux (amd64)     & \tele{carcass-linux.tar.gz}, contains the binary \\
 \end{tabularx}
 \end{center}
 
-Unpack it and run the app. The Python analysis features still need a Python
-environment with the scientific libraries (see below); everything else works out
-of the box. Releases are produced automatically by continuous integration
-(Station~14).
+The archive is unpacked and the application is run. The Python analysis features
+still require a Python environment with the scientific libraries (see below); the
+remaining features run without further setup. Releases are produced automatically
+by continuous integration (Station~14).
 
 \begin{note}[title={Building from source}]
-If you want to develop, modify, or build for a platform not in the releases,
-follow Options~B and~C below.
+To develop, modify, or build for a platform not covered by the releases, follow
+Options~B and~C below.
 \end{note}
 
 \section{Prerequisites (build from source)}
@@ -86,8 +85,8 @@ source tree. Place them under \tele{model/weights/}:
 wails dev
 \end{lstlisting}
 
-If your system \tele{python3} does not have the scientific libraries, point the
-app at one that does:
+If the system \tele{python3} does not have the scientific libraries, the app can
+be directed to one that does:
 
 \begin{lstlisting}
 export CARCASS_PYTHON=/path/to/python-with-torch

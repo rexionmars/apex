@@ -1,10 +1,10 @@
 \chapter{Instalação e execução}
 
-\eyebrow{colocando o instrumento em funcionamento}
+\eyebrow{instalação e execução}
 
 \section{Opção A: uma versão pré-compilada}
 
-O caminho mais rápido é baixar um build nativo para a sua plataforma a partir da
+Um build nativo para cada plataforma está disponível na
 página de \textbf{Releases} do projeto. Cada versão distribui um arquivo
 autocontido por sistema operacional, com os pesos do modelo já incluídos e sem
 necessidade de ferramentas de build:
@@ -21,14 +21,14 @@ Linux (amd64)     & \tele{carcass-linux.tar.gz} (contém o binário) \\
 \end{tabularx}
 \end{center}
 
-Descompacte-o e execute o aplicativo. Os recursos de análise em Python ainda
-precisam de um ambiente Python com as bibliotecas científicas (veja abaixo); todo
-o resto funciona de imediato. As versões são produzidas automaticamente por
-integração contínua (Estação~14).
+O arquivo é descompactado e o aplicativo é executado. Os recursos de análise em
+Python ainda precisam de um ambiente Python com as bibliotecas científicas (ver
+abaixo); os demais recursos funcionam sem configuração adicional. As versões são
+produzidas automaticamente por integração contínua (Estação~14).
 
 \begin{note}[title={Compilando a partir do código-fonte}]
-Se você quiser desenvolver, modificar ou compilar para uma plataforma que não esteja
-nas versões, siga as Opções~B e~C abaixo.
+Para desenvolver, modificar ou compilar para uma plataforma que não esteja
+nas versões, aplicam-se as Opções~B e~C abaixo.
 \end{note}
 
 \section{Pré-requisitos (compilar a partir do código-fonte)}
@@ -86,8 +86,8 @@ Os pesos treinados e a tabela de consulta ColorNaming não são distribuídos na
 wails dev
 \end{lstlisting}
 
-Se o \tele{python3} do seu sistema não tiver as bibliotecas científicas, aponte o
-aplicativo para um que as tenha:
+Quando o \tele{python3} do sistema não dispõe das bibliotecas científicas, o
+aplicativo pode ser apontado para um interpretador que as tenha:
 
 \begin{lstlisting}
 export CARCASS_PYTHON=/path/to/python-with-torch

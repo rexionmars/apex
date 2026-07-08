@@ -1,6 +1,6 @@
 \chapter{Visão geral do sistema}
 
-\eyebrow{como as peças se encaixam}
+\eyebrow{arquitetura}
 
 \vspace{4pt}
 O Apex é uma única aplicação de desktop nativa. Um núcleo em Go é dono da janela, do
@@ -33,15 +33,14 @@ Binário nativo único (Wails)\\
 
 \begin{enumerate}[leftmargin=1.4em,itemsep=4pt]
   \item \textbf{O banco de dados é a fonte da verdade para o pareamento.} Uma imagem
-        nunca carrega seu vínculo no nome do arquivo. O fluxo é sempre: selecionar ou
-        criar a carcaça, depois capturar/importar \emph{dentro} do contexto dessa
-        carcaça, de modo que a imagem seja gravada com seu \tele{carcass\_id} já
-        definido. A reconstrução pela ordem dos arquivos é estruturalmente
-        impossível.
-  \item \textbf{As fontes de captura são intercambiáveis.} A captura por webcam roda
-        no front end via a API de câmera do navegador; o Kinect (depth) roda através
-        de um sidecar Python; ambos são apenas fontes de uma imagem pareada.
-  \item \textbf{As medições vêm com honestidade sobre seu status.} A cor codifica o
+        não carrega seu vínculo no nome do arquivo. O fluxo consiste em selecionar ou
+        criar a carcaça e, em seguida, capturar ou importar \emph{dentro} do contexto
+        dessa carcaça, de modo que a imagem seja gravada com seu \tele{carcass\_id} já
+        definido. A reconstrução pela ordem dos arquivos não é permitida pelo schema.
+  \item \textbf{As fontes de captura são intercambiáveis.} A captura por webcam é
+        executada no front end via a API de câmera do navegador; o Kinect (depth) é
+        executado através de um sidecar Python; ambos são fontes de uma imagem pareada.
+  \item \textbf{As medições indicam seu status.} A cor codifica o
         estado: \pillok{validated} (verde) para a segmentação de gordura,
         \pillalert{experimental} (âmbar) para os graus, e o vermelho reservado para
         pareamento quebrado, nunca para uma série de dados.

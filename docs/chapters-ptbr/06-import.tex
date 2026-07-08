@@ -1,31 +1,34 @@
 \chapter{Importar imagens externas}
 
-\eyebrow{traga fotos, mantenha o pareamento}
+\eyebrow{importação de imagens externas}
 
 \vspace{4pt}
-Quando você já tem fotos, tiradas com outra câmera ou em outra sessão,
-o objeto \textbf{Import images} as traz sem quebrar o pareamento.
+Fotos já existentes, tiradas com outra câmera ou em outra sessão, são trazidas
+pelo objeto \textbf{Import images} sem quebrar o pareamento.
 
 \section{Duas maneiras de importar}
 
-Escolha uma pasta; o app a percorre, calcula um \tele{sha256} para cada imagem
-(para que duplicatas sejam detectadas) e lê o EXIF. Então:
+Uma pasta é selecionada; o aplicativo a percorre, calcula um \tele{sha256} para cada
+imagem (de modo que duplicatas sejam detectadas) e lê o EXIF. Em seguida, há dois
+modos:
 
 \begin{enumerate}[leftmargin=1.4em,itemsep=4pt]
-  \item \textbf{Importar todas como novas carcaças.} O caminho rápido: cada foto se torna
-        uma nova carcaça, com a etiqueta física extraída do nome do arquivo. Você preenche
-        os dados reais depois na visão Overview da carcaça. Nomes de arquivo repetidos recebem um
-        sufixo numérico automaticamente, de modo que as etiquetas permanecem únicas.
-  \item \textbf{Parear a uma carcaça existente.} Item a item, concilie uma foto a uma
-        carcaça já presente no lote, útil quando várias fotos pertencem ao
+  \item \textbf{Importar todas como novas carcaças.} Cada foto se torna
+        uma nova carcaça, com a etiqueta física extraída do nome do arquivo. Os dados
+        reais são preenchidos depois na visão Overview da carcaça. Nomes de arquivo
+        repetidos recebem um sufixo numérico automaticamente, de modo que as etiquetas
+        permanecem únicas.
+  \item \textbf{Parear a uma carcaça existente.} Item a item, cada foto é conciliada a
+        uma carcaça já presente no lote, o que é útil quando várias fotos pertencem ao
         mesmo animal.
 \end{enumerate}
 
-\begin{note}[title=O pareamento é preservado de qualquer forma]
-Qualquer que seja o caminho escolhido, a carcaça é criada (ou escolhida) no momento da
-importação, de modo que a imagem nunca fica órfã. Duplicatas já presentes no conjunto de dados são
-ignoradas por hash.
+\begin{note}[title={O pareamento é preservado em ambos os modos}]
+Qualquer que seja o modo escolhido, a carcaça é criada (ou escolhida) no momento da
+importação, de modo que a imagem não fica órfã. Duplicatas já presentes no conjunto de
+dados são ignoradas por hash.
 \end{note}
 
-Isso transforma o antigo modo de falha (imagens órfãs às quais depois se atribuíam vínculos
-inventados) em uma etapa explícita que o operador resolve no momento da importação.
+O antigo modo de falha (imagens órfãs às quais depois se atribuíam vínculos
+inventados) passa a ser uma etapa explícita, resolvida pelo operador no momento da
+importação.
