@@ -21,7 +21,7 @@ Go core & \tele{go vet} and the full test suite (\tele{go test ./...}), includin
       the pairing-integrity and Fleiss'~$\kappa$ tests. \\
 Wails build & A complete \tele{wails build}: it generates the Go$\leftrightarrow$JS
       bindings, type-checks the front end (\tele{tsc}), builds it (\tele{vite}) and
-      compiles the Go core --- validating all three layers together, exactly as a
+      compiles the Go core, validating all three layers together, exactly as a
       release does. \\
 Python sidecars & Byte-compile (syntax) plus a \tele{ruff} lint of the inference,
       conformation, live and Kinect sidecars. \\
@@ -35,9 +35,9 @@ branch.
 \section{Releases}
 
 The \textbf{Release} workflow triggers when a version tag matching \tele{v*} is
-pushed. It builds the native application on three runners in parallel --- macOS,
-Windows and Linux --- bundles the model weights into each build, and attaches the
-archives to a GitHub Release with auto-generated notes.
+pushed. It builds the native application on three runners in parallel (macOS,
+Windows and Linux). It then bundles the model weights into each build, and
+attaches the archives to a GitHub Release with auto-generated notes.
 
 \begin{center}
 \begin{tabularx}{\linewidth}{@{}l l@{}}
@@ -64,13 +64,13 @@ git tag -a v0.2.0 -m "Apex v0.2.0 - <summary>"
 git push origin v0.2.0
 \end{lstlisting}
 
-The workflow does the rest --- three platform builds, weight bundling, and the
+The workflow does the rest: three platform builds, weight bundling, and the
 published release with downloadable binaries. Keep the version in
 \tele{wails.json} in step with the tag.
 
 \begin{note}[title={Reproducible by construction}]
 Because the release uses the same \tele{wails build} the CI runs on every commit,
 a tagged build is never a surprise: if CI is green, the release builds. The result
-is a set of ready-to-run binaries that need no build tools --- only, for the model
-features, a Python environment with the scientific libraries.
+is a set of ready-to-run binaries that need no build tools. The model
+features need only a Python environment with the scientific libraries.
 \end{note}

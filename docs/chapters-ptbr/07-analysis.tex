@@ -4,8 +4,8 @@
 
 \vspace{4pt}
 A visão \textbf{Analysis} de um lote executa os modelos treinados sobre suas imagens e
-transforma os resultados em um espaço de trabalho científico: uma galeria, uma tabela ordenável com uma
-distribuição, conformação, correlação física e comparação lado a lado.
+transforma os resultados em um espaço de trabalho científico: uma galeria, uma tabela ordenável com sua
+distribuição, além de conformação, correlação física e comparação lado a lado.
 
 \section{Executando a análise}
 
@@ -18,7 +18,7 @@ Cada imagem passa pelo mesmo pipeline:
 
 \begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
   \item \textbf{Remoção de fundo.} A carcaça é recortada e composta sobre
-        preto --- as mesmas condições em que o modelo de gordura foi treinado.
+        preto, nas mesmas condições em que o modelo de gordura foi treinado.
   \item \textbf{Segmentação de gordura.} O modelo validado produz uma máscara de gordura; a
         fração de gordura é medida \emph{em relação à superfície da carcaça}, não
         à foto inteira.
@@ -38,7 +38,7 @@ e o percentual de gordura passa a ser a fração da \emph{superfície da carcaç
 \section{Galeria}
 
 A galeria (Figura~\ref{fig:analysis-gallery}) mostra cada carcaça com sua sobreposição
-de gordura em ciano e o percentual de gordura abaixo --- uma varredura visual rápida do
+de gordura em ciano e o percentual de gordura abaixo: uma varredura visual rápida do
 lote inteiro. Acima dela, estatísticas do lote (média, desvio padrão, mediana, mín, máx) e uma
 linha de pílulas de status: \pillok{validated segmentation $\cdot$ IoU 0.92},
 \pillalert{experimental grade $\cdot$ n=22} e \tele{analysis saved to batch}.
@@ -60,7 +60,7 @@ lote.}{analysis-table}
 \section{Comparar}
 
 A aba \textbf{Compare} (Figura~\ref{fig:analysis-compare}) permite selecionar até
-quatro carcaças e ver suas sobreposições e números lado a lado --- útil para
+quatro carcaças e ver suas sobreposições e números lado a lado, útil para
 calibrar a percepção contra o modelo.
 
 \shot{analysis-compare.jpeg}{Analysis $\rightarrow$ Compare. Até quatro carcaças
@@ -71,5 +71,5 @@ lado a lado, cada uma com sua sobreposição de gordura, percentual de gordura e
 A aba \textbf{Physical correlation} plota a \% de gordura do modelo contra a referência
 física que você inseriu (espessura de gordura, área de olho de lombo), com o $r$ de Pearson. Esta
 é a aba que vai \emph{fechar o ciclo de validação} assim que o conjunto de dados pareado for
-grande o suficiente: ela testa se a medida de superfície prediz a referência
+grande o suficiente. Ela testa se a medida de superfície prediz a referência
 física medida no animal.

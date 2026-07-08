@@ -6,7 +6,7 @@
 O Apex é uma única aplicação de desktop nativa. Um núcleo em Go é dono da janela, do
 banco de dados e da lógica de negócio; um front end em React desenha a interface
 dentro do WebView nativo do sistema operacional; e \emph{sidecars} em Python executam
-as partes que precisam de PyTorch ou OpenCV --- inferência de modelos, sobreposição
+as partes que precisam de PyTorch ou OpenCV: inferência de modelos, sobreposição
 em tempo real e conformação.
 
 \section{Arquitetura}
@@ -44,7 +44,7 @@ Binário nativo único (Wails)\\
   \item \textbf{As medições vêm com honestidade sobre seu status.} A cor codifica o
         estado: \pillok{validated} (verde) para a segmentação de gordura,
         \pillalert{experimental} (âmbar) para os graus, e o vermelho reservado para
-        pareamento quebrado --- nunca para uma série de dados.
+        pareamento quebrado, nunca para uma série de dados.
 \end{enumerate}
 
 \section{Pilha de tecnologia}
@@ -56,7 +56,7 @@ Binário nativo único (Wails)\\
 \midrule
 Casca de desktop & Wails v2 (Go) & Janela, embutir o front end, ponte Go$\leftrightarrow$JS \\
 Núcleo          & Go 1.23+      & Banco de dados, pareamento, orquestração \\
-Banco de dados  & SQLite (pure-Go) & \tele{carcass.db} único --- a planilha única \\
+Banco de dados  & SQLite (pure-Go) & \tele{carcass.db} único: a planilha única \\
 Front end       & React 19 + Vite + TypeScript & A interface do instrumento \\
 Estilização     & Tailwind 4, shadcn/ui & Tema "Espresso" do Open MCT \\
 Inferência      & Python + PyTorch & Modelos de gordura / grau / conformação \\

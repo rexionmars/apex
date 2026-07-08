@@ -2,11 +2,11 @@
 
 \eyebrow{colocando o instrumento em funcionamento}
 
-\section{Opção A --- uma versão pré-compilada}
+\section{Opção A: uma versão pré-compilada}
 
 O caminho mais rápido é baixar um build nativo para a sua plataforma a partir da
 página de \textbf{Releases} do projeto. Cada versão distribui um arquivo
-autocontido por sistema operacional, com os pesos do modelo já incluídos --- sem
+autocontido por sistema operacional, com os pesos do modelo já incluídos e sem
 necessidade de ferramentas de build:
 
 \begin{center}
@@ -14,9 +14,9 @@ necessidade de ferramentas de build:
 \toprule
 \textbf{Plataforma} & \textbf{Arquivo} \\
 \midrule
-macOS (universal) & \tele{carcass-macos.tar.gz} --- contém o \tele{.app} \\
-Windows (amd64)   & \tele{carcass-windows.zip} --- contém o \tele{.exe} \\
-Linux (amd64)     & \tele{carcass-linux.tar.gz} --- contém o binário \\
+macOS (universal) & \tele{carcass-macos.tar.gz} (contém o \tele{.app}) \\
+Windows (amd64)   & \tele{carcass-windows.zip} (contém o \tele{.exe}) \\
+Linux (amd64)     & \tele{carcass-linux.tar.gz} (contém o binário) \\
 \bottomrule
 \end{tabularx}
 \end{center}
@@ -51,7 +51,7 @@ Os recursos de núcleo, captura e importação rodam apenas com Go e Node. Os re
 baseados em modelos (análise de gordura, conformação, monitor ao vivo) exigem
 adicionalmente um ambiente Python com as bibliotecas científicas acima.
 
-\section{Opção B --- executar a partir do código-fonte}
+\section{Opção B: executar a partir do código-fonte}
 
 \begin{lstlisting}
 # instala a Wails CLI
@@ -97,11 +97,11 @@ wails dev
 \begin{note}[title={A câmera e o WebView}]
 A captura por webcam e o monitor ao vivo usam a câmera do sistema através do WebView,
 portanto precisam rodar dentro do aplicativo (via \tele{wails dev} ou o binário
-compilado), não em um navegador comum --- a ponte para o núcleo Go só existe dentro
+compilado), não em um navegador comum. A ponte para o núcleo Go só existe dentro
 do aplicativo.
 \end{note}
 
-\section{Opção C --- compilar um aplicativo nativo}
+\section{Opção C: compilar um aplicativo nativo}
 
 \begin{lstlisting}
 wails build -platform darwin/universal   # .app

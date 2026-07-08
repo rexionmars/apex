@@ -4,8 +4,9 @@
 
 \vspace{4pt}
 The \textbf{Analysis} view of a batch runs the trained models over its images and
-turns the results into a scientific workspace: a gallery, a sortable table with a
-distribution, conformation, physical correlation, and side-by-side comparison.
+turns the results into a scientific workspace. This workspace holds a gallery, a
+sortable table with a distribution, conformation, physical correlation, and
+side-by-side comparison.
 
 \section{Running the analysis}
 
@@ -18,7 +19,7 @@ Each image passes through the same pipeline:
 
 \begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
   \item \textbf{Background removal.} The carcass is cut out and composited on
-        black --- the same conditions the fat model was trained on.
+        black, the same conditions the fat model was trained on.
   \item \textbf{Fat segmentation.} The validated model produces a fat mask; the
         fat fraction is measured \emph{relative to the carcass surface}, not the
         whole photo.
@@ -38,7 +39,7 @@ and the fat percentage becomes the fraction of the \emph{carcass surface}.
 \section{Gallery}
 
 The gallery (Figure~\ref{fig:analysis-gallery}) shows every carcass with its fat
-overlay in cyan and the fat percentage beneath --- a fast visual sweep of the
+overlay in cyan and the fat percentage beneath, a fast visual sweep of the
 whole batch. Above it, batch statistics (mean, std dev, median, min, max) and a
 row of status pills: \pillok{validated segmentation $\cdot$ IoU 0.92},
 \pillalert{experimental grade $\cdot$ n=22}, and \tele{analysis saved to batch}.
@@ -60,7 +61,7 @@ histogram.}{analysis-table}
 \section{Compare}
 
 The \textbf{Compare} tab (Figure~\ref{fig:analysis-compare}) lets you select up to
-four carcasses and view their overlays and numbers side by side --- useful to
+four carcasses and view their overlays and numbers side by side, which helps you
 calibrate perception against the model.
 
 \shot{analysis-compare.jpeg}{Analysis $\rightarrow$ Compare. Up to four carcasses
@@ -70,6 +71,6 @@ side by side, each with its fat overlay, fat percentage and experimental grade.}
 
 The \textbf{Physical correlation} tab plots the model's fat \% against the physical
 reference you entered (fat thickness, loin eye area), with the Pearson $r$. This
-is the tab that will \emph{close the validation loop} once the paired dataset is
-large enough: it tests whether the surface measurement predicts the physical
-reference measured on the animal.
+tab will \emph{close the validation loop} once the paired dataset is large enough.
+It tests whether the surface measurement predicts the physical reference measured
+on the animal.

@@ -6,14 +6,14 @@
 A conformação descreve a forma e o desenvolvimento muscular da carcaça. A
 norma de avaliação a define pela \textbf{convexidade do perfil}: musculatura plena
 empurra o contorno para fora (convexo); musculatura pobre, com osso aparente, o afunda
-para dentro (côncavo). O Apex transcreve exatamente essa regra em uma medida.
+para dentro (côncavo). O Apex transcreve essa regra exatamente em uma medida.
 
 \section{O método}
 
 A medida de \textbf{convexidade integral-invariante} (Manay et al.\ 2004; Pottmann
 et al.\ 2009) calcula, em cada ponto do contorno da carcaça, quanto de um pequeno
 disco cai dentro da silhueta. Essa área carrega a curvatura com sinal sem
-diferenciar --- por isso é robusta ao ruído da máscara --- e produz um valor:
+diferenciar, o que a torna robusta ao ruído da máscara, e produz um valor:
 
 \begin{center}
 \ttfamily $c > 0$ \rm convexo (musculoso) \quad\textbullet\quad
@@ -22,8 +22,8 @@ diferenciar --- por isso é robusta ao ruído da máscara --- e produz um valor:
 \end{center}
 
 Ela é \textbf{analítica} (sem treino, sem pesos), \textbf{invariante} a
-rotação, translação, escala e iluminação, e usa apenas a silhueta segmentada
---- sem cor nem textura. O valor é promediado por região anatômica: \emph{leg}
+rotação, translação, escala e iluminação, e usa apenas a silhueta segmentada,
+sem cor nem textura. O valor é promediado por região anatômica: \emph{leg}
 (perna), \emph{loin} (lombo) e \emph{shoulder} (paleta), com a pose pendurada
 (jarrete no topo) fixando o eixo.
 
@@ -47,7 +47,7 @@ correspondência é verificável a olho.
 \begin{caution}[title=O grau estimado não é validado]
 O mapa de convexidade e os índices por região são \textbf{medidas objetivas}.
 O \emph{grau estimado} derivado deles (mostrado com uma pílula \tele{est.} em
-âmbar) \textbf{não é validado} --- o experimento oráculo do projeto mostrou que
+âmbar) \textbf{não é validado}. O experimento oráculo do projeto mostrou que
 a conformação não é recuperável de forma confiável a partir de uma única imagem 2D neste tamanho de
 amostra (Estação~13). Use o grau como referência indicativa, a ser validado à
 medida que o conjunto de dados pareado cresce.

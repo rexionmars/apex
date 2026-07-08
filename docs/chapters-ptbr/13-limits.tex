@@ -22,13 +22,13 @@ fronteira de forma explícita.
 
 \section{O que não é validado}
 
-Os dois \emph{graus} --- acabamento e conformação --- são estimativas, não
+Os dois \emph{graus} (acabamento e conformação) são estimativas, não
 predições estabelecidas. Isso se fundamenta no experimento oráculo do projeto,
 que testou se a conformação é recuperável a partir de uma única imagem 2D:
 
 \begin{caution}[title=O resultado do oráculo]
-Calculando descritores de forma sobre a \emph{anotação manual perfeita} --- a
-melhor máscara que qualquer modelo poderia produzir --- \textbf{zero de 384
+Calculando descritores de forma sobre a \emph{anotação manual perfeita} (a
+melhor máscara que qualquer modelo poderia produzir), \textbf{zero de 384
 testes estatísticos sobreviveram à correção de múltiplas comparações} com n=22.
 Mesmo com segmentação perfeita, a conformação não é recuperável de forma
 confiável a partir de uma única imagem 2D neste tamanho de amostra. O gargalo é
@@ -38,13 +38,13 @@ a modalidade de aquisição, não o modelo.
 Portanto, o software apresenta esses graus como \pillalert{estimativas}, nunca
 como fatos, e os marca em âmbar onde quer que apareçam.
 
-\section{Por que isso importa --- e como se resolve}
+\section{Por que isso importa, e como se resolve}
 
 A validação que falta aos graus requer exatamente uma coisa: graus corretamente
 pareados às imagens, em uma amostra maior. É precisamente isso que o Apex foi
 construído para coletar. À medida que o conjunto de dados pareado cresce, a aba
 \textbf{Correlação física} (Estação~7) pode testar se as medições de superfície
-predizem a referência física e os graus dos avaliadores --- fechando o ciclo que
+predizem a referência física e os graus dos avaliadores. Assim se fecha o ciclo que
 a pesquisa anterior não conseguiu.
 
 \section{Ressalvas de modalidade}
@@ -64,7 +64,7 @@ a pesquisa anterior não conseguiu.
 \end{itemize}
 
 \begin{note}[title=O fio condutor]
-O estudo anterior não falhou em seus métodos --- falhou na integridade dos dados.
+O estudo anterior não falhou em seus métodos. Falhou na integridade dos dados.
 O Apex existe para corrigir isso primeiro. Cada limitação honesta acima é uma
 razão pela qual o software é construído do jeito que é: coletar um conjunto de
 dados pareado e confiável, e deixar a validação seguir.

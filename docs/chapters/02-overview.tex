@@ -4,9 +4,9 @@
 
 \vspace{4pt}
 Apex is a single native desktop application. A Go core owns the window, the
-database and the business logic; a React front end draws the interface inside the
-operating system's native WebView; and Python \emph{sidecars} run the parts that
-need PyTorch or OpenCV --- model inference, real-time overlay, and conformation.
+database and the business logic. A React front end draws the interface inside the
+operating system's native WebView. Python \emph{sidecars} run the parts that
+need PyTorch or OpenCV: model inference, real-time overlay, and conformation.
 
 \section{Architecture}
 
@@ -42,7 +42,7 @@ Single native binary (Wails)\\
   \item \textbf{Measurements come with honesty about their status.} Colour
         encodes state: \pillok{validated} (green) for fat segmentation,
         \pillalert{experimental} (amber) for the grades, and red reserved for
-        broken pairing --- never for a data series.
+        broken pairing, never for a data series.
 \end{enumerate}
 
 \section{Technology stack}
@@ -54,7 +54,7 @@ Single native binary (Wails)\\
 \midrule
 Desktop shell & Wails v2 (Go) & Window, embed front end, Go$\leftrightarrow$JS bridge \\
 Core          & Go 1.23+      & Database, pairing, orchestration \\
-Database      & SQLite (pure-Go) & Single \tele{carcass.db} --- the one spreadsheet \\
+Database      & SQLite (pure-Go) & Single \tele{carcass.db}, the one spreadsheet \\
 Front end     & React 19 + Vite + TypeScript & The instrument interface \\
 Styling       & Tailwind 4, shadcn/ui & Open MCT "Espresso" theme \\
 Inference     & Python + PyTorch & Fat / grade / conformation models \\

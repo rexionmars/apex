@@ -2,11 +2,11 @@
 
 \eyebrow{getting the instrument on}
 
-\section{Option A --- a pre-built release}
+\section{Option A: a pre-built release}
 
 The quickest path is to download a native build for your platform from the
 project's \textbf{Releases} page. Each release ships a self-contained archive per
-operating system, with the model weights already bundled --- no build tools
+operating system, with the model weights already bundled and no build tools
 required:
 
 \begin{center}
@@ -14,9 +14,9 @@ required:
 \toprule
 \textbf{Platform} & \textbf{Archive} \\
 \midrule
-macOS (universal) & \tele{carcass-macos.tar.gz} --- contains the \tele{.app} \\
-Windows (amd64)   & \tele{carcass-windows.zip} --- contains the \tele{.exe} \\
-Linux (amd64)     & \tele{carcass-linux.tar.gz} --- contains the binary \\
+macOS (universal) & \tele{carcass-macos.tar.gz}, contains the \tele{.app} \\
+Windows (amd64)   & \tele{carcass-windows.zip}, contains the \tele{.exe} \\
+Linux (amd64)     & \tele{carcass-linux.tar.gz}, contains the binary \\
 \bottomrule
 \end{tabularx}
 \end{center}
@@ -51,7 +51,7 @@ The core, capture and import features run with Go and Node alone. The model-base
 features (fat analysis, conformation, live monitor) additionally require a Python
 environment with the scientific libraries above.
 
-\section{Option B --- run from source}
+\section{Option B: run from source}
 
 \begin{lstlisting}
 # install the Wails CLI
@@ -97,10 +97,10 @@ wails dev
 \begin{note}[title=Camera and the WebView]
 Webcam capture and the live monitor use the system camera through the WebView, so
 they must run inside the app (via \tele{wails dev} or the compiled binary), not in
-a plain browser --- the bridge to the Go core only exists inside the app.
+a plain browser. The bridge to the Go core only exists inside the app.
 \end{note}
 
-\section{Option C --- build a native app}
+\section{Option C: build a native app}
 
 \begin{lstlisting}
 wails build -platform darwin/universal   # .app

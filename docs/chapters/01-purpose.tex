@@ -8,7 +8,7 @@ carcass images}, built to assemble a research dataset and continue the carcass
 typification research at iCEV.
 
 Its purpose is narrow and deliberate. A previous data-collection effort did not
-fail because of its machine-learning methods --- it failed because of the
+fail because of its machine-learning methods. It failed because of the
 \textbf{integrity of the pairing} between each image, the animal it came from, and
 the grade assigned to it. That link was not recorded at the moment of collection;
 it was reconstructed afterwards, by file order, without verification. Physical
@@ -36,14 +36,14 @@ Around that integrity core, the software provides an end-to-end workflow:
 
 \begin{itemize}[leftmargin=1.3em,itemsep=3pt]
   \item \textbf{Acquisition.} Register a carcass with a mandatory physical tag,
-        then capture images from an external camera --- the image is born paired
+        then capture images from an external camera. The image is born paired
         to the carcass in the database, never inferred from a filename.
   \item \textbf{Import.} Bring in photos captured elsewhere; each becomes a
         carcass (or is reconciled to an existing one), so external images enter
         the dataset without breaking pairing.
   \item \textbf{Analysis.} Run trained models over the images: fat segmentation
         (validated), an experimental finishing grade, and an analytical
-        conformation (convexity) measure --- all with automatic background
+        conformation (convexity) measure. All run with automatic background
         removal so surface measurements are correct.
   \item \textbf{Grading.} Collect independent, blind grades from multiple raters
         and measure their agreement (Fleiss' $\kappa$).
@@ -57,17 +57,17 @@ Around that integrity core, the software provides an end-to-end workflow:
 
 The primary users are the research team and the operators who collect carcass
 images at the slaughter line and in the laboratory. The interface is designed as
-a scientific \emph{instrument} --- scanned and operated, not read top to bottom
---- and follows the visual language of mission-control software: a dark
+a scientific \emph{instrument} to be scanned and operated, not read top to bottom.
+It follows the visual language of mission-control software: a dark
 instrument ground, a cyan signal accent, and monospace readouts for every
 measured value.
 
 \section{A note on scientific honesty}
 
-Two of the numbers this software produces --- the \emph{finishing grade} and the
-\emph{conformation grade} --- are marked throughout the interface as
+Two of the numbers this software produces (the \emph{finishing grade} and the
+\emph{conformation grade}) are marked throughout the interface as
 \textbf{experimental / not validated}. This is a deliberate choice, grounded in
-the project's own findings (Station~13). The software surfaces them because they
-are useful as exploratory references and because the dataset it builds is exactly
-what is needed to validate them in the future. It never presents them as settled
-facts.
+the project's own findings (Station~13). The software surfaces them for two
+reasons: they are useful as exploratory references, and the dataset it builds is
+exactly what is needed to validate them in the future. It never presents them as
+settled facts.
