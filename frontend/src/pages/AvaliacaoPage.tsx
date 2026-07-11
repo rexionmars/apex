@@ -11,7 +11,7 @@ import {
 } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { GradingWorkspace } from "@/components/GradingWorkspace";
 
 // Inter-rater grading (R2): each rater scores independently and blind.
@@ -86,8 +86,10 @@ export function AvaliacaoPage({ batchId: fixedBatchId }: { batchId: number | nul
 
   if (!bridged) {
     return (
-      <div className="mx-auto max-w-2xl rounded-md border border-dashed border-border p-6 text-sm text-muted-foreground">
-        This screen must run inside the app (<code>wails dev</code> or a compiled binary).
+      <div className="p-5">
+        <EmptyState eyebrow="Bridge required">
+          This screen must run inside the app (<code>wails dev</code> or a compiled binary).
+        </EmptyState>
       </div>
     );
   }
@@ -108,20 +110,20 @@ export function AvaliacaoPage({ batchId: fixedBatchId }: { batchId: number | nul
   }
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+    <div className="mx-auto flex max-w-3xl flex-col gap-4 p-5">
       <div>
-        <h1 className="text-2xl font-semibold">Inter-rater grading</h1>
+        <div className="eyebrow">Grading</div>
         <p className="text-sm text-muted-foreground">
-          Each rater assigns the grade <strong>on the image</strong>, independently and blind.
+          Each rater assigns the grade on the image, independently and blind.
           Agreement (Fleiss' κ) validates the score as a reference.
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Rater</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+      <div className="panel rounded-md">
+        <div className="border-b border-hairline px-4 py-3">
+          <div className="eyebrow">Rater</div>
+        </div>
+        <div className="flex flex-col gap-3 p-4">
           {raters.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {raters.map((r) => (
@@ -129,7 +131,7 @@ export function AvaliacaoPage({ batchId: fixedBatchId }: { batchId: number | nul
                   key={r.id}
                   onClick={() => setRaterId(r.id)}
                   className={
-                    "app-no-drag rounded-md border px-3 py-1.5 text-sm transition-colors " +
+                    "app-no-drag rounded-sm border px-3 py-1.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring " +
                     (raterId === r.id
                       ? "border-primary bg-primary/10 text-foreground"
                       : "border-border text-muted-foreground hover:bg-secondary")
@@ -151,21 +153,21 @@ export function AvaliacaoPage({ batchId: fixedBatchId }: { batchId: number | nul
               <UserPlus className="size-4" /> Add
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Batch to grade</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+      <div className="panel rounded-md">
+        <div className="border-b border-hairline px-4 py-3">
+          <div className="eyebrow">Batch to grade</div>
+        </div>
+        <div className="flex flex-col gap-3 p-4">
           {lockedToBatch ? (
             <div className="text-sm text-muted-foreground">
               Batch: <span className="text-foreground">{batches.find((b) => b.id === batchId)?.name ?? "—"}</span>
             </div>
           ) : (
             <select
-              className="h-9 w-full rounded-md border border-input bg-transparent px-2 text-sm"
+              className="h-8 w-full rounded-sm border border-input bg-transparent px-2 text-sm"
               value={batchId ?? ""}
               onChange={(e) => setBatchId(Number(e.target.value))}
             >
@@ -177,12 +179,12 @@ export function AvaliacaoPage({ batchId: fixedBatchId }: { batchId: number | nul
             </select>
           )}
           <div>
-            <Button onClick={begin} disabled={raterId === null || batchId === null}>
+            <Button size="sm" onClick={begin} disabled={raterId === null || batchId === null}>
               <Play className="size-4" /> Start blind session
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

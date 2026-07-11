@@ -14,6 +14,8 @@ import { AnalisePage } from "@/pages/AnalisePage";
 import { AvaliacaoPage } from "@/pages/AvaliacaoPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { ImportarPage } from "@/pages/ImportarPage";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Button } from "@/components/ui/button";
 import type { GlobalStats } from "@/lib/api";
 
 // bump.fn is called by any view when data changes → reloads the tree,
@@ -80,6 +82,7 @@ export default function App() {
             <ViewRouter
               obj={selected}
               view={view}
+              onSelect={select}
               onOpenCarcass={(carcassId, tag) =>
                 select({ type: "carcass", id: `carcass:${carcassId}`, name: `#${tag}`, batchId: selected?.batchId, carcassId })
               }
@@ -110,24 +113,43 @@ function batchName(batchId: number | undefined, _stats: GlobalStats | null): str
 function ViewRouter({
   obj,
   view,
+  onSelect,
   onOpenCarcass,
   onChanged,
 }: {
   obj: DomainObject | null;
   view: ViewKey;
+  onSelect: (obj: DomainObject) => void;
   onOpenCarcass: (carcassId: number, tag: string) => void;
   onChanged: () => void;
 }) {
   if (!obj) {
     return (
-      <div className="flex h-full items-center justify-center p-10 text-center">
-        <div className="max-w-md">
-          <div className="eyebrow mb-2">No selection</div>
-          <p className="text-sm text-muted-foreground">
-            Choose a <strong>batch</strong> or <strong>carcass</strong> in the navigation on the left, or
-            open <strong>Import</strong> / <strong>Dashboard</strong> to get started.
-          </p>
-        </div>
+      <div className="flex h-full items-center justify-center p-10">
+        <EmptyState
+          eyebrow="No selection"
+          className="max-w-md border-0 bg-transparent"
+          action={
+            <>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onSelect({ type: "import", id: "import", name: "Import" })}
+              >
+                Import
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onSelect({ type: "dashboard", id: "dashboard", name: "Dashboard" })}
+              >
+                Dashboard
+              </Button>
+            </>
+          }
+        >
+          Choose a batch or carcass in the navigation, or open Import / Dashboard to get started.
+        </EmptyState>
       </div>
     );
   }

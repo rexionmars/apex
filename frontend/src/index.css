@@ -4,11 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
-  Identidade visual (adaptada do geosense-infer): "instrumento de aquisição" x
-  "atlas técnico". Ground graphite-blue noturno, painéis de vidro fosco, accent
-  cyan-NIR como sinal do instrumento, terracota topográfico como secundário, e
-  uma voz monospace ("telemetry") para todo dado medido (contagens, κ, etiquetas,
-  medidas, datas).
+  Identidade visual: instrumento de aquisição com voz de telemetria.
+  Paleta derivada do tema VS Code do autor — carvão quase preto, texto
+  off-white, accent lavender como sinal do instrumento, e status em pastéis
+  suaves (sage / pale yellow / dusty rose). Shell MCT preservado.
 */
 
 @theme inline {
@@ -34,7 +33,7 @@
   --color-hairline: var(--hairline);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  /* status semânticos + escada de limite (Open MCT) */
+  /* status semânticos + escada de limite */
   --color-ok: var(--ok);
   --color-alert: var(--alert);
   --color-alert-soft: var(--alert-soft);
@@ -51,62 +50,62 @@
 }
 
 /*
-  Tema Open MCT "Espresso" (NASA Ames/JPL) — valores extraídos do código-fonte
-  (_constants-espresso.scss). Fundo cinza-grafite sólido, accent cyan #03ace4,
-  texto #acacac, e status/limites de telemetria com significado reservado.
+  Tema "Carvão / Lavender" — tokens do tema VS Code do autor.
+  Fundo #121314, foreground #E6E8E5, accent purple #B1A7CF,
+  status em pastéis (green / yellow / red do tema).
 */
 :root {
   --radius: 3px;
 
-  /* Superfícies (Espresso: sólidas, do escuro ao um pouco mais claro) */
-  --background: #222222;          /* colorGenBg */
-  --foreground: #acacac;          /* colorBodyFg */
-  --head-bg: #000000;             /* colorHeadBg — barras de topo */
+  /* Superfícies — do carvão ao selection lilás */
+  --background: #121314;
+  --foreground: #e6e8e5;
+  --head-bg: #0a0a0b;
 
-  --panel: #2c2c2c;               /* colorBodyBg — painéis */
-  --panel-solid: #2c2c2c;
-  --panel-hi: #363636;            /* +5% lighten — hover/elevação */
-  --card: #2c2c2c;
-  --card-foreground: #dddddd;
-  --popover: #1c1c1c;
-  --popover-foreground: #d6d6d6;
+  --panel: #1a1b1d;
+  --panel-solid: #1a1b1d;
+  --panel-hi: #242428;            /* elevação sutil do painel */
+  --card: #1a1b1d;
+  --card-foreground: #e6e8e5;
+  --popover: #0e0e10;
+  --popover-foreground: #e6e8e5;
 
-  /* Accent (key) — cyan do instrumento */
-  --primary: #03ace4;             /* colorKey */
-  --primary-foreground: #ffffff;  /* colorKeyFg */
-  --primary-bg: #007fad;          /* colorKeyBg — botão cheio */
-  --accent: #03ace4;
-  --accent-foreground: #ffffff;
+  /* Accent (key) — lavender como sinal do instrumento */
+  --primary: #b1a7cf;
+  --primary-foreground: #e6e8e5;  /* texto em botão cheio (primary-bg) */
+  --primary-bg: #6e668a;          /* versão escura p/ botão cheio */
+  --accent: #b1a7cf;
+  --accent-foreground: #e6e8e5;
 
-  /* Status semânticos (Espresso) — reservados a significado */
-  --ok: #1f851f;                  /* colorOk — validado */
-  --alert: #ff8a0d;               /* colorAlert — atenção/experimental */
-  --alert-soft: #ffb66c;          /* colorStatusAlert */
-  --error: #da0004;               /* colorStatusError — quebra/órfã */
-  --info: #60ba7b;                /* colorStatusInfo */
+  /* Status semânticos — pastéis do tema, significado reservado */
+  --ok: #9ad1a5;                  /* green — validado */
+  --alert: #e1e4ac;               /* yellow — atenção */
+  --alert-soft: #e8eabf;
+  --error: #d29eaf;               /* red pastel — quebra/órfã */
+  --info: #787786;                /* cyan do tema = neutro informativo */
 
   /* Escada de limite de telemetria (out-of-limits) */
-  --limit-yellow: #b18b05;
-  --limit-orange: #b36b00;
-  --limit-red: #940000;
-  --limit-purple: #891bb3;
-  --limit-cyan: #4ba6b3;
+  --limit-yellow: #e1e4ac;
+  --limit-orange: #d29eaf;
+  --limit-red: #c47a90;
+  --limit-purple: #b1a7cf;
+  --limit-cyan: #787786;
 
-  /* mantido por compat.: 'terra' agora aponta para o âmbar de alerta */
-  --terra: #ff8a0d;
+  /* compat.: 'terra' → alert (experimental / research caveats) */
+  --terra: #e1e4ac;
 
-  --secondary: #363636;           /* superfície de botão/hover */
-  --secondary-foreground: #dddddd;
-  --muted: #2c2c2c;
-  --muted-foreground: #8f8f8f;    /* colorBodyFgSubtle-ish */
+  --secondary: #383643;
+  --secondary-foreground: #a5a5a5;
+  --muted: #1a1b1d;
+  --muted-foreground: #8a8a8c;    /* labels/nav legíveis no carvão */
 
-  --destructive: #da0004;
+  --destructive: #d29eaf;
 
-  /* Bordas: interiorBorder = rgba(#acacac, 0.2) */
-  --border: rgba(172, 172, 172, 0.2);
-  --hairline: rgba(172, 172, 172, 0.12);
-  --input: rgba(0, 0, 0, 0.2);    /* colorInputBg */
-  --ring: rgba(3, 172, 228, 0.5);
+  /* Bordas derivadas do foreground off-white */
+  --border: rgba(230, 232, 229, 0.12);
+  --hairline: rgba(230, 232, 229, 0.07);
+  --input: rgba(0, 0, 0, 0.35);
+  --ring: rgba(177, 167, 207, 0.45);
 
   --font-telemetry: ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", monospace;
   --font-display: "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
@@ -149,12 +148,12 @@
   letter-spacing: 0.01em;
 }
 
-/* Painel de instrumento — superfície sólida do Espresso, borda nítida.
-   Gradiente vertical sutil (mais claro no topo) imita a elevação do Open MCT. */
+/* Painel de instrumento — superfície sólida, borda nítida.
+   Gradiente vertical sutil (mais claro no topo) imita elevação. */
 .panel {
   background: linear-gradient(180deg, var(--panel-hi), var(--panel));
   border: 1px solid var(--border);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(230, 232, 229, 0.04);
 }
 
 /* Divisor hairline */
@@ -163,12 +162,12 @@
   border-top: 1px solid var(--hairline);
 }
 
-/* Fundo do Espresso: cinza-grafite sólido, liso. */
+/* Fundo sólido do ground */
 .atlas-ground {
   background-color: var(--background);
 }
 
-/* Faixa de status semântica: pílula com cor reservada a significado (Open MCT).
+/* Faixa de status semântica: pílula com cor reservada a significado.
    Sempre acompanha rótulo/ícone — cor nunca sozinha. */
 .status-pill {
   display: inline-flex; align-items: center; gap: 6px;
@@ -178,12 +177,46 @@
   border: 1px solid currentColor;
 }
 
-/* Scrollbar dos painéis (Espresso) */
+/* Track de progresso — raio instrument (não pill) */
+.progress-track {
+  height: 6px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--secondary);
+}
+.progress-track > .progress-fill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 150ms ease;
+}
+
+/* Loading pulse line (inspector / status) */
+.loading-line {
+  height: 2px;
+  width: 100%;
+  border-radius: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--primary),
+    transparent
+  );
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  animation: loading-line-slide 1.2s ease-in-out infinite;
+}
+@keyframes loading-line-slide {
+  0% { background-position: -40% 0; }
+  100% { background-position: 140% 0; }
+}
+
+/* Scrollbar dos painéis */
 .panel-scroll::-webkit-scrollbar { width: 10px; }
 .panel-scroll::-webkit-scrollbar-thumb {
-  background: rgba(172, 172, 172, 0.25);
+  background: rgba(165, 165, 165, 0.25);
   border-radius: 2px;
   border: 2px solid var(--panel);
 }
-.panel-scroll::-webkit-scrollbar-thumb:hover { background: rgba(172, 172, 172, 0.4); }
+.panel-scroll::-webkit-scrollbar-thumb:hover { background: rgba(165, 165, 165, 0.4); }
 .panel-scroll::-webkit-scrollbar-track { background: transparent; }

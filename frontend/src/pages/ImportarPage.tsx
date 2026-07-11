@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { FolderOpen, Link2, Sparkles, Loader2 } from "lucide-react";
 import { api, type Batch, type Carcass, type ScannedFile } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { bump } from "@/App";
 
 // Importing external datasets. Two paths:
@@ -124,27 +124,29 @@ export function ImportarPage() {
 
   if (!bridged) {
     return (
-      <div className="mx-auto max-w-2xl rounded-md border border-dashed border-border p-6 text-sm text-muted-foreground">
-        This screen must run inside the app (<code>wails dev</code> or a compiled binary).
+      <div className="p-5">
+        <EmptyState eyebrow="Bridge required">
+          This screen must run inside the app (<code>wails dev</code> or a compiled binary).
+        </EmptyState>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6">
+    <div className="mx-auto flex max-w-5xl flex-col gap-4 p-5">
       <div>
-        <h1 className="text-2xl font-semibold">Import external images</h1>
+        <div className="eyebrow">Import</div>
         <p className="text-sm text-muted-foreground">
           Already have the photos? Import them all at once — each photo becomes a carcass (the tag
           gets the filename) and you fill in the data later in the Overview.
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Source</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+      <div className="panel rounded-md">
+        <div className="border-b border-hairline px-4 py-3">
+          <div className="eyebrow">Source</div>
+        </div>
+        <div className="flex flex-col gap-3 p-4">
           <div className="flex items-center gap-2">
             <Button size="sm" onClick={chooseAndScan} disabled={scanning}>
               <FolderOpen className="size-4" /> Choose folder and scan
@@ -154,7 +156,7 @@ export function ImportarPage() {
           <div className="flex items-center gap-2">
             <span className="eyebrow">Target batch</span>
             <select
-              className="h-8 rounded-md border border-input bg-background/40 px-2 text-sm"
+              className="h-8 rounded-sm border border-input bg-background/40 px-2 text-sm"
               value={batchId ?? ""}
               onChange={(e) => setBatchId(Number(e.target.value))}
             >
@@ -168,7 +170,7 @@ export function ImportarPage() {
           </div>
 
           {pending.length > 0 && (
-            <div className="flex items-center gap-3 rounded-md border border-primary/40 bg-primary/5 p-3">
+            <div className="flex items-center gap-3 rounded-sm border border-primary/40 bg-primary/5 p-3">
               <Sparkles className="size-4 text-primary" />
               <div className="flex-1 text-sm">
                 Import <strong>{pending.length}</strong> photo(s) as new carcasses in this batch.
@@ -176,29 +178,29 @@ export function ImportarPage() {
                   The tag uses the filename; edit everything later in the Overview.
                 </div>
               </div>
-              <Button onClick={importAllAsNew} disabled={importingAll || batchId === null}>
+              <Button size="sm" onClick={importAllAsNew} disabled={importingAll || batchId === null}>
                 {importingAll ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
                 {importingAll ? "Importing…" : "Import all"}
               </Button>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {files.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>
+        <div className="panel rounded-md">
+          <div className="border-b border-hairline px-4 py-3">
+            <div className="eyebrow">
               Files — {pending.length} pending, {imported.size} imported
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-1">
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 p-4">
             {files.map((f) => {
               const done = imported.has(f.path);
               return (
                 <div
                   key={f.path}
-                  className="flex items-center gap-3 rounded-md border border-border px-3 py-2 text-sm"
+                  className="flex items-center gap-3 rounded-sm border border-border px-3 py-2 text-sm"
                 >
                   <span className="w-52 truncate" title={f.path}>
                     {f.name}
@@ -218,7 +220,7 @@ export function ImportarPage() {
                       </Button>
                       <span className="text-xs text-muted-foreground">or</span>
                       <select
-                        className="h-8 flex-1 rounded-md border border-input bg-background/40 px-2 text-sm"
+                        className="h-8 flex-1 rounded-sm border border-input bg-background/40 px-2 text-sm"
                         value={assign[f.path] ?? ""}
                         onChange={(e) =>
                           setAssign((prev) => ({ ...prev, [f.path]: Number(e.target.value) }))
@@ -240,8 +242,8 @@ export function ImportarPage() {
                 </div>
               );
             })}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
     </div>
   );

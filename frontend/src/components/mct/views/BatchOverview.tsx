@@ -5,6 +5,8 @@ import { api, type Carcass } from "@/lib/api";
 import type { DomainObject } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/utils";
 
 // Batch overview: carcass grid + create new (quick registration at slaughter).
@@ -18,6 +20,7 @@ export function BatchOverview({
   onChanged: () => void;
 }) {
   const [carcasses, setCarcasses] = useState<Carcass[]>([]);
+  const [loading, setLoading] = useState(true);
   const [tag, setTag] = useState("");
   const [animalId, setAnimalId] = useState("");
   const [treatment, setTreatment] = useState("");
@@ -26,7 +29,12 @@ export function BatchOverview({
 
   async function load() {
     if (obj.batchId == null) return;
-    setCarcasses(await api.listCarcasses(obj.batchId));
+    setLoading(true);
+    try {
+      setCarcasses(await api.listCarcasses(obj.batchId));
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -61,14 +69,22 @@ export function BatchOverview({
   }
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-5 p-6">
+    <div className="mx-auto flex max-w-5xl flex-col gap-4 p-5">
       <div className="panel rounded-md p-4">
         <div className="eyebrow mb-3">Register carcass</div>
-        <div className="grid grid-cols-4 gap-3">
-          <Field label="Physical tag *"><Input placeholder="e.g.: 10" value={tag} onChange={(e) => setTag(e.target.value)} onKeyDown={(e) => e.key === "Enter" && create()} /></Field>
-          <Field label="Animal (lab)"><Input placeholder="Spreadsheet ID" value={animalId} onChange={(e) => setAnimalId(e.target.value)} /></Field>
-          <Field label="Treatment"><Input placeholder="T1 / 0%" value={treatment} onChange={(e) => setTreatment(e.target.value)} /></Field>
-          <Field label="Stratum"><Input value={stratum} onChange={(e) => setStratum(e.target.value)} /></Field>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <Field id="reg-tag" label="Physical tag *">
+            <Input id="reg-tag" placeholder="e.g.: 10" value={tag} onChange={(e) => setTag(e.target.value)} onKeyDown={(e) => e.key === "Enter" && create()} />
+          </Field>
+          <Field id="reg-animal" label="Animal (lab)">
+            <Input id="reg-animal" placeholder="Spreadsheet ID" value={animalId} onChange={(e) => setAnimalId(e.target.value)} />
+          </Field>
+          <Field id="reg-treatment" label="Treatment">
+            <Input id="reg-treatment" placeholder="T1 / 0%" value={treatment} onChange={(e) => setTreatment(e.target.value)} />
+          </Field>
+          <Field id="reg-stratum" label="Stratum">
+            <Input id="reg-stratum" value={stratum} onChange={(e) => setStratum(e.target.value)} />
+          </Field>
         </div>
         <div className="mt-3">
           <Button size="sm" onClick={create} disabled={saving}><Plus className="size-4" /> Register</Button>
@@ -77,18 +93,20 @@ export function BatchOverview({
 
       <div>
         <div className="eyebrow mb-2">Carcasses in batch ({carcasses.length})</div>
-        {carcasses.length === 0 ? (
-          <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+        {loading ? (
+          <div className="py-4"><div className="loading-line" /></div>
+        ) : carcasses.length === 0 ? (
+          <EmptyState eyebrow="No carcasses">
             No carcasses yet. Register above, or import photos.
-          </div>
+          </EmptyState>
         ) : (
-          <div className="grid grid-cols-4 gap-2.5">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-2.5">
             {carcasses.map((c) => (
               <button
                 key={c.id}
                 onClick={() => onOpenCarcass(c.id, c.physicalTag)}
                 className={cn(
-                  "panel app-no-drag flex items-center gap-2.5 rounded-md p-3 text-left transition-colors hover:border-primary/50"
+                  "panel app-no-drag flex items-center gap-2.5 rounded-md p-3 text-left transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 )}
               >
                 <Beef className="size-4 text-primary/70" />
@@ -105,10 +123,10 @@ export function BatchOverview({
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="eyebrow">{label}</span>
+      <Label htmlFor={id}>{label}</Label>
       {children}
     </div>
   );

@@ -3,10 +3,11 @@ import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, Check, LogOut } from "lucide-react";
 import { api, type Carcass, type Grade, type GradingSession, type Image } from "@/lib/api";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { cn } from "@/lib/utils";
 
-// Grading scales (ordinal). Conformation and finishing follow the 1..5 standard.
-const CONFORMATION = ["1", "2", "3", "4", "5"]; // worse -> better muscle development
-const FINISHING = ["1", "2", "3", "4", "5"]; // less -> more fat cover
+const CONFORMATION = ["1", "2", "3", "4", "5"];
+const FINISHING = ["1", "2", "3", "4", "5"];
 
 export function GradingWorkspace({
   session,
@@ -25,6 +26,7 @@ export function GradingWorkspace({
   const [grades, setGrades] = useState<Record<number, Partial<Grade>>>(initialGrades);
   const [images, setImages] = useState<Image[]>([]);
   const [imgSrc, setImgSrc] = useState<string>("");
+  const [imgLoading, setImgLoading] = useState(true);
   const carcass = carcasses[idx];
 
   const current = grades[carcass.id] ?? {};
@@ -37,6 +39,8 @@ export function GradingWorkspace({
   useEffect(() => {
     let alive = true;
     setImgSrc("");
+    setImgLoading(true);
+    setImages([]);
     api.listImages(carcass.id).then(async (imgs) => {
       if (!alive) return;
       setImages(imgs);
@@ -44,6 +48,9 @@ export function GradingWorkspace({
         const url = await api.imageDataURL(imgs[0].rgbPath);
         if (alive) setImgSrc(url);
       }
+      if (alive) setImgLoading(false);
+    }).catch(() => {
+      if (alive) setImgLoading(false);
     });
     return () => {
       alive = false;
@@ -71,13 +78,12 @@ export function GradingWorkspace({
   }
 
   return (
-    <div className="mx-auto flex h-full max-w-5xl flex-col gap-4">
-      <div className="flex items-center justify-between">
+    <div className="mx-auto flex h-full max-w-5xl flex-col gap-4 p-5">
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold">Blind session · {raterName}</h1>
-          <p className="text-xs text-muted-foreground">
-            Carcass {idx + 1} of {carcasses.length} · {gradedCount} graded · other raters' scores
-            hidden
+          <div className="eyebrow">Blind session · {raterName}</div>
+          <p className="telemetry text-xs text-muted-foreground">
+            Carcass {idx + 1} of {carcasses.length} · {gradedCount} graded · other raters hidden
           </p>
         </div>
         <Button size="sm" variant="outline" onClick={onExit}>
@@ -85,14 +91,20 @@ export function GradingWorkspace({
         </Button>
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-[1fr_320px] gap-4">
-        {/* Image */}
-        <div className="flex flex-col gap-2">
-          <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-md border border-border bg-black/40">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[1fr_300px]">
+        <div className="flex min-h-0 flex-col gap-2">
+          <div className="panel flex min-h-[280px] flex-1 items-center justify-center overflow-hidden rounded-md bg-black/40">
             {imgSrc ? (
               <img src={imgSrc} className="max-h-full max-w-full object-contain" />
+            ) : imgLoading ? (
+              <div className="w-40 px-4">
+                <div className="loading-line" />
+                <p className="mt-2 text-center text-[11px] text-muted-foreground">loading image</p>
+              </div>
             ) : (
-              <span className="text-xs text-muted-foreground">loading image…</span>
+              <EmptyState eyebrow="No image" className="border-0">
+                This carcass has no images to grade.
+              </EmptyState>
             )}
           </div>
           {images.length > 1 && (
@@ -102,37 +114,40 @@ export function GradingWorkspace({
           )}
         </div>
 
-        {/* Scores panel */}
-        <div className="flex flex-col gap-4">
-          <div className="rounded-md border border-border p-3 text-sm">
-            <div className="font-medium">Carcass #{carcass.physicalTag}</div>
+        <div className="flex flex-col gap-3">
+          <div className="panel rounded-md p-3">
+            <div className="telemetry text-sm">#{carcass.physicalTag}</div>
             {carcass.animalId && (
               <div className="text-xs text-muted-foreground">animal {carcass.animalId}</div>
             )}
           </div>
 
-          <AxisPicker
-            label="Conformation"
-            hint="shape and muscle development (observable in the image)"
-            options={CONFORMATION}
-            value={current.conformation ?? ""}
-            onPick={(v) => setAxis("conformation", v)}
-          />
+          <div className="panel rounded-md p-3">
+            <AxisPicker
+              label="Conformation"
+              hint="shape and muscle development"
+              options={CONFORMATION}
+              value={current.conformation ?? ""}
+              onPick={(v) => setAxis("conformation", v)}
+            />
+          </div>
 
-          <AxisPicker
-            label="Finishing"
-            hint="fat cover — optical limitation: ideally validated by physical reference"
-            options={FINISHING}
-            value={current.finishing ?? ""}
-            onPick={(v) => setAxis("finishing", v)}
-          />
+          <div className="panel rounded-md p-3">
+            <AxisPicker
+              label="Finishing"
+              hint="fat cover — optical limit"
+              options={FINISHING}
+              value={current.finishing ?? ""}
+              onPick={(v) => setAxis("finishing", v)}
+            />
+          </div>
 
           <div className="mt-auto flex items-center justify-between gap-2">
             <Button size="sm" variant="outline" onClick={() => go(-1)} disabled={idx === 0}>
               <ChevronLeft className="size-4" /> Previous
             </Button>
             {(current.conformation || current.finishing) && (
-              <span className="flex items-center gap-1 text-xs text-ok">
+              <span className="status-pill text-ok">
                 <Check className="size-3" /> saved
               </span>
             )}
@@ -160,22 +175,23 @@ function AxisPicker({
   onPick: (v: string) => void;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2">
       <div>
-        <div className="text-sm font-medium">{label}</div>
+        <div className="eyebrow">{label}</div>
         <div className="text-[11px] leading-tight text-muted-foreground">{hint}</div>
       </div>
       <div className="flex gap-1.5">
         {options.map((o) => (
           <button
             key={o}
+            type="button"
             onClick={() => onPick(o)}
-            className={
-              "h-9 flex-1 rounded-md border text-sm font-medium transition-colors " +
-              (value === o
-                ? "border-accent bg-accent text-accent-foreground"
-                : "border-border hover:bg-secondary")
-            }
+            className={cn(
+              "app-no-drag h-8 flex-1 rounded-sm border text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+              value === o
+                ? "border-primary bg-primary/25 text-foreground"
+                : "border-border text-muted-foreground hover:bg-secondary hover:text-foreground"
+            )}
           >
             {o}
           </button>

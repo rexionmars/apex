@@ -64,6 +64,15 @@ function Empty() {
   );
 }
 
+function Loading() {
+  return (
+    <div className="flex flex-col gap-2 py-2">
+      <div className="loading-line" />
+      <span className="text-[10px] text-muted-foreground">loading</span>
+    </div>
+  );
+}
+
 function CarcassInspector({ obj, refreshKey }: { obj: DomainObject; refreshKey: number }) {
   const [c, setC] = useState<Carcass | null>(null);
   const [imgCount, setImgCount] = useState(0);
@@ -87,7 +96,7 @@ function CarcassInspector({ obj, refreshKey }: { obj: DomainObject; refreshKey: 
     };
   }, [obj.carcassId, obj.batchId, refreshKey]);
 
-  if (!c) return <div className="text-xs text-muted-foreground">loading…</div>;
+  if (!c) return <Loading />;
 
   return (
     <>

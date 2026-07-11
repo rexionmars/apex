@@ -12,10 +12,10 @@ export function CarcassImages({ obj, onChanged }: { obj: DomainObject; onChanged
     api.listCarcasses(obj.batchId).then((list) => setC(list.find((x) => x.id === obj.carcassId) ?? null));
   }, [obj.carcassId, obj.batchId]);
 
-  if (!c) return <div className="p-6 text-sm text-muted-foreground">loading…</div>;
+  if (!c) return <div className="p-5 text-sm text-muted-foreground"><div className="loading-line mb-2" />loading</div>;
 
   return (
-    <div className="p-6">
+    <div className="p-5">
       <CarcassPanel carcass={c} onImageSaved={onChanged} />
     </div>
   );

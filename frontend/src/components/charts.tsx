@@ -1,7 +1,7 @@
 import { histogram, pearson } from "@/lib/stats";
 
-// Single-series color = system accent cyan (via CSS var).
-const CYAN = "var(--color-primary)";
+// Single-series color = system accent (via CSS var).
+const ACCENT = "var(--color-primary)";
 const INK = "var(--color-muted-foreground)";
 const GRID = "var(--color-hairline)";
 
@@ -55,7 +55,7 @@ export function Histogram({
             width={Math.max(bw - 2, 1)}
             height={bh}
             rx={2}
-            fill={CYAN}
+            fill={ACCENT}
             opacity={0.85}
           >
             <title>
@@ -126,7 +126,7 @@ export function Scatter({
         ))}
         {/* points: ≥8px, 2px ring on the surface */}
         {pts.map((p, i) => (
-          <circle key={i} cx={sx(p.x)} cy={sy(p.y)} r={4.5} fill={CYAN} stroke="var(--color-background)" strokeWidth={1.5}>
+          <circle key={i} cx={sx(p.x)} cy={sy(p.y)} r={4.5} fill={ACCENT} stroke="var(--color-background)" strokeWidth={1.5}>
             <title>{p.label ? `${p.label}: ` : ""}{p.x.toFixed(1)} / {p.y.toFixed(1)}</title>
           </circle>
         ))}

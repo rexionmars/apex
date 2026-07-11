@@ -21,8 +21,8 @@ export function TitleBar({
     <header className="app-draggable flex h-11 shrink-0 items-center justify-between border-b border-border bg-head-bg pl-20 pr-2">
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1.5">
-          <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
-          <span className="text-sm font-semibold tracking-[0.18em]">CARCASS</span>
+          <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-[1px] bg-primary" />
+          <span className="text-sm font-semibold tracking-[0.18em]">APEX</span>
         </div>
         <span className="hairline h-4 w-px self-center border-l" />
         <span className="eyebrow hidden sm:inline">
@@ -78,7 +78,7 @@ function WindowButton({
     <button
       onClick={onClick}
       title={title}
-      className={`flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground ${
+      className={`flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
         danger ? "hover:bg-destructive hover:text-white" : "hover:bg-secondary"
       }`}
     >

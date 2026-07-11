@@ -3,7 +3,8 @@ import { toast } from "sonner";
 import { Play, Square, Camera, Crosshair, RotateCcw, Radio, FileVideo, Pause, Upload } from "lucide-react";
 import { api, type RTProbe } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { SegmentedControl } from "@/components/ui/segmented";
+import { EmptyState } from "@/components/ui/empty-state";
 
 // Live monitor: real-time fat overlay to ASSIST WITH FRAMING
 // (or to review a recording). Two sources: live camera or video file.
@@ -219,14 +220,14 @@ export function LiveMonitor() {
 
   if (!bridged) {
     return (
-      <div className="p-6 text-sm text-muted-foreground">
+      <div className="p-5 text-sm text-muted-foreground">
         This screen must run inside the app (<code>wails dev</code> or binary).
       </div>
     );
   }
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-4 p-6">
+    <div className="mx-auto flex max-w-5xl flex-col gap-4 p-5">
       {/* engine + source selector */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-border bg-background/30 px-3 py-2">
         <div className="flex items-center gap-2 text-xs">
@@ -242,15 +243,14 @@ export function LiveMonitor() {
           )}
         </div>
 
-        {/* source selector: camera / video */}
-        <div className="flex items-center gap-0.5 rounded-sm border border-border bg-background/40 p-0.5">
-          <SourceBtn active={source === "camera"} onClick={() => switchSource("camera")} icon={Radio}>
-            Live camera
-          </SourceBtn>
-          <SourceBtn active={source === "video"} onClick={() => switchSource("video")} icon={FileVideo}>
-            Video file
-          </SourceBtn>
-        </div>
+        <SegmentedControl
+          value={source}
+          onChange={(s) => switchSource(s)}
+          options={[
+            { value: "camera", label: "Live camera", icon: Radio },
+            { value: "video", label: "Video file", icon: FileVideo },
+          ]}
+        />
       </div>
 
       {/* video source: choose file */}
@@ -271,9 +271,16 @@ export function LiveMonitor() {
           {overlay ? (
             <img src={overlay} className="max-h-full max-w-full object-contain" />
           ) : (
-            <span className="text-sm text-muted-foreground">
-              {isRunning ? "processing…" : source === "camera" ? "monitor stopped — start the camera" : "choose a video and start"}
-            </span>
+            <EmptyState
+              eyebrow={isRunning ? "Processing" : "Stage idle"}
+              className="border-0 bg-transparent"
+            >
+              {isRunning
+                ? "processing…"
+                : source === "camera"
+                  ? "Monitor stopped — start the camera"
+                  : "Choose a video and start"}
+            </EmptyState>
           )}
         </div>
 
@@ -295,24 +302,24 @@ export function LiveMonitor() {
       {/* controls */}
       <div className="flex flex-wrap items-center gap-2">
         {!isRunning ? (
-          <Button onClick={start} disabled={!probe?.available || (source === "video" && !videoUrl)}>
+          <Button size="sm" onClick={start} disabled={!probe?.available || (source === "video" && !videoUrl)}>
             <Play className="size-4" /> Start
           </Button>
         ) : (
-          <Button variant="outline" onClick={stop}>
+          <Button size="sm" variant="outline" onClick={stop}>
             <Square className="size-4" /> Stop
           </Button>
         )}
 
-        {/* play/pause only makes sense for video */}
         {source === "video" && isRunning && (
-          <Button variant="outline" onClick={togglePlay}>
+          <Button size="sm" variant="outline" onClick={togglePlay}>
             {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
             {playing ? "Pause" : "Resume"}
           </Button>
         )}
 
         <Button
+          size="sm"
           variant="outline"
           onClick={captureBackground}
           disabled={source === "camera" ? !isRunning : !videoUrl}
@@ -327,7 +334,7 @@ export function LiveMonitor() {
 
         {source === "camera" && devices.length > 1 && (
           <select
-            className="h-9 rounded-md border border-input bg-background/40 px-2 text-sm"
+            className="h-8 rounded-md border border-input bg-background/40 px-2 text-sm"
             value={deviceId}
             onChange={(e) => {
               setDeviceId(e.target.value);
@@ -342,38 +349,14 @@ export function LiveMonitor() {
         )}
       </div>
 
-      <p className="rounded-md border border-border bg-background/30 p-3 text-[11px] text-muted-foreground">
+      <p className="eyebrow leading-relaxed normal-case tracking-normal text-muted-foreground">
         {source === "camera" ? (
-          <>Live <strong>framing</strong> guide. Fixed camera: capture the background with the scene empty, then position the carcass.</>
+          <>Live framing guide. Fixed camera: capture the background with the scene empty, then position the carcass.</>
         ) : (
-          <><strong>Recording</strong> review with a frame-by-frame overlay. For the background, pause on a frame without the carcass and click "Capture background".</>
+          <>Recording review with a frame-by-frame overlay. Pause on a frame without the carcass and capture background.</>
         )}{" "}
-        This overlay is approximate (a visual guide). The validated number comes from the Analysis tab, on a captured image.
+        Approximate overlay — validated numbers come from Analysis on a captured image.
       </p>
     </div>
-  );
-}
-
-function SourceBtn({
-  active,
-  onClick,
-  icon: Icon,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: React.ElementType;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "app-no-drag flex items-center gap-1.5 rounded-[2px] px-2.5 py-1 text-xs transition-colors",
-        active ? "bg-primary/25 text-foreground" : "text-muted-foreground hover:text-foreground"
-      )}
-    >
-      <Icon className="size-3.5" /> {children}
-    </button>
   );
 }

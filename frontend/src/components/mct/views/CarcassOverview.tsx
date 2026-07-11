@@ -5,21 +5,46 @@ import { api, type Carcass } from "@/lib/api";
 import type { DomainObject } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { EmptyState } from "@/components/ui/empty-state";
 
-// Carcass overview = edit form for all fields.
-// (Replaces the former CarcassEditor, now as the object's "view".)
 export function CarcassOverview({ obj, onChanged }: { obj: DomainObject; onChanged: () => void }) {
   const [c, setC] = useState<Carcass | null>(null);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [missing, setMissing] = useState(false);
 
   useEffect(() => {
     if (obj.carcassId == null || obj.batchId == null) return;
+    setLoading(true);
+    setMissing(false);
     api.listCarcasses(obj.batchId).then((list) => {
-      setC(list.find((x) => x.id === obj.carcassId) ?? null);
+      const found = list.find((x) => x.id === obj.carcassId) ?? null;
+      setC(found);
+      setMissing(!found);
+      setLoading(false);
+    }).catch(() => {
+      setLoading(false);
+      setMissing(true);
     });
   }, [obj.carcassId, obj.batchId]);
 
-  if (!c) return <div className="p-6 text-sm text-muted-foreground">loading…</div>;
+  if (loading) {
+    return (
+      <div className="p-5">
+        <div className="loading-line mb-2" />
+        <p className="text-xs text-muted-foreground">loading</p>
+      </div>
+    );
+  }
+
+  if (missing || !c) {
+    return (
+      <div className="p-5">
+        <EmptyState eyebrow="Not found">Carcass not found in this batch.</EmptyState>
+      </div>
+    );
+  }
 
   const num = (v: string): number | null => {
     if (v.trim() === "") return null;
@@ -47,42 +72,58 @@ export function CarcassOverview({ obj, onChanged }: { obj: DomainObject; onChang
   }
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-5 p-6">
+    <div className="mx-auto flex max-w-3xl flex-col gap-4 p-5">
       <div className="panel rounded-md p-4">
         <div className="eyebrow mb-3">Identification</div>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Physical tag *"><Input value={c.physicalTag} onChange={(e) => setC({ ...c, physicalTag: e.target.value })} /></Field>
-          <Field label="Animal (laboratory)"><Input value={c.animalId} onChange={(e) => setC({ ...c, animalId: e.target.value })} /></Field>
-          <Field label="Treatment"><Input value={c.treatment} onChange={(e) => setC({ ...c, treatment: e.target.value })} /></Field>
-          <Field label="Stratum"><Input value={c.stratum} onChange={(e) => setC({ ...c, stratum: e.target.value })} /></Field>
+          <Field id="c-tag" label="Physical tag *">
+            <Input id="c-tag" value={c.physicalTag} onChange={(e) => setC({ ...c, physicalTag: e.target.value })} />
+          </Field>
+          <Field id="c-animal" label="Animal (laboratory)">
+            <Input id="c-animal" value={c.animalId} onChange={(e) => setC({ ...c, animalId: e.target.value })} />
+          </Field>
+          <Field id="c-treatment" label="Treatment">
+            <Input id="c-treatment" value={c.treatment} onChange={(e) => setC({ ...c, treatment: e.target.value })} />
+          </Field>
+          <Field id="c-stratum" label="Stratum">
+            <Input id="c-stratum" value={c.stratum} onChange={(e) => setC({ ...c, stratum: e.target.value })} />
+          </Field>
         </div>
       </div>
 
       <div className="panel rounded-md p-4">
         <div className="eyebrow mb-3">Physical reference (measured on the animal)</div>
-        <div className="grid grid-cols-3 gap-3">
-          <Field label="Fat thickness (mm)"><Input inputMode="decimal" value={c.fatThicknessMm ?? ""} onChange={(e) => setC({ ...c, fatThicknessMm: num(e.target.value) })} /></Field>
-          <Field label="GR (mm)"><Input inputMode="decimal" value={c.grMeasureMm ?? ""} onChange={(e) => setC({ ...c, grMeasureMm: num(e.target.value) })} /></Field>
-          <Field label="Loin eye area (cm²)"><Input inputMode="decimal" value={c.loinEyeAreaCm2 ?? ""} onChange={(e) => setC({ ...c, loinEyeAreaCm2: num(e.target.value) })} /></Field>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <Field id="c-fat" label="Fat thickness (mm)">
+            <Input id="c-fat" inputMode="decimal" value={c.fatThicknessMm ?? ""} onChange={(e) => setC({ ...c, fatThicknessMm: num(e.target.value) })} />
+          </Field>
+          <Field id="c-gr" label="GR (mm)">
+            <Input id="c-gr" inputMode="decimal" value={c.grMeasureMm ?? ""} onChange={(e) => setC({ ...c, grMeasureMm: num(e.target.value) })} />
+          </Field>
+          <Field id="c-lea" label="Loin eye area (cm²)">
+            <Input id="c-lea" inputMode="decimal" value={c.loinEyeAreaCm2 ?? ""} onChange={(e) => setC({ ...c, loinEyeAreaCm2: num(e.target.value) })} />
+          </Field>
         </div>
       </div>
 
       <div className="panel rounded-md p-4">
         <div className="eyebrow mb-3">Notes</div>
-        <Input value={c.notes} onChange={(e) => setC({ ...c, notes: e.target.value })} />
+        <Input id="c-notes" value={c.notes} onChange={(e) => setC({ ...c, notes: e.target.value })} />
       </div>
 
       <div>
-        <Button onClick={save} disabled={saving}><Save className="size-4" /> Save</Button>
+        <Button size="sm" onClick={save} disabled={saving}>
+          <Save className="size-4" /> Save
+        </Button>
       </div>
     </div>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="eyebrow">{label}</span>
+      <Label htmlFor={id}>{label}</Label>
       {children}
     </div>
   );

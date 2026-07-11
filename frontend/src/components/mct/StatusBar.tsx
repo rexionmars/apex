@@ -41,11 +41,7 @@ export function StatusBar({ refreshKey }: { refreshKey: number }) {
         <Database className="size-3" />
         {stats
           ? `${stats.batches} batches · ${stats.carcasses} carcasses · ${stats.images} images · ${stats.graded} graded`
-          : "loading…"}
-      </span>
-
-      <span className="telemetry ml-auto tracking-[0.14em] text-muted-foreground/70">
-        CARCASS
+          : <span className="inline-block w-40"><span className="loading-line block" /></span>}
       </span>
     </footer>
   );

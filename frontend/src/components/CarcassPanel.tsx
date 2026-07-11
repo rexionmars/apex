@@ -3,11 +3,12 @@ import { toast } from "sonner";
 import { Camera, Play, Square, Save, Boxes } from "lucide-react";
 import { api, type Carcass, type Image, type KinectProbe } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SegmentedControl } from "@/components/ui/segmented";
+import { EmptyState } from "@/components/ui/empty-state";
 import { useWebcam } from "@/hooks/useWebcam";
 import { ImageThumb } from "@/components/ImageThumb";
 
-const VIEWS = ["posterior", "lateral", "dorsal", "other"];
+const VIEWS = ["posterior", "lateral", "dorsal", "other"] as const;
 
 export function CarcassPanel({
   carcass,
@@ -17,7 +18,7 @@ export function CarcassPanel({
   onImageSaved: () => void;
 }) {
   const cam = useWebcam();
-  const [view, setView] = useState("posterior");
+  const [view, setView] = useState<string>("posterior");
   const [images, setImages] = useState<Image[]>([]);
   const [saving, setSaving] = useState(false);
   const [pendingPreview, setPendingPreview] = useState<string | null>(null);
@@ -40,7 +41,6 @@ export function CarcassPanel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carcass.id]);
 
-  // Probe the Kinect once (does not block the webcam).
   useEffect(() => {
     let alive = true;
     api
@@ -102,114 +102,106 @@ export function CarcassPanel({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Camera className="size-4" /> 3 · Capture — carcass #{carcass.physicalTag}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center gap-2">
-          {!cam.active ? (
-            <Button size="sm" onClick={() => cam.start(cam.deviceId || undefined)}>
-              <Play className="size-4" /> Start camera
-            </Button>
-          ) : (
-            <Button size="sm" variant="outline" onClick={cam.stop}>
-              <Square className="size-4" /> Stop
-            </Button>
-          )}
+    <div className="flex flex-col gap-4">
+      <div className="panel rounded-md">
+        <div className="flex items-center gap-2 border-b border-hairline px-4 py-3">
+          <Camera className="size-3.5 text-muted-foreground" />
+          <div className="eyebrow">Capture · #{carcass.physicalTag}</div>
+        </div>
 
-          {cam.devices.length > 1 && (
-            <select
-              className="h-8 rounded-md border border-input bg-transparent px-2 text-sm"
-              value={cam.deviceId}
-              onChange={(e) => {
-                cam.setDeviceId(e.target.value);
-                if (cam.active) cam.start(e.target.value);
-              }}
-            >
-              <option value="">Default camera</option>
-              {cam.devices.map((d, i) => (
-                <option key={d.deviceId} value={d.deviceId}>
-                  {d.label || `Camera ${i + 1}`}
-                </option>
-              ))}
-            </select>
-          )}
+        <div className="flex flex-col gap-4 p-4">
+          <div className="flex flex-wrap items-center gap-2">
+            {!cam.active ? (
+              <Button size="sm" onClick={() => cam.start(cam.deviceId || undefined)}>
+                <Play className="size-4" /> Start camera
+              </Button>
+            ) : (
+              <Button size="sm" variant="outline" onClick={cam.stop}>
+                <Square className="size-4" /> Stop
+              </Button>
+            )}
 
-          <select
-            className="h-8 rounded-md border border-input bg-transparent px-2 text-sm"
-            value={view}
-            onChange={(e) => setView(e.target.value)}
-          >
-            {VIEWS.map((v) => (
-              <option key={v} value={v}>
-                View: {v}
-              </option>
-            ))}
-          </select>
-
-          {/* Kinect: RGB + depth via sidecar. The button only appears if available. */}
-          {kinect?.available ? (
-            <Button size="sm" variant="secondary" onClick={captureKinect} disabled={kinecting}>
-              <Boxes className="size-4" /> {kinecting ? "Capturing…" : `Kinect (RGB+depth)`}
-            </Button>
-          ) : (
-            kinect && (
-              <span
-                className="text-xs text-muted-foreground"
-                title={kinect.detail}
+            {cam.devices.length > 1 && (
+              <select
+                className="h-7 rounded-sm border border-input bg-transparent px-2 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                value={cam.deviceId}
+                onChange={(e) => {
+                  cam.setDeviceId(e.target.value);
+                  if (cam.active) cam.start(e.target.value);
+                }}
               >
-                Kinect unavailable (webcam only)
-              </span>
-            )
+                <option value="">Default camera</option>
+                {cam.devices.map((d, i) => (
+                  <option key={d.deviceId} value={d.deviceId}>
+                    {d.label || `Camera ${i + 1}`}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            <SegmentedControl
+              value={view}
+              onChange={setView}
+              options={VIEWS.map((v) => ({ value: v, label: v }))}
+            />
+
+            {kinect?.available ? (
+              <Button size="sm" variant="secondary" onClick={captureKinect} disabled={kinecting}>
+                <Boxes className="size-4" /> {kinecting ? "Capturing…" : "Kinect (RGB+depth)"}
+              </Button>
+            ) : (
+              kinect && (
+                <span className="text-xs text-muted-foreground" title={kinect.detail}>
+                  Kinect unavailable
+                </span>
+              )
+            )}
+          </div>
+
+          {cam.error && (
+            <div className="rounded-sm border border-destructive/40 bg-destructive/10 p-2 text-xs text-destructive">
+              {cam.error}
+            </div>
           )}
-        </div>
 
-        {cam.error && (
-          <div className="rounded-md border border-destructive/40 bg-destructive/10 p-2 text-xs text-destructive">
-            {cam.error}
-          </div>
-        )}
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-2">
-            <div className="aspect-video overflow-hidden rounded-md border border-border bg-black/40">
-              <video ref={cam.videoRef} className="h-full w-full object-contain" muted playsInline />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="flex flex-col gap-2">
+              <div className="aspect-video overflow-hidden rounded-sm border border-border bg-black/40">
+                <video ref={cam.videoRef} className="h-full w-full object-contain" muted playsInline />
+              </div>
+              <Button size="sm" onClick={grabFrame} disabled={!cam.active}>
+                <Camera className="size-4" /> Capture frame
+              </Button>
             </div>
-            <Button size="sm" onClick={grabFrame} disabled={!cam.active}>
-              <Camera className="size-4" /> Capture frame
-            </Button>
-          </div>
 
-          <div className="flex flex-col gap-2">
-            <div className="aspect-video overflow-hidden rounded-md border border-dashed border-border bg-secondary/40">
-              {pendingPreview ? (
-                <img src={pendingPreview} className="h-full w-full object-contain" />
-              ) : (
-                <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
-                  capture preview
-                </div>
-              )}
+            <div className="flex flex-col gap-2">
+              <div className="aspect-video overflow-hidden rounded-sm border border-dashed border-border bg-secondary/40">
+                {pendingPreview ? (
+                  <img src={pendingPreview} className="h-full w-full object-contain" />
+                ) : (
+                  <EmptyState eyebrow="Preview" className="h-full border-0 py-6">
+                    Capture a frame to preview
+                  </EmptyState>
+                )}
+              </div>
+              <Button size="sm" onClick={saveFrame} disabled={!pending || saving}>
+                <Save className="size-4" /> Save · pair to #{carcass.physicalTag}
+              </Button>
             </div>
-            <Button size="sm" variant="default" onClick={saveFrame} disabled={!pending || saving}>
-              <Save className="size-4" /> Save (pair to #{carcass.physicalTag})
-            </Button>
           </div>
         </div>
+      </div>
 
-        {images.length > 0 && (
-          <div>
-            <div className="mb-2 text-sm font-medium">Images for this carcass ({images.length})</div>
-            <div className="grid grid-cols-6 gap-2">
-              {images.map((img) => (
-                <ImageThumb key={img.id} image={img} />
-              ))}
-            </div>
+      {images.length > 0 && (
+        <div>
+          <div className="eyebrow mb-2">Images ({images.length})</div>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] gap-2">
+            {images.map((img) => (
+              <ImageThumb key={img.id} image={img} />
+            ))}
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </div>
+      )}
+    </div>
   );
 }
