@@ -177,6 +177,7 @@ export interface Analysis {
   analyzedAt: string;
   physicalTag: string;
   stratum: string;
+  treatment: string;
   fatThicknessMm: number | null;
   grMeasureMm: number | null;
   loinEyeAreaCm2: number | null;
@@ -185,6 +186,14 @@ export interface Analysis {
 export interface AnalysisRow extends Analysis {
   overlayUrl: string;
   conformationUrl: string;
+}
+
+export interface CarcassGradeRow {
+  carcassId: number;
+  physicalTag: string;
+  raterCount: number;
+  conformation: Record<string, number>;
+  finishing: Record<string, number>;
 }
 
 export interface RTProbe {
@@ -279,6 +288,7 @@ type GoApp = {
   RunInference(imageId: number, runGrade: boolean): Promise<AnalysisResult>;
   AnalyzeBatch(batchId: number, runGrade: boolean, reanalyze: boolean): Promise<number>;
   ListAnalyses(batchId: number): Promise<AnalysisRow[]>;
+  ListCarcassGrades(batchId: number): Promise<CarcassGradeRow[]>;
   CountToAnalyze(batchId: number): Promise<number>;
   RTProbe(): Promise<RTProbe>;
   RTSetBackground(jpegB64: string): Promise<void>;
@@ -339,6 +349,7 @@ export const api = {
   analyzeBatch: (batchId: number, runGrade: boolean, reanalyze: boolean) =>
     app().AnalyzeBatch(batchId, runGrade, reanalyze),
   listAnalyses: (batchId: number) => app().ListAnalyses(batchId),
+  listCarcassGrades: (batchId: number) => app().ListCarcassGrades(batchId),
   countToAnalyze: (batchId: number) => app().CountToAnalyze(batchId),
   rtProbe: () => app().RTProbe(),
   rtSetBackground: (jpegB64: string) => app().RTSetBackground(jpegB64),

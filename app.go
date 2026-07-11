@@ -915,6 +915,14 @@ func (a *App) ListAnalyses(batchID int64) ([]AnalysisRow, error) {
 	return out, nil
 }
 
+// ListCarcassGrades agrega notas humanas por carcaça (base do Lab de validação).
+func (a *App) ListCarcassGrades(batchID int64) ([]store.CarcassGradeRow, error) {
+	if err := a.ready(); err != nil {
+		return []store.CarcassGradeRow{}, err
+	}
+	return a.store.GradesByCarcass(batchID)
+}
+
 // CountToAnalyze diz quantas imagens ainda não têm análise num lote.
 func (a *App) CountToAnalyze(batchID int64) (int, error) {
 	if err := a.ready(); err != nil {

@@ -1,19 +1,30 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Cpu, Play, RefreshCw, Loader2, Download, LayoutGrid, Table2, GitCompare, ScatterChart, Hexagon } from "lucide-react";
+import { Play, RefreshCw, Loader2, Download, LayoutGrid, Table2, GitCompare, ScatterChart, Hexagon, FlaskConical } from "lucide-react";
 import {
   api,
-  type Batch,
   type InferenceProbe,
   type AnalysisRow,
 } from "@/lib/api";
 import { EventsOn, EventsOff } from "../../wailsjs/runtime/runtime";
 import { Button } from "@/components/ui/button";
+import { SegmentedControl } from "@/components/ui/segmented";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AdvancedLab } from "@/components/AdvancedLab";
 import { cn } from "@/lib/utils";
 import { summarize } from "@/lib/stats";
 import { Histogram, Scatter } from "@/components/charts";
 
-type Tab = "galeria" | "tabela" | "conformacao" | "correlacao" | "comparar";
+type Tab = "galeria" | "tabela" | "conformacao" | "correlacao" | "comparar" | "lab";
+
+const TABS: { value: Tab; label: string; icon: React.ElementType }[] = [
+  { value: "galeria", label: "Gallery", icon: LayoutGrid },
+  { value: "tabela", label: "Table", icon: Table2 },
+  { value: "conformacao", label: "Conformation", icon: Hexagon },
+  { value: "correlacao", label: "Correlation", icon: ScatterChart },
+  { value: "comparar", label: "Compare", icon: GitCompare },
+  { value: "lab", label: "Lab", icon: FlaskConical },
+];
 
 export function AnalisePage({ batchId, focusCarcassId }: { batchId: number | null; focusCarcassId?: number }) {
   const [probe, setProbe] = useState<InferenceProbe | null>(null);
@@ -93,8 +104,10 @@ export function AnalisePage({ batchId, focusCarcassId }: { batchId: number | nul
 
   if (!bridged) {
     return (
-      <div className="mx-auto max-w-2xl rounded-md border border-dashed border-border p-6 text-sm text-muted-foreground">
-        This screen must run inside the app (<code>wails dev</code> or a compiled binary).
+      <div className="p-5">
+        <EmptyState eyebrow="Bridge required">
+          This screen must run inside the app (<code>wails dev</code> or a compiled binary).
+        </EmptyState>
       </div>
     );
   }
@@ -102,11 +115,11 @@ export function AnalisePage({ batchId, focusCarcassId }: { batchId: number | nul
   const busy = progress !== null;
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-5 p-6">
-      {/* analysis controls (the batch comes from navigation) */}
-      <div className="panel flex flex-col gap-3 rounded-md p-3">
+    <div className="flex flex-col gap-4 p-5">
+      {/* action strip */}
+      <div className="panel flex flex-col gap-2.5 rounded-md p-3">
         <div className="flex flex-wrap items-center gap-3">
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-xs text-muted-foreground">
             <input type="checkbox" checked={runGrade} onChange={(e) => setRunGrade(e.target.checked)} />
             include grade (experimental)
           </label>
@@ -117,12 +130,16 @@ export function AnalisePage({ batchId, focusCarcassId }: { batchId: number | nul
                 <Download className="size-4" /> CSV
               </Button>
             )}
-            <Button onClick={() => analyzeBatch(false)} disabled={busy || !probe?.available || toAnalyze === 0}>
+            <Button
+              size="sm"
+              onClick={() => analyzeBatch(false)}
+              disabled={busy || !probe?.available || toAnalyze === 0}
+            >
               {busy ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
-              Analyze batch {toAnalyze > 0 && `(${toAnalyze})`}
+              Analyze {toAnalyze > 0 && `(${toAnalyze})`}
             </Button>
             {rows.length > 0 && (
-              <Button variant="outline" onClick={() => analyzeBatch(true)} disabled={busy || !probe?.available}>
+              <Button size="sm" variant="outline" onClick={() => analyzeBatch(true)} disabled={busy || !probe?.available}>
                 <RefreshCw className="size-4" /> Reanalyze
               </Button>
             )}
@@ -131,9 +148,9 @@ export function AnalisePage({ batchId, focusCarcassId }: { batchId: number | nul
 
         {progress && (
           <div className="flex flex-col gap-1">
-            <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
+            <div className="progress-track">
               <div
-                className="h-full bg-primary transition-all"
+                className="progress-fill"
                 style={{ width: `${progress.total ? (progress.current / progress.total) * 100 : 0}%` }}
               />
             </div>
@@ -144,104 +161,135 @@ export function AnalisePage({ batchId, focusCarcassId }: { batchId: number | nul
         )}
       </div>
 
-      {/* batch statistics */}
+      {/* compact telemetry strip */}
       {rows.length > 0 && (
-        <>
-          <div className="grid grid-cols-6 gap-3">
-            <Stat label="carcasses" value={String(summary.n)} />
-            <Stat label="mean fat" value={`${summary.mean.toFixed(1)}%`} accent />
-            <Stat label="std dev" value={`±${summary.std.toFixed(1)}`} />
-            <Stat label="median" value={`${summary.median.toFixed(1)}%`} />
-            <Stat label="min" value={`${summary.min.toFixed(1)}%`} />
-            <Stat label="max" value={`${summary.max.toFixed(1)}%`} />
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-sm border border-border bg-background/30 px-3 py-2">
+          <StatInline label="n" value={String(summary.n)} />
+          <StatInline label="mean" value={`${summary.mean.toFixed(1)}%`} accent />
+          <StatInline label="σ" value={`±${summary.std.toFixed(1)}`} />
+          <StatInline label="med" value={`${summary.median.toFixed(1)}%`} />
+          <StatInline label="range" value={`${summary.min.toFixed(1)}–${summary.max.toFixed(1)}`} />
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            {probe?.available ? (
+              <span className="status-pill text-ok">engine · {probe.device}</span>
+            ) : (
+              <span className="status-pill text-alert">engine offline</span>
+            )}
+            <span className="status-pill text-primary">{rows.length} analyzed</span>
+            {rows.some((r) => r.finishingClass) && (
+              <span className="status-pill text-alert">
+                grade · {rows.filter((r) => r.finishingClass).length}/{rows.length}
+              </span>
+            )}
           </div>
-          {/* status readout (Open MCT color code: color = state, with label) */}
-          <div className="flex flex-wrap items-center gap-2 text-[11px]">
-            <span className="status-pill text-ok">validated segmentation · IoU 0.92</span>
-            <span className="status-pill text-alert">experimental grade · n=22</span>
-            <span className="status-pill text-primary">analysis saved to batch</span>
-          </div>
-        </>
+        </div>
       )}
 
       {rows.length === 0 ? (
-        <div className="rounded-md border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+        <EmptyState
+          eyebrow="No analysis"
+          action={
+            toAnalyze > 0 ? (
+              <Button
+                size="sm"
+                onClick={() => analyzeBatch(false)}
+                disabled={busy || !probe?.available}
+              >
+                {busy ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
+                Analyze batch ({toAnalyze})
+              </Button>
+            ) : undefined
+          }
+        >
           {toAnalyze > 0
-            ? `No analysis yet. Click Analyze batch to process ${toAnalyze} image(s).`
+            ? `No analysis yet. Process ${toAnalyze} image(s) in this batch.`
             : "No images in this batch to analyze. Import or capture photos first."}
-        </div>
+        </EmptyState>
       ) : (
         <>
-          {/* tabs */}
-          <div className="flex gap-1 border-b border-hairline">
-            <TabBtn active={tab === "galeria"} onClick={() => setTab("galeria")} icon={LayoutGrid}>Gallery</TabBtn>
-            <TabBtn active={tab === "tabela"} onClick={() => setTab("tabela")} icon={Table2}>Table + distribution</TabBtn>
-            <TabBtn active={tab === "conformacao"} onClick={() => setTab("conformacao")} icon={Hexagon}>Conformation</TabBtn>
-            <TabBtn active={tab === "correlacao"} onClick={() => setTab("correlacao")} icon={ScatterChart}>Physical correlation</TabBtn>
-            <TabBtn active={tab === "comparar"} onClick={() => setTab("comparar")} icon={GitCompare}>Compare</TabBtn>
-          </div>
+          <SegmentedControl
+            value={tab}
+            onChange={setTab}
+            options={TABS}
+            className="self-start"
+          />
 
-          {tab === "galeria" && <Galeria rows={rows} />}
-          {tab === "tabela" && <TabelaDist rows={rows} values={fatValues} />}
+          {tab === "galeria" && <Galeria rows={rows} focusCarcassId={focusCarcassId} />}
+          {tab === "tabela" && <TabelaDist rows={rows} values={fatValues} focusCarcassId={focusCarcassId} />}
           {tab === "conformacao" && <Conformacao rows={rows} />}
           {tab === "correlacao" && <Correlacao rows={rows} />}
           {tab === "comparar" && <Comparar rows={rows} />}
+          {tab === "lab" && <AdvancedLab rows={rows} batchId={batchId} />}
         </>
       )}
     </div>
   );
 }
 
-function Stat({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
+function StatInline({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
-    <div className="panel rounded-lg p-2.5">
-      <div className="eyebrow">{label}</div>
-      <div className={cn("telemetry mt-0.5 text-xl font-semibold", accent && "text-primary")}>{value}</div>
+    <div className="flex items-baseline gap-1.5">
+      <span className="eyebrow">{label}</span>
+      <span className={cn("telemetry text-sm font-semibold", accent && "text-primary")}>{value}</span>
     </div>
   );
 }
 
-function TabBtn({
-  active, onClick, icon: Icon, children,
-}: { active: boolean; onClick: () => void; icon: React.ElementType; children: React.ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm transition-colors",
-        active ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
-      )}
-    >
-      <Icon className="size-3.5" /> {children}
-    </button>
-  );
+function useFocusHighlight(focused: boolean) {
+  const ref = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!focused || !ref.current) return;
+    ref.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [focused]);
+  return ref;
 }
 
 // ---- Gallery ----
-function Galeria({ rows }: { rows: AnalysisRow[] }) {
+function Galeria({ rows, focusCarcassId }: { rows: AnalysisRow[]; focusCarcassId?: number }) {
   return (
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-3">
       {rows.map((r) => (
-        <div key={r.id} className="panel overflow-hidden rounded-lg">
-          <div className="aspect-square bg-black/40">
-            {r.overlayUrl ? (
-              <img src={r.overlayUrl} className="h-full w-full object-contain" />
-            ) : (
-              <div className="flex h-full items-center justify-center text-[10px] text-muted-foreground">no overlay</div>
-            )}
-          </div>
-          <div className="flex items-center justify-between p-2">
-            <span className="telemetry text-xs">#{r.physicalTag}</span>
-            <span className="telemetry text-sm font-semibold text-primary">{r.fatPercent.toFixed(1)}%</span>
-          </div>
-        </div>
+        <GalleryCard key={r.id} row={r} focused={focusCarcassId === r.carcassId} />
       ))}
     </div>
   );
 }
 
+function GalleryCard({ row: r, focused }: { row: AnalysisRow; focused: boolean }) {
+  const ref = useFocusHighlight(focused);
+  return (
+    <div
+      ref={ref as React.RefObject<HTMLDivElement>}
+      className={cn(
+        "panel overflow-hidden rounded-md transition-colors",
+        focused && "ring-1 ring-primary"
+      )}
+    >
+      <div className="aspect-square bg-black/40">
+        {r.overlayUrl ? (
+          <img src={r.overlayUrl} className="h-full w-full object-contain" />
+        ) : (
+          <div className="flex h-full items-center justify-center text-[10px] text-muted-foreground">no overlay</div>
+        )}
+      </div>
+      <div className="flex items-center justify-between p-2">
+        <span className="telemetry text-xs">#{r.physicalTag}</span>
+        <span className="telemetry text-sm font-semibold text-primary">{r.fatPercent.toFixed(1)}%</span>
+      </div>
+    </div>
+  );
+}
+
 // ---- Table + distribution ----
-function TabelaDist({ rows, values }: { rows: AnalysisRow[]; values: number[] }) {
+function TabelaDist({
+  rows,
+  values,
+  focusCarcassId,
+}: {
+  rows: AnalysisRow[];
+  values: number[];
+  focusCarcassId?: number;
+}) {
   const [sortKey, setSortKey] = useState<"tag" | "fat">("fat");
   const sorted = useMemo(() => {
     const s = [...rows];
@@ -251,8 +299,8 @@ function TabelaDist({ rows, values }: { rows: AnalysisRow[]; values: number[] })
   }, [rows, sortKey]);
 
   return (
-    <div className="grid grid-cols-[1fr_460px] gap-4">
-      <div className="panel-scroll max-h-[520px] overflow-auto rounded-lg border border-border">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_minmax(280px,420px)]">
+      <div className="panel-scroll max-h-[520px] overflow-auto rounded-md border border-border">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-panel-solid text-left">
             <tr className="border-b border-hairline">
@@ -265,23 +313,36 @@ function TabelaDist({ rows, values }: { rows: AnalysisRow[]; values: number[] })
           </thead>
           <tbody>
             {sorted.map((r) => (
-              <tr key={r.id} className="border-b border-hairline/50 hover:bg-secondary/30">
-                <td className="telemetry px-3 py-1.5">#{r.physicalTag}</td>
-                <td className="telemetry px-3 py-1.5 text-primary">{r.fatPercent.toFixed(1)}</td>
-                <td className="px-3 py-1.5 text-xs text-muted-foreground">{r.finishingClass || "—"}</td>
-                <td className="telemetry px-3 py-1.5 text-xs">{r.fatThicknessMm ?? "—"}</td>
-                <td className="telemetry px-3 py-1.5 text-xs">{r.loinEyeAreaCm2 ?? "—"}</td>
-              </tr>
+              <TableRow key={r.id} row={r} focused={focusCarcassId === r.carcassId} />
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="panel rounded-lg p-3">
+      <div className="panel rounded-md p-3">
         <div className="eyebrow mb-2">Batch fat distribution</div>
         <Histogram values={values} />
       </div>
     </div>
+  );
+}
+
+function TableRow({ row: r, focused }: { row: AnalysisRow; focused: boolean }) {
+  const ref = useFocusHighlight(focused);
+  return (
+    <tr
+      ref={ref as React.RefObject<HTMLTableRowElement>}
+      className={cn(
+        "border-b border-hairline/50 hover:bg-secondary/30",
+        focused && "bg-primary/15"
+      )}
+    >
+      <td className="telemetry px-3 py-1.5">#{r.physicalTag}</td>
+      <td className="telemetry px-3 py-1.5 text-primary">{r.fatPercent.toFixed(1)}</td>
+      <td className="px-3 py-1.5 text-xs text-muted-foreground">{r.finishingClass || "—"}</td>
+      <td className="telemetry px-3 py-1.5 text-xs">{r.fatThicknessMm ?? "—"}</td>
+      <td className="telemetry px-3 py-1.5 text-xs">{r.loinEyeAreaCm2 ?? "—"}</td>
+    </tr>
   );
 }
 
@@ -305,26 +366,22 @@ function Conformacao({ rows }: { rows: AnalysisRow[] }) {
 
   if (withConf.length === 0) {
     return (
-      <div className="rounded-md border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-        No conformation results yet. Conformation runs during analysis when the background is
-        removed (a clean silhouette is required). Re-run the batch analysis.
-      </div>
+      <EmptyState eyebrow="No conformation">
+        Conformation runs during analysis when the background is removed. Re-run the batch analysis.
+      </EmptyState>
     );
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="rounded-md border border-terra/30 bg-terra/5 p-2 text-[11px] text-muted-foreground">
-        Integral-invariant convexity of the carcass profile, per anatomical region (leg / loin /
-        shoulder). Blue = convex (muscled), red = concave. The convexity map and indices are{" "}
-        <strong>objective measures</strong>; the estimated grade is <strong>not validated</strong> —
-        research showed conformation is not reliably recoverable from a single 2D image at this
-        sample size. Use it as an indicative reference, to be validated as the paired dataset grows.
+      <p className="rounded-sm border border-alert/30 bg-alert/5 p-2 text-[11px] text-muted-foreground">
+        Integral-invariant convexity of the carcass profile (leg / loin / shoulder). Blue = convex,
+        red = concave. Indices are objective; the estimated grade is <strong>not validated</strong>.
       </p>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
         {withConf.map((r) => (
-          <div key={r.id} className="panel overflow-hidden rounded-lg">
+          <div key={r.id} className="panel overflow-hidden rounded-md">
             <div className="aspect-square bg-black/40">
               {r.conformationUrl ? (
                 <img src={r.conformationUrl} className="h-full w-full object-contain" />
@@ -338,7 +395,7 @@ function Conformacao({ rows }: { rows: AnalysisRow[] }) {
               <div className="flex items-center justify-between">
                 <span className="telemetry text-sm">#{r.physicalTag}</span>
                 {r.conformationGrade && (
-                  <span className="status-pill text-terra">{r.conformationGrade} · est.</span>
+                  <span className="status-pill text-alert">{r.conformationGrade} · est.</span>
                 )}
               </div>
               <div className="telemetry grid grid-cols-3 gap-1 text-[11px]">
@@ -376,16 +433,16 @@ function Correlacao({ rows }: { rows: AnalysisRow[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="rounded-md border border-terra/30 bg-terra/5 p-2 text-[11px] text-muted-foreground">
-        Tests whether the model's fat % (surface image) predicts the physical reference measured
-        on the animal. Fill in the physical reference in each carcass's Overview.
+      <p className="rounded-sm border border-alert/30 bg-alert/5 p-2 text-[11px] text-muted-foreground">
+        Tests whether model fat % predicts the physical reference. Fill physical reference in each
+        carcass Overview.
       </p>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="panel rounded-lg p-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="panel rounded-md p-3">
           <div className="eyebrow mb-2">Model fat × fat thickness</div>
           <Scatter points={fatPoints} xLabel="model fat (%)" yLabel="fat thickness (mm)" />
         </div>
-        <div className="panel rounded-lg p-3">
+        <div className="panel rounded-md p-3">
           <div className="eyebrow mb-2">Model fat × loin eye area</div>
           <Scatter points={aolPoints} xLabel="model fat (%)" yLabel="LEA (cm²)" />
         </div>
@@ -410,7 +467,7 @@ function Comparar({ rows }: { rows: AnalysisRow[] }) {
             key={r.id}
             onClick={() => toggle(r.id)}
             className={cn(
-              "telemetry rounded-md border px-2 py-1 text-xs transition-colors",
+              "telemetry rounded-sm border px-2 py-1 text-xs transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
               sel.includes(r.id)
                 ? "border-primary bg-primary/10 text-foreground"
                 : "border-border text-muted-foreground hover:bg-secondary"
@@ -421,13 +478,11 @@ function Comparar({ rows }: { rows: AnalysisRow[] }) {
         ))}
       </div>
       {chosen.length === 0 ? (
-        <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-          Select up to 4 carcasses to compare side by side.
-        </div>
+        <EmptyState eyebrow="Compare">Select up to 4 carcasses to compare side by side.</EmptyState>
       ) : (
         <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${chosen.length}, minmax(0,1fr))` }}>
           {chosen.map((r) => (
-            <div key={r.id} className="panel overflow-hidden rounded-lg">
+            <div key={r.id} className="panel overflow-hidden rounded-md">
               <div className="aspect-square bg-black/40">
                 {r.overlayUrl && <img src={r.overlayUrl} className="h-full w-full object-contain" />}
               </div>
@@ -435,7 +490,7 @@ function Comparar({ rows }: { rows: AnalysisRow[] }) {
                 <span className="telemetry text-sm">#{r.physicalTag}</span>
                 <span className="telemetry text-lg font-semibold text-primary">{r.fatPercent.toFixed(1)}%</span>
                 {r.finishingClass && (
-                  <span className="text-[11px] text-terra">grade: {r.finishingClass}</span>
+                  <span className="text-[11px] text-alert">grade: {r.finishingClass}</span>
                 )}
                 {r.fatThicknessMm != null && (
                   <span className="telemetry text-[11px] text-muted-foreground">fat {r.fatThicknessMm}mm</span>

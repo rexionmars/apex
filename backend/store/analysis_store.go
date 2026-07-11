@@ -28,6 +28,7 @@ type Analysis struct {
 	// campos juntados da carcaça (para tabela/estatística), não persistidos aqui:
 	PhysicalTag    string   `json:"physicalTag"`
 	Stratum        string   `json:"stratum"`
+	Treatment      string   `json:"treatment"`
 	FatThicknessMM *float64 `json:"fatThicknessMm"`
 	GRMeasureMM    *float64 `json:"grMeasureMm"`
 	LoinEyeAreaCM2 *float64 `json:"loinEyeAreaCm2"`
@@ -89,7 +90,7 @@ func (s *Store) queryAnalyses(where string, args ...interface{}) ([]Analysis, er
 		       a.overlay_path, a.carcass_path, a.grade_experimental,
 		       a.conv_perna, a.conv_lombo, a.conv_paleta, a.conformation_index,
 		       a.conformation_grade, a.conformation_conf, a.conformation_map, a.analyzed_at,
-		       c.physical_tag, c.stratum, c.fat_thickness_mm, c.gr_measure_mm, c.loin_eye_area_cm2
+		       c.physical_tag, c.stratum, c.treatment, c.fat_thickness_mm, c.gr_measure_mm, c.loin_eye_area_cm2
 		FROM analyses a
 		JOIN carcasses c ON c.id = a.carcass_id ` + where + `
 		ORDER BY c.physical_tag, a.id`
@@ -107,7 +108,7 @@ func (s *Store) queryAnalyses(where string, args ...interface{}) ([]Analysis, er
 			&a.OverlayPath, &a.CarcassPath, &ge,
 			&a.ConvPerna, &a.ConvLombo, &a.ConvPaleta, &a.ConformationIndex,
 			&a.ConformationGrade, &a.ConformationConf, &a.ConformationMap, &a.AnalyzedAt,
-			&a.PhysicalTag, &a.Stratum, &a.FatThicknessMM, &a.GRMeasureMM, &a.LoinEyeAreaCM2); err != nil {
+			&a.PhysicalTag, &a.Stratum, &a.Treatment, &a.FatThicknessMM, &a.GRMeasureMM, &a.LoinEyeAreaCM2); err != nil {
 			return nil, err
 		}
 		a.BackgroundRemoved = bg == 1
